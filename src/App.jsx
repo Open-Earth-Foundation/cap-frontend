@@ -44,41 +44,34 @@ const App = () => {
 
   return (
     <Layout>
-      {/* Set up flexbox with min height of full screen */}
+      {/* Set up full-width search bar at the top */}
+      <div className="bg-white w-full p-6 shadow-md">
+        <header className="text-center my-4">
+          <h1 className="text-3xl font-bold text-gray-800">
+            City Climate Risk Assessment
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Select a city to assess its climate risk factors
+          </p>
+        </header>
+
+        <div className="max-w-4xl mx-auto">
+          <CityDropdown className="w-full" onCityChange={handleCityChange} />
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="flex flex-col min-h-screen bg-gray-100">
-        {/* Main Content */}
         <div className="flex-grow w-full p-6">
-          <header className="text-center my-8">
-            <h1 className="text-3xl font-bold text-gray-800">
-              City Climate Risk Assessment
-            </h1>
-            <p className="mt-4 text-gray-600">
-              Select a city to assess its climate risk factors
-            </p>
-          </header>
+          {/* Risk Assessment Section */}
+          {loading && <p>Loading data for {selectedCity}...</p>}
+          {error && <p>Error: {error}</p>}
 
-          <main className="max-w-screen-xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-            {/* City Dropdown */}
-            <div className="z-10 bg-white p-4 shadow-md rounded-lg">
-              <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                Select a City
-              </h2>
-              <CityDropdown className="z-10" onCityChange={handleCityChange} />
+          {selectedCity && ccraData.length > 0 && !loading && !error && (
+            <div className="mt-8">
+              <RiskAssessment selectedCity={selectedCity} />
             </div>
-
-            {/* Risk Assessment Section */}
-            {loading && <p>Loading data for {selectedCity}...</p>}
-            {error && <p>Error: {error}</p>}
-
-            {selectedCity && ccraData.length > 0 && !loading && !error && (
-              <div className="mt-8">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                  Risk Assessment for {selectedCity}
-                </h2>
-                <RiskAssessment selectedCity={selectedCity} />
-              </div>
-            )}
-          </main>
+          )}
         </div>
 
         {/* Sticky Footer */}
