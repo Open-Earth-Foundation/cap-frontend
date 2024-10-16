@@ -8,30 +8,34 @@ const CityDropdown = ({ onCityChange }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const apiUrl = 'https://adapta-brasil-api.replit.app/cities';
+    // Ensure you are using the correct endpoint to get a list of all cities
+    const apiUrl = `https://adapta-brasil-api.replit.app/cities`; // Adjust endpoint if needed
     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
-    fetch(proxyUrl)
-      .then(response => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetch(proxyUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then(data => {
+        const data = await response.json();
         const parsedData = JSON.parse(data.contents);
+
+        // Ensure data is in the expected format
         const cityOptions = parsedData.map(city => ({
           value: city.cityName,
           label: `${city.cityName} - ${city.region}`,
         }));
         setCities(cityOptions);
-        setIsLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching cities:', error);
         setError(error.message);
+      } finally {
         setIsLoading(false);
-      });
+      }
+    };
+
+    fetchCities();
   }, []);
 
   const handleCityChange = (selectedOption) => {
