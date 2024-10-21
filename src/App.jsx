@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CityDropdown from "./components/CityDropdown";
 import Layout from "./components/Layout";
 import RiskAssessment from "./components/RiskAssessment";
+import { exportToCSV, ExportToPDF } from "./exportUtils.jsx";
 import "./index.css";
 
 const App = () => {
@@ -14,18 +15,16 @@ const App = () => {
   const fetchCcraData = async (city) => {
     setLoading(true);
     setError(null);
-
     try {
       const apiUrl = `https://adapta-brasil-api.replit.app/process/?city=${encodeURIComponent(city)}`;
       const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-
       const response = await fetch(proxyUrl);
       if (!response.ok) {
         throw new Error(`Error fetching data: ${response.statusText}`);
       }
-
       const data = await response.json();
-      const parsedData = JSON.parse(data.contents); // Parse data from the proxy response
+      const parsedData = JSON.parse(data.contents);
+      console.log("Parsed CCRA Data:", parsedData);
       setCcraData(parsedData);
     } catch (err) {
       setError(`Failed to fetch data: ${err.message}`);
@@ -40,6 +39,10 @@ const App = () => {
     if (city) {
       fetchCcraData(city); // Fetch the climate risk data when a city is selected
     }
+  };
+
+  const handleExportCSV = () => {
+    exportToCSV(ccraData, `${selectedCity}_climate_risk_assessment.csv`);
   };
 
   return (
@@ -66,14 +69,21 @@ const App = () => {
           {/* Risk Assessment Section */}
           {loading && <p>Loading data for {selectedCity}...</p>}
           {error && <p>Error: {error}</p>}
-
           {selectedCity && ccraData.length > 0 && !loading && !error && (
             <div className="mt-8">
               <RiskAssessment selectedCity={selectedCity} />
+              <div className="mt-4 flex space-x-4">
+                <button
+                  onClick={handleExportCSV}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Export to CSV
+                </button>
+                <ExportToPDF data={ccraData} city={selectedCity} />
+              </div>
             </div>
           )}
         </div>
-
         {/* Sticky Footer */}
         <footer className="text-center py-4 bg-gray-200">
           <p className="text-gray-500 text-sm">
