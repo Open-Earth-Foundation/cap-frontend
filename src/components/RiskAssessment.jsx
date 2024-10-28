@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, MapPin } from "lucide-react";
 import CityMap from "./CityMap";
+import QualitativeAssessment from './QualitativeAssessment';
 import {
   Radar,
   RadarChart,
@@ -563,6 +564,11 @@ const RiskAssessment = ({
         </div>
       </div>
 
+      {/* Qualitative Assessment */}
+      <div className="mb-12">
+        <QualitativeAssessment />
+      </div>
+      
       {/* Export Buttons */}
       <div className="flex justify-center gap-4 mb-8">
         <button
