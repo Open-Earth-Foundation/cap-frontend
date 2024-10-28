@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import CityMap from "./CityMap"; // Import the CityMap component
+import { ArrowLeft, MapPin } from "lucide-react";
+import CityMap from "./CityMap";
 import {
   Radar,
   RadarChart,
@@ -7,43 +8,20 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
-const RiskAssessment = ({ selectedCity }) => {
-  const [loading, setLoading] = useState(true);
-  const [ccraData, setCcraData] = useState(null);
-  const [error, setError] = useState(null);
+const RiskAssessment = ({
+  selectedCity,
+  onBack,
+  ccraData,
+  loading,
+  error,
+  onExportCSV,
+  onExportPDF,
+}) => {
   const [selectedHazard, setSelectedHazard] = useState("");
   const [customRiskLevels, setCustomRiskLevels] = useState({});
-
-  useEffect(() => {
-    if (!selectedCity) return;
-
-    setLoading(true);
-    setError(null);
-
-    const apiUrl = `https://adapta-brasil-api.replit.app/process/?city=${encodeURIComponent(selectedCity)}`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-
-    const fetchCityData = async () => {
-      try {
-        const response = await fetch(proxyUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const parsedData = JSON.parse(data.contents);
-        setCcraData(parsedData);
-        setLoading(false);
-        setSelectedHazard(parsedData[0].Hazard); // Set initial hazard to the first one
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    fetchCityData();
-  }, [selectedCity]);
 
   const defineRiskLevel = (score) => {
     if (score >= 0.75) return "Very High";
@@ -52,26 +30,33 @@ const RiskAssessment = ({ selectedCity }) => {
     return "Low";
   };
 
-  const handleCustomRiskChange = (index, newRiskLevel) => {
-    setCustomRiskLevels((prev) => ({
-      ...prev,
-      [index]: newRiskLevel,
-    }));
+  const [selectedHazards, setSelectedHazards] = useState([]);
+
+  // Add this function to handle hazard selection
+  const toggleHazard = (hazard) => {
+    setSelectedHazards((prev) =>
+      prev.includes(hazard)
+        ? prev.filter((h) => h !== hazard)
+        : [...prev, hazard],
+    );
   };
 
-  const getRiskLevelStyle = (score, customRisk) => {
-    const riskLevel = customRisk || defineRiskLevel(score);
-    switch (riskLevel) {
-      case "Very High":
-        return { color: "text-red-600", bar: "bg-red-500", label: "Very High" };
-      case "High":
-        return { color: "text-orange-500", bar: "bg-orange-500", label: "High" };
-      case "Medium":
-        return { color: "text-yellow-500", bar: "bg-yellow-500", label: "Medium" };
-      case "Low":
-      default:
-        return { color: "text-blue-500", bar: "bg-blue-500", label: "Low" };
+  // Initialize selected hazards with top 3 when data loads
+  useEffect(() => {
+    if (ccraData && ccraData.length > 0) {
+      const topHazards = ccraData
+        .sort((a, b) => b["Risk Score"] - a["Risk Score"])
+        .slice(0, 3)
+        .map((h) => h.Hazard);
+      setSelectedHazards(topHazards);
     }
+  }, [ccraData]);
+
+  const getRiskColor = (score) => {
+    if (score >= 0.75) return "#E80A0A"; // Very High - Red
+    if (score >= 0.5) return "#E06835"; // High - Orange
+    if (score >= 0.25) return "#F59E0B"; // Medium - Yellow
+    return "#3B82F6"; // Low - Blue
   };
 
   const getFilledSegments = (customRisk, score) => {
@@ -89,197 +74,177 @@ const RiskAssessment = ({ selectedCity }) => {
     }
   };
 
-  if (loading) return <p>Loading data for {selectedCity}...</p>;
-  if (error) return <p>Error loading data: {error}</p>;
+  const handleCustomRiskChange = (index, newRiskLevel) => {
+    setCustomRiskLevels((prev) => ({
+      ...prev,
+      [index]: newRiskLevel,
+    }));
+  };
 
-  const hazards = ccraData ? [...new Set(ccraData.map((item) => item.Hazard))] : [];
-  const selectedHazardData = ccraData ? ccraData.find((item) => item.Hazard === selectedHazard) : null;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-lg text-gray-600">
+          Loading data for {selectedCity}...
+        </p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-lg text-red-500">Error loading data: {error}</p>
+      </div>
+    );
+  }
+
+  if (!ccraData || ccraData.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <p className="text-lg text-gray-600">
+          No data available for {selectedCity}.
+        </p>
+      </div>
+    );
+  }
+
+  const hazards = [...new Set(ccraData.map((item) => item.Hazard))];
+  const selectedHazardData = ccraData.find(
+    (item) => item.Hazard === (selectedHazard || hazards[0]),
+  );
 
   const radarData = selectedHazardData
     ? [
-        { indicator: "Hazard Score", value: selectedHazardData["Climate Threat Score"] || 0 },
-        { indicator: "Exposure Score", value: selectedHazardData["Exposure Score"] || 0 },
-        { indicator: "Sensitivity Score", value: selectedHazardData["Sensitivity Score"] || 0 },
-        { indicator: "Adaptive Capacity Score", value: selectedHazardData["Adaptive Capacity Score"] || 0 },
-        { indicator: "Vulnerability Score", value: selectedHazardData["Vulnerability Score"] || 0 },
-        { indicator: "Risk Score", value: selectedHazardData["Risk Score"] || 0 },
+        {
+          indicator: "Hazard Score",
+          value: selectedHazardData["Climate Threat Score"] || 0,
+        },
+        {
+          indicator: "Exposure Score",
+          value: selectedHazardData["Exposure Score"] || 0,
+        },
+        {
+          indicator: "Sensitivity Score",
+          value: selectedHazardData["Sensitivity Score"] || 0,
+        },
+        {
+          indicator: "Adaptive Capacity Score",
+          value: selectedHazardData["Adaptive Capacity Score"] || 0,
+        },
+        {
+          indicator: "Vulnerability Score",
+          value: selectedHazardData["Vulnerability Score"] || 0,
+        },
+        {
+          indicator: "Risk Score",
+          value: selectedHazardData["Risk Score"] || 0,
+        },
       ]
     : [];
 
   return (
-    <div className="max-w-screen-xl mx-auto p-4 risk-assessment">
-      {hazards.length > 0 && (
-        <div className="mb-4">
-          <label className="text-xl font-semibold text-gray-700 mr-2">
-            Select Hazard:
-          </label>
-          <select
-            value={selectedHazard}
-            onChange={(e) => setSelectedHazard(e.target.value)}
-            className="p-2 border rounded-md"
-          >
-            {hazards.map((hazard, index) => (
-              <option key={index} value={hazard}>
-                {hazard}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+    <div className="max-w-screen-xl mx-auto p-4">
+      {/* Back button and City Title */}
+      <div className="flex flex-col gap-4 mb-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors w-fit"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to search</span>
+        </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-        <div className="lg:col-span-2">
-          <CityMap selectedCity={selectedCity} />
-        </div>
-        <div className="lg:col-span-1">
-          {selectedHazardData && radarData.length > 0 && (
-            <ResponsiveContainer width="100%" height={400}>
-              <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="indicator" />
-                <PolarRadiusAxis angle={30} domain={[0, 1]} />
-                <Radar
-                  name="Risk Assessment"
-                  dataKey="value"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                  fillOpacity={0.6}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          )}
+        <div className="flex items-center gap-2">
+          <MapPin className="w-6 h-6 text-primary" />
+          <h1 className="text-3xl font-bold">{selectedCity}</h1>
         </div>
       </div>
 
-      {/* Top 3 Risks Cards */}
-      {ccraData && ccraData.length > 0 && (
-        <div className="my-8">
-          <h3 className="text-xl font-bold text-gray-700 mb-4">
-            Top Risks for {selectedCity}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {ccraData
-              .sort((a, b) => b["Risk Score"] - a["Risk Score"])
-              .slice(0, 3)
-              .map((risk, index) => {
-                const customRisk = customRiskLevels[index];
-                const riskStyle = getRiskLevelStyle(risk["Risk Score"], customRisk);
-                const filledSegments = getFilledSegments(customRisk, risk["Risk Score"]);
+      {/* Map Section */}
+      <div className="mb-8">
+        <CityMap selectedCity={selectedCity} />
+      </div>
 
-                return (
-                  <div
-                    key={index}
-                    className="w-full h-full p-4 bg-white rounded-lg shadow-md flex flex-col justify-start items-start gap-4"
+      {/* CCRA Table Section */}
+      <div className="mb-12 overflow-x-auto">
+        <h2 className="text-[57px] font-normal leading-tight font-poppins mb-12 mt-12">
+          Climate Change Risk Assessment
+        </h2>
+        <table className="w-full bg-white rounded-lg shadow-md">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-2 text-left">City</th>
+              <th className="px-4 py-2 text-left">Year</th>
+              <th className="px-4 py-2 text-left">Key Impact</th>
+              <th className="px-4 py-2 text-left">Hazard</th>
+              <th className="px-4 py-2 text-left">Hazard Score</th>
+              <th className="px-4 py-2 text-left">Exposure Score</th>
+              <th className="px-4 py-2 text-left">Sensitivity Score</th>
+              <th className="px-4 py-2 text-left">Adaptive Capacity Score</th>
+              <th className="px-4 py-2 text-left">Vulnerability Score</th>
+              <th className="px-4 py-2 text-left">Risk Score</th>
+              <th className="px-4 py-2 text-left">Risk Level</th>
+              <th className="px-4 py-2 text-left">Custom Risk Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ccraData.map((row, index) => {
+              const riskLevel = defineRiskLevel(row["Risk Score"]);
+              const customRisk = customRiskLevels[index];
+              const riskColor = getRiskColor(row["Risk Score"]);
+
+              return (
+                <tr
+                  key={index}
+                  className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-50 transition-colors`}
+                >
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row.City}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row.Year}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row.Sector}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row.Hazard}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row["Climate Threat Score"]?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row["Exposure Score"]?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row["Sensitivity Score"]?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row["Adaptive Capacity Score"]?.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
+                    {row["Vulnerability Score"]?.toFixed(2)}
+                  </td>
+                  <td
+                    className="px-4 py-2 border-b border-gray-200 font-semibold"
+                    style={{ color: riskColor }}
                   >
-                    <div className="w-full flex flex-col justify-start items-start">
-                      <div className="text-sm font-semibold text-gray-600">{risk.Sector}</div>
-                    </div>
-                    <div className="w-full flex flex-col justify-end items-start">
-                      <div className="text-lg font-semibold">{risk.Hazard}</div>
-                      <div className="text-sm text-gray-600">Hazard</div>
-                    </div>
-                    <div className="w-full flex flex-col justify-start items-start gap-2">
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">Risk Score</div>
-                        <div className={`text-3xl font-bold ${riskStyle.color}`}>{risk["Risk Score"]?.toFixed(2)}</div>
-                      </div>
-                      {/* Risk Bar with dynamic segments */}
-                      <div className="flex w-full gap-1">
-                        {[...Array(4)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`flex-1 h-1 rounded-full ${i < filledSegments ? riskStyle.bar : "bg-gray-200"}`}
-                          ></div>
-                        ))}
-                      </div>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">
-                          {customRisk ? (
-                            <>
-                              Risk Level{" "}
-                              <span className={`${riskStyle.color}`}> (customized)</span>
-                            </>
-                          ) : (
-                            "Risk Level"
-                          )}
-                        </div>
-                        <div className={`text-lg font-bold ${riskStyle.color}`}>{riskStyle.label}</div>
-                      </div>
-                    </div>
-                    <div className="w-full h-0 border-t border-gray-200"></div>
-                    <div className="flex flex-col gap-2 w-full">
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">Sensitivity</div>
-                        <div className="text-lg font-semibold text-gray-800">
-                          {risk["Sensitivity Score"]?.toFixed(2) || "N/A"}
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">Hazard Score</div>
-                        <div className="text-lg font-semibold text-gray-800">
-                          {risk["Climate Threat Score"]?.toFixed(2) || "N/A"}
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">Exposure</div>
-                        <div className="text-lg font-semibold text-gray-800">
-                          {risk["Exposure Score"]?.toFixed(2) || "N/A"}
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center w-full">
-                        <div className="text-sm text-gray-600">Adaptive Capacity</div>
-                        <div className="text-lg font-semibold text-gray-800">
-                          {risk["Adaptive Capacity Score"]?.toFixed(2) || "N/A"}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-      )}
-
-      {/* Risk Assessment Table */}
-      {ccraData && ccraData.length > 0 ? (
-        <div className="overflow-x-auto mt-8">
-          <h3 className="text-xl font-bold text-gray-700 mb-4">CCRA for {selectedCity}</h3>
-          <table className="table-auto w-full bg-white rounded-lg shadow-md mt-4 overflow-x-auto">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="px-4 py-2">City</th>
-                <th className="px-4 py-2">Year</th>
-                <th className="px-4 py-2">Key Impact</th> {/* Changed from "Sector" */}
-                <th className="px-4 py-2">Hazard</th>
-                <th className="px-4 py-2">Hazard Score</th> {/* Changed from "Climate Threat Score" */}
-                <th className="px-4 py-2">Exposure Score</th>
-                <th className="px-4 py-2">Sensitivity Score</th>
-                <th className="px-4 py-2">Adaptive Capacity Score</th>
-                <th className="px-4 py-2">Vulnerability Score</th>
-                <th className="px-4 py-2">Risk Score</th>
-                <th className="px-4 py-2">Risk Level</th>
-                <th className="px-4 py-2">Custom Risk Level</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ccraData.map((row, index) => (
-                <tr key={index} className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}>
-                  <td className="border px-4 py-2">{row.City}</td>
-                  <td className="border px-4 py-2">{row.Year}</td>
-                  <td className="border px-4 py-2">{row.Sector}</td> {/* Changed column name only */}
-                  <td className="border px-4 py-2">{row.Hazard}</td>
-                  <td className="border px-4 py-2">{row["Climate Threat Score"]?.toFixed(2)}</td> {/* Changed column name only */}
-                  <td className="border px-4 py-2">{row["Exposure Score"]?.toFixed(2)}</td>
-                  <td className="border px-4 py-2">{row["Sensitivity Score"]?.toFixed(2)}</td>
-                  <td className="border px-4 py-2">{row["Adaptive Capacity Score"]?.toFixed(2)}</td>
-                  <td className="border px-4 py-2">{row["Vulnerability Score"]?.toFixed(2)}</td>
-                  <td className="border px-4 py-2">{row["Risk Score"]?.toFixed(2)}</td>
-                  <td className="border px-4 py-2">{defineRiskLevel(row["Risk Score"])}</td>
-                  <td className="border px-4 py-2">
+                    {row["Risk Score"]?.toFixed(2)}
+                  </td>
+                  <td
+                    className="px-4 py-2 border-b border-gray-200 font-semibold"
+                    style={{ color: riskColor }}
+                  >
+                    {customRisk || riskLevel}
+                  </td>
+                  <td className="px-4 py-2 border-b border-gray-200">
                     <select
-                      value={customRiskLevels[index] || defineRiskLevel(row["Risk Score"])}
-                      onChange={(e) => handleCustomRiskChange(index, e.target.value)}
-                      className="p-1 border rounded-md"
+                      value={customRisk || riskLevel}
+                      onChange={(e) =>
+                        handleCustomRiskChange(index, e.target.value)
+                      }
+                      className="w-full p-1 border rounded-md bg-white hover:border-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     >
                       <option value="Low">Low</option>
                       <option value="Medium">Medium</option>
@@ -288,13 +253,331 @@ const RiskAssessment = ({ selectedCity }) => {
                     </select>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Top Risks Section */}
+      <div className="mb-12">
+        <div className="flex flex-col gap-6 mb-8">
+          <h2 className="text-[57px] font-normal leading-tight font-poppins">
+            Top risks in your city
+          </h2>
+          <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+            The risks that you should pay special attention to
+          </p>
         </div>
-      ) : (
-        <p>No data available for {selectedCity}.</p>
-      )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+          {ccraData
+            .sort((a, b) => b["Risk Score"] - a["Risk Score"])
+            .slice(0, 3)
+            .map((risk, index) => {
+              const riskScore = risk["Risk Score"];
+              const riskColor = getRiskColor(riskScore);
+              return (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-sm p-6 flex flex-col gap-4"
+                >
+                  <div className="uppercase text-[#575757] text-xs font-semibold tracking-[1.5px] py-2">
+                    {risk.Sector}
+                  </div>
+
+                  <div className="flex flex-col">
+                    <h3 className="text-2xl font-semibold">{risk.Hazard}</h3>
+                    <span className="text-[#575757] text-xs font-medium tracking-wide">
+                      Hazard
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-[#575757] text-sm font-medium">
+                        Risk Score
+                      </span>
+                      <span
+                        style={{ color: riskColor }}
+                        className="text-4xl font-semibold font-inter"
+                      >
+                        {riskScore?.toFixed(2)}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-1">
+                      {[...Array(4)].map((_, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            background:
+                              i < getFilledSegments(null, riskScore)
+                                ? riskColor
+                                : "#E2E2E2",
+                          }}
+                          className="h-[5px] flex-1 rounded-full"
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-[#575757] text-xs font-medium tracking-wide">
+                        Risk Level
+                      </span>
+                      <span
+                        style={{ color: riskColor }}
+                        className="text-base font-semibold"
+                      >
+                        {defineRiskLevel(riskScore)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-[#E4E4E4] my-2" />
+
+                  {/* Metrics */}
+                  {[
+                    { label: "Sensitivity", value: risk["Sensitivity Score"] },
+                    {
+                      label: "Climate Threat",
+                      value: risk["Climate Threat Score"],
+                    },
+                    { label: "Exposure", value: risk["Exposure Score"] },
+                    {
+                      label: "Adaptive Capacity",
+                      value: risk["Adaptive Capacity Score"],
+                    },
+                    {
+                      label: "Vulnerability",
+                      value: risk["Vulnerability Score"],
+                    },
+                  ].map(({ label, value }, i) => (
+                    <div key={i} className="flex justify-between items-center">
+                      <span className="text-[#575757] text-xs font-medium tracking-wide">
+                        {label}
+                      </span>
+                      <span className="text-[#575757] text-base font-semibold">
+                        {value?.toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+        </div>
+      </div>
+
+      {/* Updated Radar Chart Section */}
+      <div className="mb-12">
+        <div className="mx-auto">
+          <div className="flex flex-col gap-6 mb-8">
+            <h2 className="text-[57px] font-normal leading-tight font-poppins">
+              Hazard Visualization
+            </h2>
+            <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+              Compare the top risks and their indicators
+            </p>
+          </div>
+
+          <div className="mb-6 flex flex-wrap gap-4">
+            {ccraData
+              .sort((a, b) => b["Risk Score"] - a["Risk Score"])
+              .slice(0, 3)
+              .map((hazard, index) => {
+                const riskColor = getRiskColor(hazard["Risk Score"]);
+                return (
+                  <div key={index} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={`hazard-${index}`}
+                      checked={selectedHazards.includes(hazard.Hazard)}
+                      onChange={() => toggleHazard(hazard.Hazard)}
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <label
+                      htmlFor={`hazard-${index}`}
+                      className="text-lg font-medium"
+                      style={{ color: riskColor }}
+                    >
+                      {hazard.Hazard}
+                    </label>
+                  </div>
+                );
+              })}
+          </div>
+
+          <div className="h-[500px]">
+            <ResponsiveContainer>
+              <RadarChart
+                cx="50%"
+                cy="50%"
+                outerRadius="70%"
+                data={[
+                  {
+                    name: "Hazard Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] = hazard?.["Climate Threat Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                  {
+                    name: "Exposure Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] = hazard?.["Exposure Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                  {
+                    name: "Sensitivity Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] = hazard?.["Sensitivity Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                  {
+                    name: "Adaptive Capacity Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] =
+                        hazard?.["Adaptive Capacity Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                  {
+                    name: "Vulnerability Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] = hazard?.["Vulnerability Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                  {
+                    name: "Risk Score",
+                    ...selectedHazards.reduce((acc, hazardName) => {
+                      const hazard = ccraData.find(
+                        (h) => h.Hazard === hazardName,
+                      );
+                      acc[hazardName] = hazard?.["Risk Score"] || 0;
+                      return acc;
+                    }, {}),
+                  },
+                ]}
+              >
+                <PolarGrid gridType="circle" />
+                <PolarAngleAxis
+                  dataKey="name"
+                  tick={{ fill: "#575757", fontSize: 12 }}
+                />
+                <PolarRadiusAxis
+                  angle={30}
+                  domain={[0, 1]}
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                />
+                {selectedHazards.map((hazardName) => {
+                  const hazard = ccraData.find((h) => h.Hazard === hazardName);
+                  const riskColor = getRiskColor(hazard?.["Risk Score"] || 0);
+
+                  return (
+                    <Radar
+                      key={hazardName}
+                      name={hazardName}
+                      dataKey={hazardName}
+                      stroke={riskColor}
+                      fill={riskColor}
+                      fillOpacity={0.3}
+                    />
+                  );
+                })}
+                <Legend
+                  formatter={(value, entry) => (
+                    <span style={{ color: entry.color }}>{value}</span>
+                  )}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold mb-4">Score Comparison</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {selectedHazards.map((hazardName) => {
+                const hazard = ccraData.find((h) => h.Hazard === hazardName);
+                if (!hazard) return null;
+
+                const riskColor = getRiskColor(hazard["Risk Score"]);
+                return (
+                  <div
+                    key={hazardName}
+                    className="p-4 rounded-lg border border-gray-200"
+                    style={{
+                      borderLeftColor: riskColor,
+                      borderLeftWidth: "4px",
+                    }}
+                  >
+                    <h4
+                      className="font-semibold mb-2"
+                      style={{ color: riskColor }}
+                    >
+                      {hazardName}
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Risk Score:</span>
+                        <span className="font-semibold">
+                          {hazard["Risk Score"]?.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Vulnerability:</span>
+                        <span className="font-semibold">
+                          {hazard["Vulnerability Score"]?.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Hazard Score:</span>
+                        <span className="font-semibold">
+                          {hazard["Climate Threat Score"]?.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Export Buttons */}
+      <div className="flex justify-center gap-4 mb-8">
+        <button
+          onClick={onExportCSV}
+          className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg transition-colors"
+        >
+          Export to CSV
+        </button>
+        <button
+          onClick={onExportPDF}
+          className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-6 rounded-lg transition-colors"
+        >
+          Export to PDF
+        </button>
+      </div>
     </div>
   );
 };

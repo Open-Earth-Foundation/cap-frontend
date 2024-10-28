@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import CityDropdown from "./components/CityDropdown";
-import Layout from "./components/Layout";
+import Hero from "./components/Hero";
 import RiskAssessment from "./components/RiskAssessment";
-import { exportToCSV, ExportToPDF } from "./exportUtils.jsx";
+import { exportToCSV, ExportToPDF } from "./exportUtils";
 import "./index.css";
 
 const App = () => {
@@ -11,8 +10,9 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch climate risk assessment data using proxy to avoid CORS issues
   const fetchCcraData = async (city) => {
+    if (!city) return;
+
     setLoading(true);
     setError(null);
     try {
@@ -33,12 +33,17 @@ const App = () => {
     }
   };
 
-  // Handler function to update selected city
-  const handleCityChange = (city) => {
-    setSelectedCity(city);
-    if (city) {
-      fetchCcraData(city); // Fetch the climate risk data when a city is selected
+  const handleSearch = (searchTerm) => {
+    setSelectedCity(searchTerm);
+    if (searchTerm) {
+      fetchCcraData(searchTerm);
     }
+  };
+
+  const handleBack = () => {
+    setSelectedCity("");
+    setCcraData([]);
+    setError(null);
   };
 
   const handleExportCSV = () => {
@@ -46,52 +51,40 @@ const App = () => {
   };
 
   return (
-    <Layout>
-      {/* Set up full-width search bar at the top */}
-      <div className="bg-white w-full p-6 shadow-md">
-        <header className="text-center my-4">
-          <h1 className="text-3xl font-bold text-gray-800">
-            City Climate Risk Assessment
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Select a city to assess its climate risk factors
-          </p>
-        </header>
-
-        <div className="max-w-4xl mx-auto">
-          <CityDropdown className="w-full" onCityChange={handleCityChange} />
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-primary text-white p-4">
+        <div className="container mx-auto">
+          <h1 className="text-xl font-semibold">CCRA PoC</h1>
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
-      <div className="flex flex-col min-h-screen bg-gray-100">
-        <div className="flex-grow w-full p-6">
-          {/* Risk Assessment Section */}
-          {loading && <p>Loading data for {selectedCity}...</p>}
-          {error && <p>Error: {error}</p>}
-          {selectedCity && ccraData.length > 0 && !loading && !error && (
-            <div className="mt-8">
-              <RiskAssessment selectedCity={selectedCity} />
-              <div className="mt-4 flex space-x-4">
-                <button
-                  onClick={handleExportCSV}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  Export to CSV
-                </button>
-                <ExportToPDF data={ccraData} city={selectedCity} />
-              </div>
-            </div>
-          )}
+      <main className="flex-grow">
+        {/* Always show Hero component with search */}
+        <Hero onSearch={handleSearch} initialCity={selectedCity} />
+
+        {/* Show Risk Assessment if city is selected */}
+        {selectedCity && (
+          <RiskAssessment
+            selectedCity={selectedCity}
+            ccraData={ccraData}
+            loading={loading}
+            error={error}
+            onBack={handleBack}
+            onExportCSV={handleExportCSV}
+            onExportPDF={() => {/* Your PDF export logic */}}
+          />
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-100 py-4 mt-auto">
+        <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
+          &copy; 2024 CityCatalyst CCRA | All Rights Reserved
         </div>
-        {/* Sticky Footer */}
-        <footer className="text-center py-4 bg-gray-200">
-          <p className="text-gray-500 text-sm">
-            &copy; 2024 City Climate Risk Assessment | All Rights Reserved
-          </p>
-        </footer>
-      </div>
-    </Layout>
+      </footer>
+    </div>
   );
 };
 

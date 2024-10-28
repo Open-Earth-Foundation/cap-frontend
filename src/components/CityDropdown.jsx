@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
-const CityDropdown = ({ onCityChange }) => {
+const CityDropdown = ({ onCityChange, styles }) => {
   const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Ensure you are using the correct endpoint to get a list of all cities
-    const apiUrl = `https://adapta-brasil-api.replit.app/cities`; // Adjust endpoint if needed
+    const apiUrl = `https://adapta-brasil-api.replit.app/cities`;
     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
 
     const fetchCities = async () => {
@@ -21,7 +20,6 @@ const CityDropdown = ({ onCityChange }) => {
         const data = await response.json();
         const parsedData = JSON.parse(data.contents);
 
-        // Ensure data is in the expected format
         const cityOptions = parsedData.map(city => ({
           value: city.cityName,
           label: `${city.cityName} - ${city.region}`,
@@ -39,23 +37,28 @@ const CityDropdown = ({ onCityChange }) => {
   }, []);
 
   const handleCityChange = (selectedOption) => {
-    setSelectedCity(selectedOption.value);
-    onCityChange(selectedOption.value);
+    setSelectedCity(selectedOption);
+    if (selectedOption) {
+      onCityChange(selectedOption.value);
+    }
   };
 
-  if (isLoading) return <p>Loading cities...</p>;
-  if (error) return <p>Error loading cities: {error}</p>;
+  if (error) return (
+    <div className="text-red-500 text-sm">Error loading cities: {error}</div>
+  );
 
   return (
-    <div>
-      <Select
-        value={cities.find(city => city.value === selectedCity)}
-        onChange={handleCityChange}
-        options={cities}
-        placeholder="Search for a city..."
-        isClearable
-      />
-    </div>
+    <Select
+      value={selectedCity}
+      onChange={handleCityChange}
+      options={cities}
+      placeholder="Search for a city..."
+      isClearable
+      isLoading={isLoading}
+      styles={styles}
+      className="city-dropdown"
+      classNamePrefix="city-select"
+    />
   );
 };
 
