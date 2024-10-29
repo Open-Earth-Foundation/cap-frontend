@@ -51,7 +51,7 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
       <header className="bg-primary text-white p-4">
         <div className="container mx-auto">
@@ -63,6 +63,13 @@ const App = () => {
       <main className="flex-grow">
         {/* Always show Hero component with search */}
         <Hero onSearch={handleSearch} initialCity={selectedCity} />
+
+        {/* Empty State */}
+        {!selectedCity && (
+          <div className="container mx-auto px-4 py-10 text-center text-gray-500">
+            <p>Start by selecting a city to view its Climate Change Risk Assessment data.</p>
+          </div>
+        )}
 
         {/* Show Risk Assessment if city is selected */}
         {selectedCity && (

@@ -22,7 +22,8 @@ const FitBoundsToPolygon = ({ polygon }) => {
       // Fit the map to the polygon bounds with some padding
       map.fitBounds(bounds, {
         padding: [50, 50],
-        maxZoom: 13, // Limit maximum zoom level
+        maxZoom: 12, // Limit maximum zoom level
+        minZoom: 10, // Limit minimum zoom level
       });
     }
   }, [map, polygon]);
