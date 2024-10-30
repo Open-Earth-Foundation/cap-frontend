@@ -3,7 +3,7 @@ import CityDropdown from './CityDropdown';
 
 const Hero = ({ onSearch }) => {
   return (
-    <div className="container mx-auto px-4 py-36 flex justify-center items-center gap-32">
+    <div className="container mx-auto px-4 py-36 flex justify-center items-center gap-32 max-w-[1200px]">
       {/* Left column with text */}
       <div className="flex-1 flex flex-col justify-center items-start gap-6">
         <h1 className="w-full">

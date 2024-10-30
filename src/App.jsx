@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Hero from "./components/Hero";
 import RiskAssessment from "./components/RiskAssessment";
-import { exportToCSV, ExportToPDF } from "./exportUtils";
+import { exportUtils } from './utils/exportUtils';
 import "./index.css";
 
 const App = () => {
@@ -12,7 +12,6 @@ const App = () => {
 
   const fetchCcraData = async (city) => {
     if (!city) return;
-
     setLoading(true);
     setError(null);
     try {
@@ -47,14 +46,20 @@ const App = () => {
   };
 
   const handleExportCSV = () => {
-    exportToCSV(ccraData, `${selectedCity}_climate_risk_assessment.csv`);
+    if (!ccraData || ccraData.length === 0) {
+      console.error('No data available to export');
+      return;
+    }
+    exportUtils.exportToCSV(ccraData, `${selectedCity}_climate_risk_assessment.csv`);
   };
+
+  // Remove handleExportPDF as we'll handle it directly in RiskAssessment component
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-primary text-white p-4">
-        <div className="container mx-auto">
+      <header className="bg-primary text-white p-4 ">
+        <div className="container mx-auto max-w-[1160px] align-center">
           <h1 className="text-xl font-semibold">CCRA PoC</h1>
         </div>
       </header>
@@ -67,7 +72,10 @@ const App = () => {
         {/* Empty State */}
         {!selectedCity && (
           <div className="container mx-auto px-4 py-10 text-center text-gray-500">
-            <p>Start by selecting a city to view its Climate Change Risk Assessment data.</p>
+            <p>
+              Start by selecting a city to view its Climate Change Risk
+              Assessment data.
+            </p>
           </div>
         )}
 
@@ -80,7 +88,6 @@ const App = () => {
             error={error}
             onBack={handleBack}
             onExportCSV={handleExportCSV}
-            onExportPDF={() => {/* Your PDF export logic */}}
           />
         )}
       </main>
