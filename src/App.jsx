@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Hero from "./components/Hero";
-import RiskAssessment from "./components/RiskAssessment";
-import { exportUtils } from './utils/exportUtils';
+import ClimateActions from "./components/ClimateActions.jsx";
 import "./index.css";
+import climateActions from "./data/climateActions.js";
 
 const App = () => {
   const [selectedCity, setSelectedCity] = useState("");
@@ -15,16 +15,10 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl = `https://adapta-brasil-api.replit.app/process/?city=${encodeURIComponent(city)}`;
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-      const response = await fetch(proxyUrl);
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
-      const data = await response.json();
-      const parsedData = JSON.parse(data.contents);
-      console.log("Parsed CCRA Data:", parsedData);
-      setCcraData(parsedData);
+      const filteredData = climateActions.filter(
+        (action) => action.city_name == city,
+      );
+      setCcraData(filteredData);
     } catch (err) {
       setError(`Failed to fetch data: ${err.message}`);
     } finally {
@@ -45,22 +39,12 @@ const App = () => {
     setError(null);
   };
 
-  const handleExportCSV = () => {
-    if (!ccraData || ccraData.length === 0) {
-      console.error('No data available to export');
-      return;
-    }
-    exportUtils.exportToCSV(ccraData, `${selectedCity}_climate_risk_assessment.csv`);
-  };
-
-  // Remove handleExportPDF as we'll handle it directly in RiskAssessment component
-
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header */}
       <header className="bg-primary text-white p-4 ">
         <div className="container mx-auto max-w-[1160px] align-center">
-          <h1 className="text-xl font-semibold">CCRA PoC</h1>
+          <h1 className="text-xl font-semibold">CityCatalyst CAP</h1>
         </div>
       </header>
 
@@ -73,29 +57,30 @@ const App = () => {
         {!selectedCity && (
           <div className="container mx-auto px-4 py-10 text-center text-gray-500">
             <p>
-              Start by selecting a city to view its Climate Change Risk
-              Assessment data.
+              Start by selecting a city to view its top recommended climate
+              actions.
             </p>
           </div>
         )}
 
-        {/* Show Risk Assessment if city is selected */}
+        {/* Show ClimateActions if city is selected */}
         {selectedCity && (
-          <RiskAssessment
-            selectedCity={selectedCity}
-            ccraData={ccraData}
-            loading={loading}
-            error={error}
-            onBack={handleBack}
-            onExportCSV={handleExportCSV}
-          />
+          <div className="container mx-auto px-4 py-10 text-gray-500">
+            <ClimateActions
+              selectedCity={selectedCity}
+              ccraData={ccraData}
+              loading={loading}
+              error={error}
+              onBack={handleBack}
+            />
+          </div>
         )}
       </main>
 
       {/* Footer */}
       <footer className="bg-gray-100 py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          &copy; 2024 CityCatalyst CCRA | All Rights Reserved
+          &copy; 2024 CityCatalyst CAP | All Rights Reserved
         </div>
       </footer>
     </div>

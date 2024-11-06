@@ -8,14 +8,14 @@ const Hero = ({ onSearch }) => {
       <div className="flex-1 flex flex-col justify-center items-start gap-6">
         <h1 className="w-full">
           <span className="block text-5xl font-normal leading-tight font-poppins">
-            Know more.
+            Take action.
           </span>
           <span className="block text-5xl font-bold leading-tight font-poppins">
-            Prepare better.
+            Drive Impact.
           </span>
         </h1>
         <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-          Prepare and adapt your city to potential risks with science-backed insights
+          Empower your city to prioritize climate actions that make a difference with data-driven insights.
         </p>
       </div>
 

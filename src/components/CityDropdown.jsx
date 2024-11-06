@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import climateActions from "../data/climateActions.js";
 
 const CityDropdown = ({ onCityChange, styles }) => {
   const [cities, setCities] = useState([]);
@@ -8,25 +9,26 @@ const CityDropdown = ({ onCityChange, styles }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const apiUrl = `https://adapta-brasil-api.replit.app/cities`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
-
     const fetchCities = async () => {
+      //console.log(climateActions)
       try {
-        const response = await fetch(proxyUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const parsedData = JSON.parse(data.contents);
+        const uniqueCities = new Set();
+        const cityOptions = climateActions
+          .filter((city) => {
+            if (!uniqueCities.has(city.city_name)) {
+              uniqueCities.add(city.city_name);
+              return true;
+            }
+            return false;
+          })
+          .map((city) => ({
+            value: city.city_name,
+            label: `${city.city_name} - ${city.region}`,
+          }));
 
-        const cityOptions = parsedData.map(city => ({
-          value: city.cityName,
-          label: `${city.cityName} - ${city.region}`,
-        }));
         setCities(cityOptions);
       } catch (error) {
-        console.error('Error fetching cities:', error);
+        console.error("Error fetching cities:", error);
         setError(error.message);
       } finally {
         setIsLoading(false);
@@ -43,9 +45,10 @@ const CityDropdown = ({ onCityChange, styles }) => {
     }
   };
 
-  if (error) return (
-    <div className="text-red-500 text-sm">Error loading cities: {error}</div>
-  );
+  if (error)
+    return (
+      <div className="text-red-500 text-sm">Error loading cities: {error}</div>
+    );
 
   return (
     <Select

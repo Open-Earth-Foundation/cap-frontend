@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polygon,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polygon, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { MapPin } from "lucide-react";
 
 // Custom hook to fit bounds
 const FitBoundsToPolygon = ({ polygon }) => {
@@ -14,16 +9,14 @@ const FitBoundsToPolygon = ({ polygon }) => {
 
   useEffect(() => {
     if (polygon && polygon.length > 0) {
-      // Create bounds from polygon coordinates
       const bounds = polygon.reduce((bounds, coordinate) => {
         return bounds.extend(coordinate);
       }, map.getBounds());
 
-      // Fit the map to the polygon bounds with some padding
       map.fitBounds(bounds, {
         padding: [50, 50],
-        maxZoom: 12, // Limit maximum zoom level
-        minZoom: 10, // Limit minimum zoom level
+        maxZoom: 12,
+        minZoom: 10,
       });
     }
   }, [map, polygon]);
@@ -45,7 +38,9 @@ const CityMap = ({ selectedCity }) => {
 
     const fetchCityData = async () => {
       try {
-        const apiUrl = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(selectedCity)}&format=json&polygon_geojson=1&addressdetails=1`;
+        const apiUrl = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(
+          selectedCity
+        )}&format=json&polygon_geojson=1&addressdetails=1`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,12 +51,10 @@ const CityMap = ({ selectedCity }) => {
           const { lat, lon } = data[0];
           let polygon = data[0].geojson ? data[0].geojson.coordinates : null;
 
-          // Handle different types of polygons
           if (polygon) {
             let coordinateArray;
 
             if (data[0].geojson.type === "MultiPolygon") {
-              // Get the largest polygon from MultiPolygon
               coordinateArray = polygon.reduce((largest, current) => {
                 const currentArea = current[0].length;
                 const largestArea = largest[0].length;
@@ -71,7 +64,6 @@ const CityMap = ({ selectedCity }) => {
               coordinateArray = polygon[0];
             }
 
-            // Convert coordinates to [lat, lng] format
             const adjustedPolygon = coordinateArray.map((point) => [
               point[1],
               point[0],
@@ -93,22 +85,34 @@ const CityMap = ({ selectedCity }) => {
     fetchCityData();
   }, [selectedCity]);
 
-  if (loading)
-    return (
-      <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-        <p className="text-gray-600">Loading map for {selectedCity}...</p>
-      </div>
-    );
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
+          <p className="text-gray-600">Loading map for {selectedCity}...</p>
+        </div>
+      );
+    }
 
-  if (error)
-    return (
-      <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-        <p className="text-red-500">Error loading map: {error}</p>
-      </div>
-    );
+    if (error) {
+      return (
+        <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
+          <p className="text-red-500">Error loading map: {error}</p>
+        </div>
+      );
+    }
 
-  return cityCoordinates ? (
-    <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg">
+    if (!cityCoordinates) {
+      return (
+        <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
+          <p className="text-gray-600">
+            No coordinates available for {selectedCity}.
+          </p>
+        </div>
+      );
+    }
+
+    return (
       <MapContainer
         center={cityCoordinates}
         zoom={12}
@@ -135,12 +139,18 @@ const CityMap = ({ selectedCity }) => {
           </>
         )}
       </MapContainer>
-    </div>
-  ) : (
-    <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-      <p className="text-gray-600">
-        No coordinates available for {selectedCity}.
-      </p>
+    );
+  };
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="flex items-center gap-2">
+        <MapPin className="w-6 h-6 text-blue-600" />
+        <h2 className="text-xl font-semibold">{selectedCity}, Brazil</h2>
+      </div>
+      <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
+        {renderContent()}
+      </div>
     </div>
   );
 };
