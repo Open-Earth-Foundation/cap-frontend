@@ -17,7 +17,6 @@ const App = () => {
         setError(null);
         try {
             const data = await fetchActions(city);
-            console.log("data", JSON.stringify(data)) // TODO NINA
             setData(data);
         } catch (err) {
             setError(`Failed to fetch data: ${err.message}`);
