@@ -1,6 +1,6 @@
 import React from "react";
 
-const ClimateActions = ({ ccraData }) => {
+const ClimateActions = ({ data }) => {
   const getImpactLevelClass = (level) => {
     const classes = {
       Low: "bg-blue-100 text-blue-800 border border-blue-800",
@@ -10,7 +10,7 @@ const ClimateActions = ({ ccraData }) => {
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
   };
 
-  const rankedData = ccraData.map((item, index) => ({
+  const rankedData = data.map((item, index) => ({
     ...item,
     rank: `${index + 1}°`
   }));
