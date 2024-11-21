@@ -11,6 +11,13 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+.tab-actions {
+  border-bottom: 1px solid #E6E7FF;
+  font-style: normal;
+  font-family: 'Open Sans', sans-serif;
+
+}
+
 /* Table Styles - keeping existing styles and adding new ones */
 .data-table {
   @apply w-full;
@@ -31,4 +38,31 @@
 
 .secondary-button {
   @apply px-4 py-4 bg-white text-[#2351DC] rounded-lg font-semibold uppercase tracking-wider;
+}
+
+li.react-tabs__tab {
+  display: flex;
+  align-items: center;
+}
+
+li.react-tabs__tab:focus:after {
+  display: none;
+}
+
+li.react-tabs__tab--selected, li.react-tabs__tab--selected::after {
+  border: none;
+  border-bottom: 2px solid #2351DC;
+  color: #2351DC;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  
+}
+
+.modify-rankings {
+  display: flex;
+  align-items: center;
+}
+
+.tab-text {
+  margin: 6px
 }

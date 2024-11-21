@@ -143,10 +143,10 @@ const CityMap = ({ selectedCity }) => {
   };
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex items-center gap-2">
+    <div className="w-full space-y-8">
+      <div className="flex items-center gap-4">
         <MapPin className="w-6 h-6 text-blue-600" />
-        <h2 className="text-xl font-semibold">{selectedCity}, Brazil</h2>
+        <h2 className="text-2xl font-bold text-[#232640] font-poppins">{selectedCity}, Brazil</h2>
       </div>
       <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
         {renderContent()}

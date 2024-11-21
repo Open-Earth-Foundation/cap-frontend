@@ -7,9 +7,14 @@ export default [
     action_name: "Electric Transportation",
     action_description:
       "Promote the use of electric buses in public transport to reduce carbon emissions",
-    target_year: 2025,
-    impact_level: "High",
-    estimated_cost: 50000000,
+    sector: "Transport",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "40-59%",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -19,9 +24,10 @@ export default [
     action_name: "Green Infrastructure",
     action_description:
       "Increase urban green areas to improve rainwater absorption and reduce flood risks",
-    target_year: 2026,
-    impact_level: "Medium",
-    estimated_cost: 20000000,
+    hazard: "Flood",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "<5 years"
   },
   {
     city_name: "São Paulo",
@@ -31,9 +37,14 @@ export default [
     action_name: "Solar Energy",
     action_description:
       "Install solar panels on government buildings to reduce fossil fuel dependency",
-    target_year: 2027,
-    impact_level: "High",
-    estimated_cost: 10000000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "40-59%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -43,9 +54,14 @@ export default [
     action_name: "Waste Management",
     action_description:
       "Implement organic waste recycling in municipal markets to reduce methane emissions",
-    target_year: 2028,
-    impact_level: "Medium",
-    estimated_cost: 1500000,
+    sector: "Waste",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "none",
+      waste: "20-39%"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -55,9 +71,10 @@ export default [
     action_name: "Drainage Channels",
     action_description:
       "Construct drainage channels to manage seasonal flood risks",
-    target_year: 2029,
-    impact_level: "Medium",
-    estimated_cost: 8000000,
+    hazard: "Flood",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -66,9 +83,14 @@ export default [
     action_id: 2004,
     action_name: "Energy Efficiency",
     action_description: "Replace public lighting with low-energy LED systems",
-    target_year: 2025,
-    impact_level: "Low",
-    estimated_cost: 500000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "20-39%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "Low",
+    timeline_for_implementation: "<5 years"
   },
   {
     city_name: "São Paulo",
@@ -78,9 +100,10 @@ export default [
     action_name: "Coastal Fortification",
     action_description:
       "Build barriers to protect coastal areas from erosion and rising sea levels",
-    target_year: 2026,
-    impact_level: "High",
-    estimated_cost: 75000000,
+    hazard: "Sea-level rise",
+    risk_potential: "High",
+    estimated_cost: "High",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -90,9 +113,14 @@ export default [
     action_name: "Urban Reforestation",
     action_description:
       "Plant trees in urban areas to capture CO₂ and reduce temperature",
-    target_year: 2029,
-    impact_level: "Medium",
-    estimated_cost: 3000000,
+    sector: "AFOLU",
+    ghg_reduction_potential: {
+      energy: "20-39%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "São Paulo",
@@ -101,9 +129,10 @@ export default [
     action_id: 3004,
     action_name: "Landslide Monitoring",
     action_description: "Install monitoring systems in landslide-prone areas",
-    target_year: 2030,
-    impact_level: "High",
-    estimated_cost: 12000000,
+    hazard: "Landslides",
+    risk_potential: "High",
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
   },
   {
     city_name: "São Paulo",
@@ -113,9 +142,14 @@ export default [
     action_name: "Biofuels",
     action_description:
       "Promote the use of biofuels in public transportation to reduce emissions",
-    target_year: 2026,
-    impact_level: "Medium",
-    estimated_cost: 9000000,
+    sector: "Transport",
+    ghg_reduction_potential: {
+      energy: "20-39%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Curitiba",
@@ -124,9 +158,14 @@ export default [
     action_id: 2007,
     action_name: "Enhanced Public Transport",
     action_description: "Implement rapid low-carbon transport systems",
-    target_year: 2025,
-    impact_level: "High",
-    estimated_cost: 60000000,
+    sector: "Transport",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "40-59%",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: "<5 years"
   },
   {
     city_name: "Curitiba",
@@ -135,9 +174,10 @@ export default [
     action_id: 3005,
     action_name: "Urban Green Spaces",
     action_description: "Expand green spaces to counter urban heat",
-    target_year: 2028,
-    impact_level: "Medium",
-    estimated_cost: 18000000,
+    hazard: "Heatwave",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Curitiba",
@@ -146,9 +186,14 @@ export default [
     action_id: 2008,
     action_name: "Wind Energy",
     action_description: "Install wind turbines in urban and rural areas",
-    target_year: 2032,
-    impact_level: "High",
-    estimated_cost: 45000000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "40-59%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
   },
   {
     city_name: "Curitiba",
@@ -158,9 +203,10 @@ export default [
     action_name: "Rainwater Reuse",
     action_description:
       "Encourage rainwater collection and use in residential areas",
-    target_year: 2025,
-    impact_level: "Medium",
-    estimated_cost: 7000000,
+    hazard: "Drought",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "<5 years"
   },
   {
     city_name: "Curitiba",
@@ -169,9 +215,14 @@ export default [
     action_id: 2009,
     action_name: "Plastic Recycling",
     action_description: "Increase recycling centers and reduce waste burning",
-    target_year: 2026,
-    impact_level: "Medium",
-    estimated_cost: 3000000,
+    sector: "Waste",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "none",
+      waste: "20-39%"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Curitiba",
@@ -181,9 +232,10 @@ export default [
     action_name: "Wetlands Restoration",
     action_description:
       "Protect and restore urban wetlands to enhance climate resilience",
-    target_year: 2031,
-    impact_level: "High",
-    estimated_cost: 10000000,
+    hazard: "Flood",
+    risk_potential: "High",
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
   },
   {
     city_name: "Curitiba",
@@ -192,9 +244,14 @@ export default [
     action_id: 2010,
     action_name: "Sustainable Buildings",
     action_description: "Promote the construction of low-energy buildings",
-    target_year: 2030,
-    impact_level: "High",
-    estimated_cost: 40000000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "40-59%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
   },
   {
     city_name: "Curitiba",
@@ -203,9 +260,10 @@ export default [
     action_id: 3008,
     action_name: "Early Warning Systems",
     action_description: "Develop alert systems for extreme climate events",
-    target_year: 2029,
-    impact_level: "Medium",
-    estimated_cost: 5000000,
+    hazard: "Drought",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Curitiba",
@@ -215,9 +273,14 @@ export default [
     action_name: "Urban Agriculture",
     action_description:
       "Encourage urban agriculture to reduce food transportation needs",
-    target_year: 2026,
-    impact_level: "Low",
-    estimated_cost: 1000000,
+    sector: "AFOLU",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "0-19%",
+      waste: "none"
+    },
+    estimated_cost: "Low",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Curitiba",
@@ -227,9 +290,10 @@ export default [
     action_name: "Climate Shelters",
     action_description:
       "Establish shelters in vulnerable areas to protect residents during extreme events",
-    target_year: 2027,
-    impact_level: "Medium",
-    estimated_cost: 6000000,
+    hazard: "Heatwave",
+    risk_potential: "Medium",
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -239,9 +303,14 @@ export default [
     action_name: "Residential Solar Energy",
     action_description:
       "Promote solar panels in households to reduce emissions",
-    target_year: 2026,
-    impact_level: "Medium",
-    estimated_cost: 15000000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "20-39%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -251,9 +320,10 @@ export default [
     action_name: "Mangrove Protection",
     action_description:
       "Restore and protect coastal mangroves to combat erosion",
-    target_year: 2027,
-    impact_level: "High",
-    estimated_cost: 20000000,
+    hazard: "Sea-level rise",
+    risk_potential: "High",
+    estimated_cost: "High",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -263,9 +333,14 @@ export default [
     action_name: "Non-Motorized Transport",
     action_description:
       "Encourage bicycle use through infrastructure development",
-    target_year: 2029,
-    impact_level: "Medium",
-    estimated_cost: 12000000,
+    sector: "Transport",
+    ghg_reduction_potential: {
+      energy: "none",
+      transportation: "20-39%",
+      waste: "none"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -275,9 +350,10 @@ export default [
     action_name: "Water Desalination",
     action_description:
       "Implement desalination technology to tackle water scarcity",
-    target_year: 2031,
-    impact_level: "High",
-    estimated_cost: 50000000,
+    hazard: "Drought",
+    risk_potential: "High",
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -286,9 +362,14 @@ export default [
     action_id: 2014,
     action_name: "Industrial Energy Efficiency",
     action_description: "Enhance energy efficiency in industrial plants",
-    target_year: 2027,
-    impact_level: "Medium",
-    estimated_cost: 30000000,
+    sector: "Stationary Energy",
+    ghg_reduction_potential: {
+      energy: "20-39%",
+      transportation: "none",
+      waste: "none"
+    },
+    estimated_cost: "Medium",
+    timeline_for_implementation: "5-10 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -298,9 +379,10 @@ export default [
     action_name: "Green Roofs",
     action_description:
       "Promote green roofs to reduce heat and improve insulation",
-    target_year: 2025,
-    impact_level: "Low",
-    estimated_cost: 2000000,
+    hazard: "Heatwave",
+    risk_potential: "Low",
+    estimated_cost: "Low",
+    timeline_for_implementation: "<5 years"
   },
   {
     city_name: "Rio de Janeiro",
@@ -310,8 +392,13 @@ export default [
     action_name: "Sustainable Public Transport",
     action_description:
       "Integrate electric vehicles into the public transport system",
-    target_year: 2030,
-    impact_level: "High",
-    estimated_cost: 45000000,
-  },
+    sector: "Transport",
+    ghg_reduction_potential: {
+      energy: "40-59%",
+      transportation: "40-59%",
+      waste: "none"
+    },
+    estimated_cost: "High",
+    timeline_for_implementation: ">10 years"
+  }
 ];

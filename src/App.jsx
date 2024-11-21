@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
+import CityMap from "./components/CityMap.jsx";
 import "./index.css";
 import climateActions from "./data/climateActions.js";
 
@@ -16,7 +17,7 @@ const App = () => {
     setError(null);
     try {
       const filteredData = climateActions.filter(
-        (action) => action.city_name == city,
+        (action) => action.city_name === city,
       );
       setCcraData(filteredData);
     } catch (err) {
@@ -52,15 +53,28 @@ const App = () => {
       <main className="flex-grow">
         {/* Always show Hero component with search */}
         <Hero onSearch={handleSearch} initialCity={selectedCity} />
-
+        {selectedCity && (
+          <div className="container mx-auto px-4 flex justify-center items-center gap-32 max-w-[1200px]">
+            <CityMap selectedCity={selectedCity} />
+          </div>
+        )}
         {/* Empty State */}
         {!selectedCity && (
-          <div className="container mx-auto px-4 py-10 text-center text-gray-500">
-            <p>
-              Start by selecting a city to view its top recommended climate
-              actions.
-            </p>
-          </div>
+      <div className="container mx-auto px-4 py-10 mb-20">
+        <div className="max-w-md mx-auto text-center">
+          <img 
+            src="/city-image.svg" 
+            alt="Cityscape" 
+            className="mx-auto mb-6 h-32 w-auto"
+          />
+          <h2 className="text-xl font-semibold mb-2">
+            Select a city to explore climate actions
+          </h2>
+          <p className="text-gray-500">
+            Discover top actions tailored to the city's climate needs.
+          </p>
+        </div>
+      </div>
         )}
 
         {/* Show ClimateActions if city is selected */}
@@ -68,7 +82,6 @@ const App = () => {
           <div className="container mx-auto px-4 py-10 text-gray-500">
             <ClimateActions
               selectedCity={selectedCity}
-              ccraData={ccraData}
               loading={loading}
               error={error}
               onBack={handleBack}
