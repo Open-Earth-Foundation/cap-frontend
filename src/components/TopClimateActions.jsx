@@ -1,6 +1,7 @@
 import React from "react";
 
 const TopClimateActions = ({ actions, type }) => {
+  // console.log("actions", JSON.stringify(actions, null, 2)) // TODO NINA
   // Get top 3 actions of the specified type
   const topActions = actions
     .filter((action) => action.action_type === type)

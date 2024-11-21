@@ -1,68 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, {useState} from "react";
 import Select from "react-select";
-import climateActions from "../data/climateActions.js";
 
-const CityDropdown = ({ onCityChange, styles }) => {
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+const CityDropdown = ({onCityChange, styles}) => {
+    const [cities, setCities] = useState([
+        {value: 'sao paulo', label: "São Paulo"},
+        {value: 'curitiba', label: "Curitiba"},
+        {value: 'rio de janeiro', label: "Rio de Janeiro"}]);
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      //console.log(climateActions)
-      try {
-        const uniqueCities = new Set();
-        const cityOptions = climateActions
-          .filter((city) => {
-            if (!uniqueCities.has(city.city_name)) {
-              uniqueCities.add(city.city_name);
-              return true;
-            }
-            return false;
-          })
-          .map((city) => ({
-            value: city.city_name,
-            label: `${city.city_name} - ${city.region}`,
-          }));
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        setCities(cityOptions);
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
+    // useEffect(() => {
+    //   const fetchCities = async () => {
+    //     //console.log(climateActions)
+    //     try {
+    //       const uniqueCities = new Set();
+    //       const cityOptions = climateActions
+    //         .filter((city) => {
+    //           if (!uniqueCities.has(city.city_name)) {
+    //             uniqueCities.add(city.city_name);
+    //             return true;
+    //           }
+    //           return false;
+    //         })
+    //         .map((city) => ({
+    //           value: city.city_name,
+    //           label: `${city.city_name} - ${city.region}`,
+    //         }));
+    //
+    //       setCities(cityOptions);
+    //     } catch (error) {
+    //       console.error("Error fetching cities:", error);
+    //       setError(error.message);
+    //     } finally {
+    //       setIsLoading(false);
+    //     }
+    //   };
+    //
+    //   fetchCities();
+    // }, []);
+
+    const handleCityChange = (selectedOption) => {
+        setSelectedCity(selectedOption);
+        if (selectedOption) {
+            onCityChange(selectedOption.value);
+        }
     };
 
-    fetchCities();
-  }, []);
+    if (error)
+        return (
+            <div className="text-red-500 text-sm">Error loading cities: {error}</div>
+        );
 
-  const handleCityChange = (selectedOption) => {
-    setSelectedCity(selectedOption);
-    if (selectedOption) {
-      onCityChange(selectedOption.value);
-    }
-  };
-
-  if (error)
     return (
-      <div className="text-red-500 text-sm">Error loading cities: {error}</div>
+        <Select
+            value={selectedCity}
+            onChange={handleCityChange}
+            options={cities}
+            placeholder="Search for a city..."
+            isClearable
+            isLoading={isLoading}
+            styles={styles}
+            className="city-dropdown"
+            classNamePrefix="city-select"
+        />
     );
-
-  return (
-    <Select
-      value={selectedCity}
-      onChange={handleCityChange}
-      options={cities}
-      placeholder="Search for a city..."
-      isClearable
-      isLoading={isLoading}
-      styles={styles}
-      className="city-dropdown"
-      classNamePrefix="city-select"
-    />
-  );
 };
 
 export default CityDropdown;

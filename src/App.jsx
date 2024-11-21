@@ -1,25 +1,25 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
 import CityMap from "./components/CityMap.jsx";
 import "./index.css";
-import climateActions from "./data/climateActions.js";
+import {fetchActions} from "./utils/fetchActions.js";
+
 
 const App = () => {
     const [selectedCity, setSelectedCity] = useState("");
-    const [ccraData, setCcraData] = useState([]);
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchCcraData = async (city) => {
+    const fetchData = async (city) => {
         if (!city) return;
         setLoading(true);
         setError(null);
         try {
-            const filteredData = climateActions.filter(
-                (action) => action.city_name === city,
-            );
-            setCcraData(filteredData);
+            const data = await fetchActions(city);
+            // console.log("data", JSON.stringify(data, null, 2)) // TODO NINA
+            setData(data);
         } catch (err) {
             setError(`Failed to fetch data: ${err.message}`);
         } finally {
@@ -30,13 +30,13 @@ const App = () => {
     const handleSearch = (searchTerm) => {
         setSelectedCity(searchTerm);
         if (searchTerm) {
-            fetchCcraData(searchTerm);
+            fetchData(searchTerm);
         }
     };
 
     const handleBack = () => {
         setSelectedCity("");
-        setCcraData([]);
+        setData([]);
         setError(null);
     };
 
@@ -82,6 +82,7 @@ const App = () => {
                     <div className="container mx-auto px-4 py-10 text-gray-500">
                         <ClimateActions
                             selectedCity={selectedCity}
+                            data={data}
                             loading={loading}
                             error={error}
                             onBack={handleBack}

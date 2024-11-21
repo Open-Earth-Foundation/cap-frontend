@@ -1,14 +1,12 @@
-import {React, useState} from "react";
+import { React, useState, useEffect } from "react";
 import './ClimateActions.css';
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import climateActions from "../data/climateActions.js";
-import {adaptationColumns, mitigationColumns} from "./columns";
-import {MRT_TableContainer, useMaterialReactTable,} from "material-react-table";
+import { adaptationColumns, mitigationColumns } from "./columns";
+import { MRT_TableContainer, useMaterialReactTable } from "material-react-table";
 import TopClimateActions from "./TopClimateActions.jsx";
-import {MdOutlineFlood, MdOutlineLowPriority} from "react-icons/md";
-import {FiArrowDownRight} from "react-icons/fi";
-
+import { MdOutlineFlood, MdOutlineLowPriority } from "react-icons/md";
+import { FiArrowDownRight } from "react-icons/fi";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -19,55 +17,60 @@ const getImpactLevelClass = (level) => {
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
 
-const createTable = (type, columns, enableRowOrdering) => {
-    const filterActions = climateActions.filter(
-        (action) => action.action_type === type,
-    );
+const ClimateActions = ({
+    selectedCity,
+    data,
+    loading,
+    error,
+    onBack
+}) => {
+    const [enableRowOrderingMitigation, setEnableRowOrderingMitigation] = useState(false);
+    const [enableRowOrderingAdaptation, setEnableRowOrderingAdaptation] = useState(false);
+    const [rankedDataMitigation, setRankedDataMitigation] = useState([]);
+    const [rankedDataAdaptation, setRankedDataAdaptation] = useState([]);
 
-    const dataWithRank = filterActions.map((action, index) => ({
-        ...action,
-        id: index + 1,
-    }));
+    useEffect(() => {
+        const filterActions = (type) => data.filter((action) => action.action_type === type);
+        const addRank = (actions) => actions.map((action, index) => ({ ...action, id: index + 1 }));
 
-    const [data, setData] = useState(() => dataWithRank);
+        setRankedDataMitigation(addRank(filterActions("Mitigation")));
+        setRankedDataAdaptation(addRank(filterActions("Adaptation")));
+    }, [data]);
 
-    return useMaterialReactTable({
-        autoResetPageIndex: false,
-        columns,
-        data,
-        enableRowOrdering,
-        enableSorting: false,
-        muiRowDragHandleProps: ({table}) => ({
-            onDragEnd: () => {
-                const {draggingRow, hoveredRow} = table.getState();
-                if (hoveredRow && draggingRow) {
-                    data.splice(
-                        hoveredRow.index,
-                        0,
-                        data.splice(draggingRow.index, 1)[0],
-                    );
-                    setData([...data]);
-                }
-            },
-        }),
-    });
-};
-
-const ClimateActions = () => {
-    const [enableRowOrderingMitigation, setEnableRowOrderingMitigation] =
-        useState(false);
-    const [enableRowOrderingAdaptation, setEnableRowOrderingAdaptation] =
-        useState(false);
+    const createTable = (columns, enableRowOrdering, rankedData, setRankedData) => {
+        return useMaterialReactTable({
+            autoResetPageIndex: false,
+            columns,
+            data: rankedData,
+            enableRowOrdering,
+            enableSorting: false,
+            muiRowDragHandleProps: ({ table }) => ({
+                onDragEnd: () => {
+                    const { draggingRow, hoveredRow } = table.getState();
+                    if (hoveredRow && draggingRow) {
+                        rankedData.splice(
+                            hoveredRow.index,
+                            0,
+                            rankedData.splice(draggingRow.index, 1)[0],
+                        );
+                        setRankedData([...rankedData]);
+                    }
+                },
+            }),
+        });
+    };
 
     const table1 = createTable(
-        "Mitigation",
         mitigationColumns,
         enableRowOrderingMitigation,
+        rankedDataMitigation,
+        setRankedDataMitigation,
     );
     const table2 = createTable(
-        "Adaptation",
         adaptationColumns,
         enableRowOrderingAdaptation,
+        rankedDataAdaptation,
+        setRankedDataAdaptation,
     );
 
     return (
@@ -76,7 +79,6 @@ const ClimateActions = () => {
                 Climate actions prioritization for your city
             </h1>
             <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-                {" "}
                 Discover the ranking of your city's climate actions according to their
                 effectiveness, costs and benefits, helping you to prioritize those with
                 the greatest potential for impact.
@@ -84,20 +86,19 @@ const ClimateActions = () => {
             <Tabs>
                 <TabList className="flex justify-left mb-12 my-8 tab-actions">
                     <Tab>
-                        <FiArrowDownRight/>
+                        <FiArrowDownRight />
                         <span className="tab-text">Mitigation</span>
                     </Tab>
                     <Tab>
                         <div>
-                            <MdOutlineFlood/>
+                            <MdOutlineFlood />
                         </div>
                         <span className="tab-text">Adaptation</span>
                     </Tab>
                 </TabList>
                 <TabPanel>
                     <div className="rounded-lg overflow-hidden">
-                        <TopClimateActions actions={climateActions} type="Mitigation"/>
-                        {/* Botón para alternar la funcionalidad de mover filas */}
+                        <TopClimateActions actions={data} type="Mitigation" />
                         <div className="flex justify-between mt-12 mb-8">
                             <h2 className="text-2xl font-normal text-gray-900 font-poppins">
                                 Ranking list of climate actions
@@ -107,18 +108,17 @@ const ClimateActions = () => {
                                 onClick={() => setEnableRowOrderingMitigation((prev) => !prev)}
                             >
                                 <div>
-                                    <MdOutlineLowPriority/>
+                                    <MdOutlineLowPriority />
                                 </div>
                                 MODIFY RANKINGS
                             </button>
                         </div>
-                        <MRT_TableContainer table={table1}/>
+                        <MRT_TableContainer table={table1} />
                     </div>
                 </TabPanel>
                 <TabPanel>
                     <div className="rounded-lg overflow-hidden">
-                        <TopClimateActions actions={climateActions} type="Adaptation"/>
-                        {/* Botón para alternar la funcionalidad de mover filas */}
+                        <TopClimateActions actions={data} type="Adaptation" />
                         <div className="flex justify-between mt-12 ">
                             <h2 className="text-lg font-bold text-[#232640]">
                                 Ranking list of climate actions
@@ -130,7 +130,7 @@ const ClimateActions = () => {
                                 MODIFY RANKINGS
                             </button>
                         </div>
-                        <MRT_TableContainer table={table2}/>
+                        <MRT_TableContainer table={table2} />
                     </div>
                 </TabPanel>
             </Tabs>
