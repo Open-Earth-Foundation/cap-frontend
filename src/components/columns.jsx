@@ -1,3 +1,5 @@
+import {getReductionPotential} from "../utils/helpers.js";
+
 const getImpactLevelClass = (level) => {
   const classes = {
     Low: "bg-blue-100 text-blue-800 border border-blue-800",
@@ -31,9 +33,14 @@ export const mitigationColumns = [
     size: 150,
   },
   {
-    accessorKey: "ghg_reduction_potential.energy",
+    accessorKey: "ghg_reduction_potential",
     header: "Reduction Potential",
     size: 150,
+    Cell: ({ cell }) => (
+    <div>
+      {getReductionPotential(cell.row.original)}
+    </div>
+  ),
   },
   {
     accessorKey: "estimated_cost",

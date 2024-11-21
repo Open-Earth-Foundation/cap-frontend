@@ -29,6 +29,7 @@ const ClimateActions = ({
     const [rankedDataMitigation, setRankedDataMitigation] = useState([]);
     const [rankedDataAdaptation, setRankedDataAdaptation] = useState([]);
 
+
     useEffect(() => {
         const filterActions = (type) => data.filter((action) => action.action_type === type);
         const addRank = (actions) => actions.map((action, index) => ({ ...action, id: index + 1 }));
