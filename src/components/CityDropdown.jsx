@@ -1,11 +1,9 @@
 import React, {useState} from "react";
 import Select from "react-select";
+import {CITIES} from "./constants.js";
 
 const CityDropdown = ({onCityChange, styles}) => {
-    const [cities, setCities] = useState([
-        {value: 'sao paulo', label: "São Paulo"},
-        {value: 'curitiba', label: "Curitiba"},
-        {value: 'rio de janeiro', label: "Rio de Janeiro"}]);
+    const [cities, setCities] = useState(CITIES);
 
     const [selectedCity, setSelectedCity] = useState(null);
     const [isLoading, setIsLoading] = useState(true);

@@ -8,6 +8,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin } from "lucide-react";
+import {toTitleCase} from "../utils/helpers.js";
 
 // Custom hook to fit bounds
 const FitBoundsToPolygon = ({ polygon }) => {
@@ -95,7 +96,7 @@ const CityMap = ({ selectedCity }) => {
     if (loading) {
       return (
         <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-          <p className="text-gray-600">Loading map for {selectedCity}...</p>
+          <p className="text-gray-600">Loading map for {toTitleCase(selectedCity)}...</p>
         </div>
       );
     }
@@ -112,7 +113,7 @@ const CityMap = ({ selectedCity }) => {
       return (
         <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
           <p className="text-gray-600">
-            No coordinates available for {selectedCity}.
+            No coordinates available for {toTitleCase(selectedCity)}.
           </p>
         </div>
       );
@@ -152,10 +153,7 @@ const CityMap = ({ selectedCity }) => {
     <div className="w-full space-y-8">
       <div className="flex items-center gap-4">
         <MapPin className="w-6 h-6 text-blue-600" />
-        <h2 className="text-2xl font-bold text-[#232640]">
-          {selectedCity}, Brazil
-        </h2>
-        
+        <h2 className="text-2xl font-bold text-[#232640] font-poppins">{toTitleCase(selectedCity)}, Brazil</h2>
       </div>
       <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
         {renderContent()}

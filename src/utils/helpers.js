@@ -23,3 +23,8 @@ export function getReductionPotential(action) {
     }, null, 2)) // TODO NINA
     return action[fullField]
 }
+
+export const toTitleCase = str => str.replace(
+    /\w\S*/g,
+    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+);
