@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Polygon, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polygon,
+  useMap,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin } from "lucide-react";
 
@@ -39,7 +45,7 @@ const CityMap = ({ selectedCity }) => {
     const fetchCityData = async () => {
       try {
         const apiUrl = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(
-          selectedCity
+          selectedCity,
         )}&format=json&polygon_geojson=1&addressdetails=1`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -146,7 +152,10 @@ const CityMap = ({ selectedCity }) => {
     <div className="w-full space-y-8">
       <div className="flex items-center gap-4">
         <MapPin className="w-6 h-6 text-blue-600" />
-        <h2 className="text-2xl font-bold text-[#232640] font-poppins">{selectedCity}, Brazil</h2>
+        <h2 className="text-2xl font-bold text-[#232640]">
+          {selectedCity}, Brazil
+        </h2>
+        
       </div>
       <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
         {renderContent()}

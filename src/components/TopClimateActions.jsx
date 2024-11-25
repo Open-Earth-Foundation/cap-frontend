@@ -70,7 +70,7 @@ const TopClimateActions = ({actions, type}) => {
                             <h2 className="text-xl font-semibold text-gray-900 font-poppins">
                                 {action.action_name}
                             </h2>
-                            <p className="text-gray-600 text-sm line-clamp-2 font-opensans">
+                            <p className="text-gray-600 text-md line-clamp-2 font-opensans">
                                 {action.action_description}
                             </p>
                         </div>
@@ -83,7 +83,7 @@ const TopClimateActions = ({actions, type}) => {
                             <div className="flex justify-between items-center pt-2">
                                 <span className="text-gray-600 ">Reduction potential</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
-                    <p className="text-gray-600 text-sm line-clamp-2 font-opensans">
+                    <p className="text-gray-600 text-md line-clamp-2 font-bold font-opensans">
                                 {getReductionPotential(action)}
                             </p>
                 {/*</span>*/}
@@ -117,7 +117,7 @@ const TopClimateActions = ({actions, type}) => {
                             </div>
                         </div>
 
-                        <button onClick={() => setSelectedAction(action)}>
+                        <button onClick={() => setSelectedAction(action)} className="button-link">
                             See more details
                         </button>
                     </div>

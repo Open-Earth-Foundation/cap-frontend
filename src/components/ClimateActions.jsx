@@ -7,6 +7,9 @@ import { MRT_TableContainer, useMaterialReactTable } from "material-react-table"
 import TopClimateActions from "./TopClimateActions.jsx";
 import { MdOutlineFlood, MdOutlineLowPriority } from "react-icons/md";
 import { FiArrowDownRight } from "react-icons/fi";
+import { CSVLink } from "react-csv";
+import { FiDownload } from "react-icons/fi";
+
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -74,6 +77,20 @@ const ClimateActions = ({
         setRankedDataAdaptation,
     );
 
+     // Prepare CSV data for export
+      const prepareCsvData = (tableData, columns) => {
+        return tableData.map(row => 
+          columns.reduce((acc, column) => {
+            const key = column.accessorKey;
+            acc[column.header] = row[key];
+            return acc;
+          }, {})
+        );
+      };
+
+      const mitigationCsvData = prepareCsvData(rankedDataMitigation, mitigationColumns);
+      const adaptationCsvData = prepareCsvData(rankedDataAdaptation, adaptationColumns);
+
     return (
         <div className="max-w-screen-xl mx-auto p-12">
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
@@ -97,46 +114,69 @@ const ClimateActions = ({
                         <span className="tab-text">Adaptation</span>
                     </Tab>
                 </TabList>
-                <TabPanel>
-                    <div className="rounded-lg overflow-hidden">
-                        <TopClimateActions actions={data} type="Mitigation" />
-                        <div className="flex justify-between mt-12 mb-8">
-                            <h2 className="text-2xl font-normal text-gray-900 font-poppins">
-                                Ranking list of climate actions
-                            </h2>
-                            <button
-                                className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
-                                onClick={() => setEnableRowOrderingMitigation((prev) => !prev)}
-                            >
-                                <div>
-                                    <MdOutlineLowPriority />
-                                </div>
-                                MODIFY RANKINGS
-                            </button>
-                        </div>
-                        <MRT_TableContainer table={table1} />
-                    </div>
-                </TabPanel>
-                <TabPanel>
-                    <div className="rounded-lg overflow-hidden">
-                        <TopClimateActions actions={data} type="Adaptation" />
-                        <div className="flex justify-between mt-12 ">
-                            <h2 className="text-lg font-bold text-[#232640]">
-                                Ranking list of climate actions
-                            </h2>
-                            <button
-                                className="px-4 py-2 rounded border border-solid border-[#E8EAFB] font-semibold color-[#4B4C63]"
-                                onClick={() => setEnableRowOrderingAdaptation((prev) => !prev)}
-                            >
-                                MODIFY RANKINGS
-                            </button>
-                        </div>
-                        <MRT_TableContainer table={table2} />
-                    </div>
-                </TabPanel>
-            </Tabs>
+<TabPanel>
+      <div className="rounded-lg overflow-hidden">
+        <TopClimateActions actions={data} type="Mitigation" />
+        <div className="flex justify-between mt-12 mb-8">
+          <h2 className="text-2xl font-normal text-gray-900 font-poppins">
+            Ranking list of climate actions
+          </h2>
+          <div className="flex gap-4">
+            <button
+              className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
+              onClick={() => setEnableRowOrderingMitigation((prev) => !prev)}
+            >
+              <div>
+                <MdOutlineLowPriority />
+              </div>
+              MODIFY RANKINGS
+            </button>
+            <CSVLink
+              data={mitigationCsvData}
+              filename={`${selectedCity}_mitigation_actions.csv`}
+              className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
+            >
+                <FiDownload />
+              DOWNLOAD CSV
+            </CSVLink>
+          </div>
         </div>
-    );
+        <MRT_TableContainer table={table1} />
+      </div>
+    </TabPanel>
+    <TabPanel>
+      <div className="rounded-lg overflow-hidden">
+        <TopClimateActions actions={data} type="Adaptation" />
+        <div className="flex justify-between mt-12 mb-8">
+          <h2 className="text-2xl font-normal text-gray-900 font-poppins">
+            Ranking list of climate actions
+          </h2>
+          <div className="flex gap-4">
+            <button
+              className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
+              onClick={() => setEnableRowOrderingAdaptation((prev) => !prev)}
+            >
+              <div>
+                <MdOutlineLowPriority />
+              </div>
+              MODIFY RANKINGS
+            </button>
+            <CSVLink
+              data={adaptationCsvData}
+              filename={`${selectedCity}_adaptation_actions.csv`}
+              className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
+            >
+            <FiDownload />
+              DOWNLOAD CSV
+            </CSVLink>
+          </div>
+        </div>
+        <MRT_TableContainer table={table2} />
+      </div>
+    </TabPanel>
+  </Tabs>
+</div>
+);
 };
 
 export default ClimateActions;

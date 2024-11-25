@@ -63,6 +63,18 @@ li.react-tabs__tab--selected, li.react-tabs__tab--selected::after {
   align-items: center;
 }
 
+.download-table {
+  display: flex;
+  align-items: center;
+}
+
 .tab-text {
   margin: 6px
+}
+
+.button-link {
+  color: #2351DC;
+  text-decoration: underline;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
 }

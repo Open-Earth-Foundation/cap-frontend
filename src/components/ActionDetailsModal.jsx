@@ -1,59 +1,134 @@
 import React from 'react';
-import {getReductionPotential} from "../utils/helpers.js";
+import { getReductionPotential } from "../utils/helpers.js";
+import { X } from 'lucide-react';
 
-const ActionDetailsModal = ({action, onClose}) => {
-    return (<>
-            {!!action &&
-                <div className="fixed z-10 inset-0 overflow-y-auto">
-                    <div
-                        className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"
-                             onClick={onClose}/>
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen"
-                              aria-hidden="true">&#8203;</span>
-                        <div
-                            className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                            <div className="sm:flex sm:items-start">
-                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900">{action.action_name}</h3>
-                                    <div className="mt-2">
-                                        <p className="text-sm text-gray-500">{action.action_description}</p>
-                                    </div>
-                                    <div className="mt-4 grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">Sector/Hazard:</p>
-                                            <p className="text-sm text-gray-500">{action.sector || action.hazard}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">Estimated Cost:</p>
-                                            <p className="text-sm text-gray-500">{action.estimated_cost}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">Implementation Time:</p>
-                                            <p className="text-sm text-gray-500">{action.timeline_for_implementation}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">Reduction Potential:</p>
-                                            <p className="text-sm text-gray-500">{getReductionPotential(action)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                                <button
-                                    type="button"
-                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                    onClick={onClose}
-                                >
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+const ActionDetailsModal = ({ action, onClose }) => {
+  if (!action) return null;
+
+  // Helper function to render progress bars based on reduction potential
+  const renderReductionBars = () => {
+    const potential = getReductionPotential(action).toLowerCase();
+    const bars = potential === 'high' ? 3 : potential === 'medium' ? 2 : 1;
+
+    return (
+      <div className="flex justify-between mb-8">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`w-[184px] h-[5px] rounded-2xl ${
+              index < bars ? 'bg-[#F23D33]' : 'bg-gray-200'
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="fixed z-10 inset-0 overflow-y-auto">
+      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        {/* Overlay */}
+        <div 
+          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+          aria-hidden="true"
+          onClick={onClose}
+        />
+
+        {/* Modal */}
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full font-poppins">
+          {/* Header */}
+          <div className="flex justify-between items-center px-12 pt-8 pb-6">
+            <h3 className="text-xl font-bold text-[#00001F] font-poppins">
+              Climate action details
+            </h3>
+            <button onClick={onClose} className="p-1">
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="border-b-2 border-[#E8EAFB]" />
+
+          {/* Content */}
+          <div className="px-12 py-8">
+            {/* Title and Description */}
+            <h2 className="text-lg font-bold text-[#232640] mb-4 font-poppins">
+              {action.action_name}
+            </h2>
+            <p className="text-md text-[#4B4C63] mb-8 font-opensans">
+              {action.action_description}
+            </p>
+
+            {/* Divider */}
+            <div className="border-b border-[#E4E4E4] mb-6" />
+
+            {/* Reduction Potential Bars */}
+            {renderReductionBars()}
+
+            {/* Stats Grid */}
+            <div className="space-y-4 mb-6 font-poppins font-bold">
+              <div className="flex justify-between items-center">
+                <span className="text-md text-[#4B4C63]">Reduction potential</span>
+                <span className="text-md text-[#F23D33]">
+                  {getReductionPotential(action)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-md text-[#4B4C63]">Sector</span>
+                <span className="text-base text-[#4B4C63]">
+                  {action.sector || action.hazard}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-md text-[#4B4C63]">Estimated cost</span>
+                <span className="text-base text-[#4B4C63]">
+                  {action.estimated_cost}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-md text-[#4B4C63]">Implementation time</span>
+                <span className="text-base text-[#4B4C63]">
+                  {action.timeline_for_implementation}
+                </span>
+              </div>
+            </div>
+
+              {/* Divider */}
+              <div className="border-b border-[#E4E4E4] mb-6" />
+
+            {/* Additional sections if available in your data */}
+            {action.impacts && (
+              <>
+                <div className="border-b border-[#E4E4E4] mb-8" />
+                <div className="mb-8">
+                  <h3 className="text-lg font-medium text-[#232640] mb-3">Impacts</h3>
+                  <p className="text-sm text-[#4B4C63]">{action.impacts}</p>
                 </div>
-            }</>
-    )
+              </>
+            )}
 
+            {action.co_benefits && (
+              <>
+                <div className="mb-8">
+                  <h3 className="text-lg font-medium text-[#232640] mb-3">Co-benefits</h3>
+                  <p className="text-sm text-[#4B4C63]">{action.co_benefits}</p>
+                </div>
+              </>
+            )}
+
+            {action.equity_considerations && (
+              <div>
+                <h3 className="text-lg font-medium text-[#232640] mb-3">
+                  Equity and inclusion considerations
+                </h3>
+                <p className="text-sm text-[#4B4C63]">{action.equity_considerations}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ActionDetailsModal;
