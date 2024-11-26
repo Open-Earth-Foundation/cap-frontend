@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
-import {getReductionPotential} from "../utils/helpers.js";
+import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
 
 
 const TopClimateActions = ({actions, type}) => {
@@ -43,10 +43,11 @@ const TopClimateActions = ({actions, type}) => {
         return bars;
     };
 
-
+    console.log("type", JSON.stringify(type, null, 2)) // TODO NINA
     return (
         <div className="space-y-6">
-            <ActionDetailsModal action={selectedAction} onClose={() => setSelectedAction(null)}/>
+            <ActionDetailsModal type={type.toLowerCase()} action={selectedAction}
+                                onClose={() => setSelectedAction(null)}/>
             <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                 Top {type.toLowerCase()} climate actions
             </h1>
@@ -81,12 +82,13 @@ const TopClimateActions = ({actions, type}) => {
                                 {getProgressBars(action.estimated_cost)}
                             </div>
                             <div className="flex justify-between items-center pt-2">
-                                <span className="text-gray-600 ">Reduction potential</span>
+                                <span
+                                    className="text-gray-600 ">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
-                    <p className="text-gray-600 text-md line-clamp-2 font-bold font-opensans">
-                                {getReductionPotential(action)}
-                            </p>
-                {/*</span>*/}
+                                <p className="text-gray-600 text-sm line-clamp-2 font-opensans">
+                                    {isAdaptation(type) ? action.adaptation_potential : getReductionPotential(action)}
+                                </p>
+                                {/*</span>*/}
                             </div>
                         </div>
 

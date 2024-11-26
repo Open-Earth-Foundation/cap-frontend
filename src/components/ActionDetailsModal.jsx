@@ -1,6 +1,5 @@
 import React from 'react';
-import { getReductionPotential } from "../utils/helpers.js";
-import { X } from 'lucide-react';
+import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
 
 const ActionDetailsModal = ({ action, onClose }) => {
   if (!action) return null;
@@ -68,9 +67,9 @@ const ActionDetailsModal = ({ action, onClose }) => {
             {/* Stats Grid */}
             <div className="space-y-4 mb-6 font-poppins font-bold">
               <div className="flex justify-between items-center">
-                <span className="text-md text-[#4B4C63]">Reduction potential</span>
+                <span className="text-md text-[#4B4C63]">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
                 <span className="text-md text-[#F23D33]">
-                  {getReductionPotential(action)}
+                  {isAdaptation(type) ? action.adaptation_potential : getReductionPotential(action)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
