@@ -3,7 +3,7 @@ import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
 import CityMap from "./components/CityMap.jsx";
 import "./index.css";
-import {fetchActions} from "./utils/fetchActions.js";
+import {readFile} from "./utils/readWrite.js";
 
 
 const App = () => {
@@ -17,7 +17,7 @@ const App = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await fetchActions(city);
+            const data = await readFile(city);
             setData(data);
         } catch (err) {
             setError(`Failed to fetch data: ${err.message}`);

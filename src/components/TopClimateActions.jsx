@@ -7,7 +7,8 @@ const TopClimateActions = ({actions, type}) => {
     const [selectedAction, setSelectedAction] = useState()
     // Get top 3 actions of the specified type
     const topActions = actions
-        .filter((action) => action.action_type === type)
+        .filter((action) => action.action.ActionType.toLowerCase() === type)
+        .sort((a, b) => a.actionPriority - b.actionPriority)
         .slice(0, 3);
 
     const getReductionColor = (level) => {
@@ -43,20 +44,19 @@ const TopClimateActions = ({actions, type}) => {
         return bars;
     };
 
-    console.log("type", JSON.stringify(type, null, 2)) // TODO NINA
     return (
         <div className="space-y-6">
-            <ActionDetailsModal type={type.toLowerCase()} action={selectedAction}
+            <ActionDetailsModal type={type} cityAction={selectedAction}
                                 onClose={() => setSelectedAction(null)}/>
             <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                 Top {type.toLowerCase()} climate actions
             </h1>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {topActions.map((action, index) => (
+                {topActions.map(({action}, index) => (
                     /* Mitigation Card */
                     <div
-                        key={action.action_id}
+                        key={action.ActionID}
                         className="p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans"
                     >
                         {/*Index*/}
@@ -69,24 +69,24 @@ const TopClimateActions = ({actions, type}) => {
                         {/* Description */}
                         <div className="space-y-2">
                             <h2 className="text-xl font-semibold text-gray-900 font-poppins">
-                                {action.action_name}
+                                {action.ActionName}
                             </h2>
                             <p className="text-gray-600 text-md line-clamp-2 font-opensans">
-                                {action.action_description}
+                                {action.Description}
                             </p>
                         </div>
 
                         {/* Progress Bar */}
                         <div className="space-y-1">
                             <div className="flex gap-2 ">
-                                {getProgressBars(action.estimated_cost)}
+                                {getProgressBars(action.CostInvestmentNeeded)}
                             </div>
                             <div className="flex justify-between items-center pt-2">
                                 <span
                                     className="text-gray-600 ">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
                                 <p className="text-gray-600 text-sm line-clamp-2 font-opensans">
-                                    {isAdaptation(type) ? action.adaptation_potential : getReductionPotential(action)}
+                                    {isAdaptation(type) ? action.AdaptationEffectiveness : getReductionPotential(action)}
                                 </p>
                                 {/*</span>*/}
                             </div>
@@ -97,24 +97,24 @@ const TopClimateActions = ({actions, type}) => {
                         <div className="space-y-3">
                             <div className="flex justify-between">
                 <span className="text-gray-600">
-                  {action.action_type === "Mitigation" ? "Sector" : "Hazard"}
+                  {isAdaptation(action.ActionType) ? "Hazard" : "Sector"}
                 </span>
                                 <span className="text-gray-600 font-semibold">
-                  {action.sector || action.hazard}
+                  {action.Sector || action.Hazard}
                 </span>
                             </div>
 
                             <div className="flex justify-between ">
                                 <span className="text-gray-600">Estimated cost</span>
                                 <span className="text-gray-600 font-semibold">
-                  {action.estimated_cost}
+                  {action.CostInvestmentNeeded}
                 </span>
                             </div>
 
                             <div className="flex justify-between">
                                 <span className="text-gray-600">Implementation time</span>
                                 <span className="text-gray-600 font-semibold">
-                  {action.timeline_for_implementation}
+                  {action.TimelineForImplementation}
                 </span>
                             </div>
                         </div>
