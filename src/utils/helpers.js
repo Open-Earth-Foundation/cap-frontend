@@ -1,32 +1,41 @@
+export    const ADAPTATION = 'adaptation';
+export    const MITIGATION = 'mitigation';
+
 export function getReductionPotential(action) {
-    let field;
-    if (!action.sector) return ''
-    switch (action.sector) {
-        case 'Stationary Energy':
-            field = 'energy';
-            break;
+    // if (!action.Sector) return ''
+    // let field;
+    // switch (action.Sector) {
+    //     case 'Stationary Energy':
+    //         field = 'energy';
+    //         break;
+    //
+    //     case "Transport":
+    //         field = 'transportation';
+    //         break;
+    //
+    //     case "Waste":
+    //         field = 'waste'
+    //         break;
+    // }
+    // const fullField = `GHGReductionPotential.${field}`
 
-        case "Transport":
-            field = 'transportation';
-            break;
-
-        case "Waste":
-            field = 'waste'
-            break;
-    }
-    const fullField = `ghg_reduction_potential.${field}`
-    console.log("{field, fullField}", JSON.stringify({
-        sector: action.sector,
-        field,
-        fullField,
-        out: action[fullField]
-    }, null, 2)) // TODO NINA
-    return action[fullField]
+    return Object.values(action.GHGReductionPotential).find((value) => {
+        return value !== 'none'
+    })
 }
 
 export const toTitleCase = str => str.replace(
     /\w\S*/g,
     text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
 );
-
-export const isAdaptation = str => str.toLowerCase() === 'adaptation';
+export const isAdaptation = type => type.toLowerCase() === ADAPTATION.toLowerCase();
+//Prepare CSV data for export
+export const prepareCsvData = (tableData, columns) => {
+    return tableData.map(row =>
+        columns.reduce((acc, column) => {
+            const key = column.accessorKey;
+            acc[column.header] = row[key];
+            return acc;
+        }, {})
+    );
+};

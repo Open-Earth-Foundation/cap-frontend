@@ -1,9 +1,10 @@
 import React from 'react';
 import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
+import { FiX } from 'react-icons/fi';
 
-const ActionDetailsModal = ({ action, onClose }) => {
-  if (!action) return null;
-
+const ActionDetailsModal = ({ cityAction, onClose }) => {
+  if (!cityAction) return null;
+const action = cityAction;
   // Helper function to render progress bars based on reduction potential
   const renderReductionBars = () => {
     const potential = getReductionPotential(action).toLowerCase();
@@ -41,7 +42,7 @@ const ActionDetailsModal = ({ action, onClose }) => {
               Climate action details
             </h3>
             <button onClick={onClose} className="p-1">
-              <X className="h-6 w-6" />
+              <FiX className="h-6 w-6" />
             </button>
           </div>
 
@@ -52,10 +53,10 @@ const ActionDetailsModal = ({ action, onClose }) => {
           <div className="px-12 py-8">
             {/* Title and Description */}
             <h2 className="text-lg font-bold text-[#232640] mb-4 font-poppins">
-              {action.action_name}
+              {action.ActionName}
             </h2>
             <p className="text-md text-[#4B4C63] mb-8 font-opensans">
-              {action.action_description}
+              {action.Description}
             </p>
 
             {/* Divider */}
@@ -67,27 +68,27 @@ const ActionDetailsModal = ({ action, onClose }) => {
             {/* Stats Grid */}
             <div className="space-y-4 mb-6 font-poppins font-bold">
               <div className="flex justify-between items-center">
-                <span className="text-md text-[#4B4C63]">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
+                <span className="text-md text-[#4B4C63]">{isAdaptation(action.ActionType) ? "Adaptation Potential" : "Reduction Potential"}</span>
                 <span className="text-md text-[#F23D33]">
-                  {isAdaptation(type) ? action.adaptation_potential : getReductionPotential(action)}
+                  {isAdaptation(action.ActionType) ? action.adaptation_potential : getReductionPotential(action)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-md text-[#4B4C63]">Sector</span>
                 <span className="text-base text-[#4B4C63]">
-                  {action.sector || action.hazard}
+                  {action.Sector || action.Hazard}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-md text-[#4B4C63]">Estimated cost</span>
                 <span className="text-base text-[#4B4C63]">
-                  {action.estimated_cost}
+                  {action.CostInvestmentNeeded}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-md text-[#4B4C63]">Implementation time</span>
                 <span className="text-base text-[#4B4C63]">
-                  {action.timeline_for_implementation}
+                  {action.TimelineForImplementation}
                 </span>
               </div>
             </div>
@@ -96,31 +97,31 @@ const ActionDetailsModal = ({ action, onClose }) => {
               <div className="border-b border-[#E4E4E4] mb-6" />
 
             {/* Additional sections if available in your data */}
-            {action.impacts && (
+            {action.Impacts && (
               <>
                 <div className="border-b border-[#E4E4E4] mb-8" />
                 <div className="mb-8">
                   <h3 className="text-lg font-medium text-[#232640] mb-3">Impacts</h3>
-                  <p className="text-sm text-[#4B4C63]">{action.impacts}</p>
+                  <p className="text-sm text-[#4B4C63]">{action.Impacts}</p>
                 </div>
               </>
             )}
 
-            {action.co_benefits && (
+            {action.CoBenefits && (
               <>
                 <div className="mb-8">
                   <h3 className="text-lg font-medium text-[#232640] mb-3">Co-benefits</h3>
-                  <p className="text-sm text-[#4B4C63]">{action.co_benefits}</p>
+                  <p className="text-sm text-[#4B4C63]">{action.CoBenefits}</p>
                 </div>
               </>
             )}
 
-            {action.equity_considerations && (
+            {action.EquityAndInclusionConsiderations && (
               <div>
                 <h3 className="text-lg font-medium text-[#232640] mb-3">
                   Equity and inclusion considerations
                 </h3>
-                <p className="text-sm text-[#4B4C63]">{action.equity_considerations}</p>
+                <p className="text-sm text-[#4B4C63]">{action.EquityAndInclusionConsiderations}</p>
               </div>
             )}
           </div>

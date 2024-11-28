@@ -1,4 +1,7 @@
 export const CITIES = [
-    {value: 'sao paulo', label: "São Paulo"},
-    {value: 'curitiba', label: "Curitiba"},
-    {value: 'rio de janeiro', label: "Rio de Janeiro"}];
+    {value: 'Camaçari', label: "Camaçari"},
+    {value: 'Caixas do Sul', label: "Caixas do Sul"},
+    {value: 'Corumba', label: "Corumba"},
+    {value: 'Rio Branco', label: "Rio Branco"},
+    {value: 'Serra', label: "Serra"},
+];

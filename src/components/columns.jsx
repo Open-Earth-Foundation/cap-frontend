@@ -16,34 +16,34 @@ export const mitigationColumns = [
     size: 50,
   },
   {
-    accessorKey: "action_name",
+    accessorKey: "action.ActionName",
     header: "Action",
     size: 200,
     Cell: ({ cell }) => (
       <div>
         <strong>{cell.getValue()}</strong>
         <br />
-        <span className="text-gray-500">{cell.row.original.action_description}</span>
+        <span className="text-gray-500">{cell.row.original.action.ActionName}</span>
       </div>
     ),
   },
   {
-    accessorKey: "sector",
+    accessorKey: "action.Sector",
     header: "Sector",
     size: 150,
   },
   {
-    accessorKey: "ghg_reduction_potential",
+    accessorKey: "action.GHGReductionPotential",
     header: "Reduction Potential",
     size: 150,
     Cell: ({ cell }) => (
     <div>
-      {getReductionPotential(cell.row.original)}
+      {getReductionPotential(cell.row.original.action)}
     </div>
   ),
   },
   {
-    accessorKey: "estimated_cost",
+    accessorKey: "action.CostInvestmentNeeded",
     header: "Estimate cost",
     size: 150,
     Cell: ({ cell }) => (
@@ -53,7 +53,7 @@ export const mitigationColumns = [
     ),
   },
   {
-    accessorKey: "timeline_for_implementation",
+    accessorKey: "action.TimelineForImplementation",
     header: "Implementation time",
     size: 150,
   },
@@ -61,30 +61,30 @@ export const mitigationColumns = [
 
 export const adaptationColumns = [
   {
-    accessorKey: "id",
+    accessorKey:  "actionPriority",
     header: "Rank",
-    size: 10,
+    size: 50,
   },
   {
-    accessorKey: "action_name",
+    accessorKey: "action.ActionName",
     header: "Action",
     size: 200,
     Cell: ({ cell }) => (
       <div>
         <strong>{cell.getValue()}</strong>
         <br />
-        <span className="text-gray-500">{cell.row.original.action_description}</span>
+        <span className="text-gray-500">{cell.row.original.action.ActionName}</span>
       </div>
     ),
   },
   {
-    accessorKey: "hazard",
+    accessorKey: "action.Hazard",
     header: "Hazard",
     size: 150,
   },
   {
-    accessorKey: "risk_potential",
-    header: "Risk Level",
+    accessorKey: "action.AdaptationEffectiveness",
+    header: "Adaptation Effectiveness",
     size: 150,
     Cell: ({ cell }) => (
       <div>
@@ -93,7 +93,7 @@ export const adaptationColumns = [
     ),
   },
   {
-    accessorKey: "estimated_cost",
+    accessorKey: "action.CostInvestmentNeeded",
     header: "Estimate cost",
     size: 150,
     Cell: ({ cell }) => (
@@ -103,7 +103,7 @@ export const adaptationColumns = [
     ),
   },
   {
-    accessorKey: "timeline_for_implementation",
+    accessorKey: "action.TimelineForImplementation",
     header: "Implementation time",
     size: 150,
   },
