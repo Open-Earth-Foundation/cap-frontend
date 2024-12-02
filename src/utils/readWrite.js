@@ -1,13 +1,13 @@
 import {GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
-
+require('dotenv').config();
 const s3Client = new S3Client({
-    region: import.meta.env.VITE_AWS_REGION,
+    region: process.env.VITE_AWS_REGION,
     credentials: {
-        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.VITE_AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.VITE_AWS_SECRET_ACCESS_KEY,
     },
 });
-const bucketName = import.meta.env.VITE_AWS_S3_BUCKET_ID;
+const bucketName = process.env.VITE_AWS_S3_BUCKET_ID;
 
 const streamToString = async (stream) => {
     const reader = stream.getReader();
