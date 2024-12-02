@@ -29,12 +29,18 @@ export const toTitleCase = str => str.replace(
     text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
 );
 export const isAdaptation = type => type.toLowerCase() === ADAPTATION.toLowerCase();
-//Prepare CSV data for export
+
+// Function to get nested property value
+const getNestedValue = (obj, path) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+};
+
+// Prepare CSV data for export
 export const prepareCsvData = (tableData, columns) => {
     return tableData.map(row =>
         columns.reduce((acc, column) => {
             const key = column.accessorKey;
-            acc[column.header] = row[key];
+            acc[column.header] = getNestedValue(row, key);
             return acc;
         }, {})
     );
