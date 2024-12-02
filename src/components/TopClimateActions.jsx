@@ -3,8 +3,7 @@ import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
 
 
-const TopClimateActions = ({actions, type}) => {
-    const [selectedAction, setSelectedAction] = useState()
+const TopClimateActions = ({actions, type, setSelectedAction}) => {
     // Get top 3 actions of the specified type
     const topActions = actions
         .filter((action) => action.action.ActionType.toLowerCase() === type)
@@ -46,8 +45,6 @@ const TopClimateActions = ({actions, type}) => {
 
     return (
         <div className="space-y-6">
-            <ActionDetailsModal type={type} cityAction={selectedAction}
-                                onClose={() => setSelectedAction(null)}/>
             <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                 Top {type.toLowerCase()} climate actions
             </h1>

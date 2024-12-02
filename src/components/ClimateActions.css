@@ -1,80 +1,85 @@
 .ClimateActions {
-  @apply max-w-screen-xl mx-auto p-16 space-y-9;
+    @apply max-w-screen-xl mx-auto p-16 space-y-9;
 }
 
 /* Typography */
 .font-poppins {
-  font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .font-opensans {
-  font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .tab-actions {
-  border-bottom: 1px solid #E6E7FF;
-  font-style: normal;
-  font-family: 'Open Sans', sans-serif;
+    border-bottom: 1px solid #E6E7FF;
+    font-style: normal;
+    font-family: 'Open Sans', sans-serif;
 
 }
 
 /* Table Styles - keeping existing styles and adding new ones */
 .data-table {
-  @apply w-full;
+    @apply w-full;
 }
 
 .data-table th {
-  @apply px-4 py-2 text-left bg-gray-50 font-semibold text-sm text-gray-700;
+    @apply px-4 py-2 text-left bg-gray-50 font-semibold text-sm text-gray-700;
 }
 
 .data-table td {
-  @apply px-4 py-2 border-b border-gray-200;
+    @apply px-4 py-2 border-b border-gray-200;
 }
 
 /* Button Styles */
 .primary-button {
-  @apply px-4 py-4 bg-[#2351DC] text-white rounded-lg font-semibold uppercase tracking-wider;
+    @apply px-4 py-4 bg-[#2351DC] text-white rounded-lg font-semibold uppercase tracking-wider;
 }
 
 .secondary-button {
-  @apply px-4 py-4 bg-white text-[#2351DC] rounded-lg font-semibold uppercase tracking-wider;
+    @apply px-4 py-4 bg-white text-[#2351DC] rounded-lg font-semibold uppercase tracking-wider;
 }
 
 li.react-tabs__tab {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 li.react-tabs__tab:focus:after {
-  display: none;
+    display: none;
 }
 
 li.react-tabs__tab--selected, li.react-tabs__tab--selected::after {
-  border: none;
-  border-bottom: 2px solid #2351DC;
-  color: #2351DC;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  
+    border: none;
+    border-bottom: 2px solid #2351DC;
+    color: #2351DC;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+
 }
 
 .modify-rankings {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .download-table {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .tab-text {
-  margin: 6px
+    margin: 6px
 }
 
 .button-link {
-  color: #2351DC;
-  text-decoration: underline;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+    color: #2351DC;
+    text-decoration: underline;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.table-header {
+    background-color: #2351DC; /* Change this to your desired color */
+    color: #2351DC;
 }

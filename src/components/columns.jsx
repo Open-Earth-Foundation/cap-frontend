@@ -1,4 +1,5 @@
 import {getReductionPotential} from "../utils/helpers.js";
+import { MdInfoOutline } from "react-icons/md";
 
 const getImpactLevelClass = (level) => {
   const classes = {
@@ -8,6 +9,7 @@ const getImpactLevelClass = (level) => {
   };
   return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
+
 
 export const mitigationColumns = [
   {
