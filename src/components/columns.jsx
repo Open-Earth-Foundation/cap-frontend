@@ -80,6 +80,11 @@ export const adaptationColumns = [
   {
     accessorKey: "action.Hazard",
     header: "Hazard",
+       Cell: ({ cell }) => (
+      <div>
+      {cell.getValue().join(", ")}
+      </div>
+    ),
     size: 150,
   },
   {
