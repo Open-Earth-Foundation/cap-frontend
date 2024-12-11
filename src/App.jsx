@@ -82,6 +82,7 @@ const App = () => {
                         <ClimateActions
                             selectedCity={selectedCity}
                             data={data}
+                            setData={setData}
                             loading={loading}
                             error={error}
                             onBack={handleBack}

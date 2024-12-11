@@ -1,0 +1,41 @@
+TopClimateActions.jsx:183 Uncaught ReferenceError: isGenerating is not defined
+    at TopClimateActions.jsx:183:47
+    at Array.map (<anonymous>)
+    at TopClimateActions (TopClimateActions.jsx:106:29)
+    at renderWithHooks (chunk-QNBLCSXN.js?v=d7c90bd4:12171:26)
+    at updateFunctionComponent (chunk-QNBLCSXN.js?v=d7c90bd4:14577:28)
+    at beginWork (chunk-QNBLCSXN.js?v=d7c90bd4:15912:22)
+    at HTMLUnknownElement.callCallback2 (chunk-QNBLCSXN.js?v=d7c90bd4:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-QNBLCSXN.js?v=d7c90bd4:3699:24)
+    at invokeGuardedCallback (chunk-QNBLCSXN.js?v=d7c90bd4:3733:39)
+    at beginWork$1 (chunk-QNBLCSXN.js?v=d7c90bd4:19761:15)
+
+chunk-QNBLCSXN.js?v=d7c90bd4:14036 The above error occurred in the <TopClimateActions> component:
+
+    at TopClimateActions (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/components/TopClimateActions.jsx:22:30)
+    at div
+    at div
+    at TabPanel
+    at div
+    at UncontrolledTabs (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/node_modules/.vite/deps/react-tabs.js?v=d7c90bd4:155:43)
+    at Tabs (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/node_modules/.vite/deps/react-tabs.js?v=d7c90bd4:361:56)
+    at div
+    at ClimateActions (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/components/ClimateActions.jsx:40:27)
+    at div
+    at main
+    at div
+    at App (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/App.jsx:26:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+chunk-QNBLCSXN.js?v=d7c90bd4:19409 Uncaught ReferenceError: isGenerating is not defined
+    at TopClimateActions.jsx:183:47
+    at Array.map (<anonymous>)
+    at TopClimateActions (TopClimateActions.jsx:106:29)
+    at renderWithHooks (chunk-QNBLCSXN.js?v=d7c90bd4:12171:26)
+    at updateFunctionComponent (chunk-QNBLCSXN.js?v=d7c90bd4:14577:28)
+    at beginWork (chunk-QNBLCSXN.js?v=d7c90bd4:15912:22)
+    at beginWork$1 (chunk-QNBLCSXN.js?v=d7c90bd4:19749:22)
+    at performUnitOfWork (chunk-QNBLCSXN.js?v=d7c90bd4:19194:20)
+    at workLoopSync (chunk-QNBLCSXN.js?v=d7c90bd4:19133:13)
+    at renderRootSync (chunk-QNBLCSXN.js?v=d7c90bd4:19112:15)

@@ -18,7 +18,7 @@ export function getReductionPotential(action) {
     //         break;
     // }
     // const fullField = `GHGReductionPotential.${field}`
-    console.log("action", JSON.stringify(action, null, 2)) // TODO NINA
+    //console.log("action", JSON.stringify(action, null, 2)) // TODO NINA
     return Object.values(action.GHGReductionPotential).find((value) => {
         return value !== 'none'
     })

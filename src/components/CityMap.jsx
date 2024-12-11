@@ -47,7 +47,7 @@ const CityMap = ({ selectedCity }) => {
       try {
         const apiUrl = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(
           selectedCity,
-        )}&format=json&polygon_geojson=1&addressdetails=1`;
+        )},&format=json&polygon_geojson=1&addressdetails=1&countrycodes=br`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

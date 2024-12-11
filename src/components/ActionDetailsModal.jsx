@@ -7,21 +7,61 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
     const action = cityAction;
     // Helper function to render progress bars based on reduction potential
     const renderReductionBars = () => {
-        const potential = getReductionPotential(action).toLowerCase();
-        const bars = potential === 'high' ? 3 : potential === 'medium' ? 2 : 1;
+        if (isAdaptation(action.ActionType)) {
+            const level = action.AdaptationEffectiveness;
+            const filledBars = level === "High" ? 3 : level === "Medium" ? 2 : 1;
+            const color = level === "High" 
+                ? "bg-blue-500" 
+                : level === "Medium" 
+                    ? "bg-blue-400" 
+                    : "bg-blue-300";
 
-        return (
-            <div className="flex justify-between mb-8">
-                {[...Array(3)].map((_, index) => (
-                    <div
-                        key={index}
-                        className={`w-[184px] h-[5px] rounded-2xl ${
-                            index < bars ? 'bg-[#F23D33]' : 'bg-gray-200'
-                        }`}
-                    />
-                ))}
-            </div>
-        );
+            return (
+                <div className="flex gap-2 mb-8">
+                    {Array(3).fill().map((_, i) => (
+                        <div
+                            key={i}
+                            className={`w-[184px] h-[5px] rounded-2xl ${
+                                i < filledBars ? color : "bg-gray-200"
+                            }`}
+                        />
+                    ))}
+                </div>
+            );
+        } else {
+            // Mitigation logic
+            const potential = getReductionPotential(action);
+            const potentialValue = parseInt(potential.split('-')[0]);
+
+            const getBarColor = (value) => {
+                if (value >= 80) return "bg-blue-500";    
+                if (value >= 60) return "bg-blue-400";    
+                if (value >= 40) return "bg-blue-300";  
+                if (value >= 20) return "bg-blue-200"; 
+                return "bg-blue-100";                    
+            };
+
+            const filledBars = potentialValue >= 80 ? 5 
+                : potentialValue >= 60 ? 4 
+                : potentialValue >= 40 ? 3 
+                : potentialValue >= 20 ? 2 
+                : 1;
+
+            const color = getBarColor(potentialValue);
+
+            return (
+                <div className="flex gap-2 mb-8">
+                    {Array(5).fill().map((_, i) => (
+                        <div
+                            key={i}
+                            className={`w-[184px] h-[5px] rounded-2xl ${
+                                i < filledBars ? color : "bg-gray-200"
+                            }`}
+                        />
+                    ))}
+                </div>
+            );
+        }
     };
 
     return (
@@ -67,29 +107,29 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                         {renderReductionBars()}
 
                         {/* Stats Grid */}
-                        <div className="space-y-4 mb-6 font-poppins font-bold">
+                        <div className="space-y-4 mb-6 font-poppins">
                             <div className="flex justify-between items-center">
                                 <span
                                     className="text-md text-[#4B4C63]">{isAdaptation(action.ActionType) ? "Adaptation Potential" : "Reduction Potential"}</span>
-                                <span className="text-md text-[#F23D33]">
-                  {isAdaptation(action.ActionType) ? action.adaptation_potential : getReductionPotential(action)}
+                                <span className="text-md font-semibold text-[#4B4C63]">
+                  {isAdaptation(action.ActionType) ? action.AdaptationEffectiveness : getReductionPotential(action)}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">Sector</span>
-                                <span className="text-base text-[#4B4C63]">
+                                <span className="text-base font-semibold text-[#4B4C63]">
                   {action.Sector || action.Hazard}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">Estimated cost</span>
-                                <span className="text-base text-[#4B4C63]">
+                                <span className="text-base font-semibold text-[#4B4C63]">
                   {action.CostInvestmentNeeded}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">Implementation time</span>
-                                <span className="text-base text-[#4B4C63]">
+                                <span className="text-base font-semibold text-[#4B4C63]">
                   {action.TimelineForImplementation}
                 </span>
                             </div>

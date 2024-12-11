@@ -18,6 +18,16 @@
 
 }
 
+.first-card {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
+    position: relative;
+}
+/* Optional: you can add a hover effect */
+.first-card:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important ;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
 /* Table Styles - keeping existing styles and adding new ones */
 .data-table {
     @apply w-full;
@@ -29,6 +39,24 @@
 
 .data-table td {
     @apply px-4 py-2 border-b border-gray-200;
+}
+
+/* Add these styles to override Material React Table font */
+.MuiTableCell-root {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.MuiTableHead-root {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.MuiTableBody-root {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+/* If there's pagination or other table controls */
+.MuiTablePagination-root {
+    font-family: 'Open Sans', sans-serif !important;
 }
 
 /* Button Styles */

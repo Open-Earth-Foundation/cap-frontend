@@ -1,0 +1,99 @@
+Uncaught ReferenceError: PlanModal is not defined
+    at TopClimateActions (TopClimateActions.jsx:231:14)
+    at renderWithHooks (chunk-QNBLCSXN.js?v=d7c90bd4:12171:26)
+    at mountIndeterminateComponent (chunk-QNBLCSXN.js?v=d7c90bd4:14921:21)
+    at beginWork (chunk-QNBLCSXN.js?v=d7c90bd4:15902:22)
+    at HTMLUnknownElement.callCallback2 (chunk-QNBLCSXN.js?v=d7c90bd4:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-QNBLCSXN.js?v=d7c90bd4:3699:24)
+    at invokeGuardedCallback (chunk-QNBLCSXN.js?v=d7c90bd4:3733:39)
+    at beginWork$1 (chunk-QNBLCSXN.js?v=d7c90bd4:19761:15)
+    at performUnitOfWork (chunk-QNBLCSXN.js?v=d7c90bd4:19194:20)
+    at workLoopSync (chunk-QNBLCSXN.js?v=d7c90bd4:19133:13)
+TopClimateActions @ TopClimateActions.jsx:231
+renderWithHooks @ chunk-QNBLCSXN.js?v=d7c90bd4:12171
+mountIndeterminateComponent @ chunk-QNBLCSXN.js?v=d7c90bd4:14921
+beginWork @ chunk-QNBLCSXN.js?v=d7c90bd4:15902
+callCallback2 @ chunk-QNBLCSXN.js?v=d7c90bd4:3674
+invokeGuardedCallbackDev @ chunk-QNBLCSXN.js?v=d7c90bd4:3699
+invokeGuardedCallback @ chunk-QNBLCSXN.js?v=d7c90bd4:3733
+beginWork$1 @ chunk-QNBLCSXN.js?v=d7c90bd4:19761
+performUnitOfWork @ chunk-QNBLCSXN.js?v=d7c90bd4:19194
+workLoopSync @ chunk-QNBLCSXN.js?v=d7c90bd4:19133
+renderRootSync @ chunk-QNBLCSXN.js?v=d7c90bd4:19112
+performSyncWorkOnRoot @ chunk-QNBLCSXN.js?v=d7c90bd4:18870
+flushSyncCallbacks @ chunk-QNBLCSXN.js?v=d7c90bd4:9135
+(anonymous) @ chunk-QNBLCSXN.js?v=d7c90bd4:18623
+Show 13 more frames
+Show lessUnderstand this error
+TopClimateActions.jsx:231 Uncaught ReferenceError: PlanModal is not defined
+    at TopClimateActions (TopClimateActions.jsx:231:14)
+    at renderWithHooks (chunk-QNBLCSXN.js?v=d7c90bd4:12171:26)
+    at mountIndeterminateComponent (chunk-QNBLCSXN.js?v=d7c90bd4:14921:21)
+    at beginWork (chunk-QNBLCSXN.js?v=d7c90bd4:15902:22)
+    at HTMLUnknownElement.callCallback2 (chunk-QNBLCSXN.js?v=d7c90bd4:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-QNBLCSXN.js?v=d7c90bd4:3699:24)
+    at invokeGuardedCallback (chunk-QNBLCSXN.js?v=d7c90bd4:3733:39)
+    at beginWork$1 (chunk-QNBLCSXN.js?v=d7c90bd4:19761:15)
+    at performUnitOfWork (chunk-QNBLCSXN.js?v=d7c90bd4:19194:20)
+    at workLoopSync (chunk-QNBLCSXN.js?v=d7c90bd4:19133:13)
+TopClimateActions @ TopClimateActions.jsx:231
+renderWithHooks @ chunk-QNBLCSXN.js?v=d7c90bd4:12171
+mountIndeterminateComponent @ chunk-QNBLCSXN.js?v=d7c90bd4:14921
+beginWork @ chunk-QNBLCSXN.js?v=d7c90bd4:15902
+callCallback2 @ chunk-QNBLCSXN.js?v=d7c90bd4:3674
+invokeGuardedCallbackDev @ chunk-QNBLCSXN.js?v=d7c90bd4:3699
+invokeGuardedCallback @ chunk-QNBLCSXN.js?v=d7c90bd4:3733
+beginWork$1 @ chunk-QNBLCSXN.js?v=d7c90bd4:19761
+performUnitOfWork @ chunk-QNBLCSXN.js?v=d7c90bd4:19194
+workLoopSync @ chunk-QNBLCSXN.js?v=d7c90bd4:19133
+renderRootSync @ chunk-QNBLCSXN.js?v=d7c90bd4:19112
+recoverFromConcurrentError @ chunk-QNBLCSXN.js?v=d7c90bd4:18732
+performSyncWorkOnRoot @ chunk-QNBLCSXN.js?v=d7c90bd4:18875
+flushSyncCallbacks @ chunk-QNBLCSXN.js?v=d7c90bd4:9135
+(anonymous) @ chunk-QNBLCSXN.js?v=d7c90bd4:18623
+Show 14 more frames
+Show lessUnderstand this error
+chunk-QNBLCSXN.js?v=d7c90bd4:14036 The above error occurred in the <TopClimateActions> component:
+
+    at TopClimateActions (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/components/TopClimateActions.jsx?t=1733834530741:23:30)
+    at div
+    at div
+    at TabPanel
+    at div
+    at UncontrolledTabs (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/node_modules/.vite/deps/react-tabs.js?v=d7c90bd4:155:43)
+    at Tabs (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/node_modules/.vite/deps/react-tabs.js?v=d7c90bd4:361:56)
+    at div
+    at ClimateActions (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/components/ClimateActions.jsx:40:27)
+    at div
+    at main
+    at div
+    at App (https://8afcf28a-32fd-4ac4-845e-a4ae6a170085-00-2uxj09qwkou5m.spock.replit.dev/src/App.jsx:26:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-QNBLCSXN.js?v=d7c90bd4:14036
+update.callback @ chunk-QNBLCSXN.js?v=d7c90bd4:14056
+callCallback @ chunk-QNBLCSXN.js?v=d7c90bd4:10511
+commitUpdateQueue @ chunk-QNBLCSXN.js?v=d7c90bd4:10528
+commitLayoutEffectOnFiber @ chunk-QNBLCSXN.js?v=d7c90bd4:17083
+commitLayoutMountEffects_complete @ chunk-QNBLCSXN.js?v=d7c90bd4:17976
+commitLayoutEffects_begin @ chunk-QNBLCSXN.js?v=d7c90bd4:17965
+commitLayoutEffects @ chunk-QNBLCSXN.js?v=d7c90bd4:17916
+commitRootImpl @ chunk-QNBLCSXN.js?v=d7c90bd4:19349
+commitRoot @ chunk-QNBLCSXN.js?v=d7c90bd4:19273
+performSyncWorkOnRoot @ chunk-QNBLCSXN.js?v=d7c90bd4:18891
+flushSyncCallbacks @ chunk-QNBLCSXN.js?v=d7c90bd4:9135
+(anonymous) @ chunk-QNBLCSXN.js?v=d7c90bd4:18623
+Show 13 more frames
+Show lessUnderstand this error
+chunk-QNBLCSXN.js?v=d7c90bd4:9145 Uncaught ReferenceError: PlanModal is not defined
+    at TopClimateActions (TopClimateActions.jsx:231:14)
+    at renderWithHooks (chunk-QNBLCSXN.js?v=d7c90bd4:12171:26)
+    at mountIndeterminateComponent (chunk-QNBLCSXN.js?v=d7c90bd4:14921:21)
+    at beginWork (chunk-QNBLCSXN.js?v=d7c90bd4:15902:22)
+    at beginWork$1 (chunk-QNBLCSXN.js?v=d7c90bd4:19749:22)
+    at performUnitOfWork (chunk-QNBLCSXN.js?v=d7c90bd4:19194:20)
+    at workLoopSync (chunk-QNBLCSXN.js?v=d7c90bd4:19133:13)
+    at renderRootSync (chunk-QNBLCSXN.js?v=d7c90bd4:19112:15)
+    at recoverFromConcurrentError (chunk-QNBLCSXN.js?v=d7c90bd4:18732:28)
+    at performSyncWorkOnRoot (chunk-QNBLCSXN.js?v=d7c90bd4:18875:28)

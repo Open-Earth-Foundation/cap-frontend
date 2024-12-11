@@ -22,7 +22,7 @@ const getImpactLevelClass = (level) => {
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
 
-const ClimateActions = ({selectedCity, data, loading, error, onBack}) => {
+const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) => {
     const [enableRowOrdering, setEnableRowOrdering] = useState(false);
     const [rankedDataMitigation, setRankedDataMitigation] = useState([]);
     const [rankedDataAdaptation, setRankedDataAdaptation] = useState([]);
@@ -128,6 +128,9 @@ const ClimateActions = ({selectedCity, data, loading, error, onBack}) => {
             ...rankedDataMitigation,
             ...rankedDataAdaptation,
         ]);
+        // Force a refresh of the data after saving
+        const updatedData = [...rankedDataMitigation, ...rankedDataAdaptation];
+        setData(updatedData); // Add this line to update the parent data
         setEnableRowOrdering(false);
         setIsSaving(false);
     };
@@ -164,21 +167,25 @@ const ClimateActions = ({selectedCity, data, loading, error, onBack}) => {
                         <span className="tab-text">Adaptation</span>
                     </Tab>
                 </TabList>
-                {[ADAPTATION, MITIGATION].map((type) => (
+                {[MITIGATION, ADAPTATION].map((type) => (
                     <TabPanel key={type}>
                         <ActionDetailsModal type={type} cityAction={selectedAction}
                                             onClose={() => setSelectedAction(null)}/>
 
                         <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions actions={data} type={type} setSelectedAction={setSelectedAction}/>
-                            <div className="flex justify-between mt-12 mb-8">
-                                <h2 className="text-2xl font-normal text-gray-900 font-poppins">
-                                    Ranking list of climate actions
-                                </h2>
-                                <div className="flex gap-4">
+                            <TopClimateActions actions={data} type={type} setSelectedAction={setSelectedAction} selectedCity={selectedCity}/>
+                            <div className="mt-12 mb-8">
+                                    <h2 className="text-2xl font-normal text-gray-900 font-poppins">
+                                        Ranking list of climate actions
+                                    </h2>
+                                    <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
+                                        Apply your local expertise to customize action priorities. Reorder based on your city's specific needs, feasibility, and potential impacts. Save your changes and download the complete table to share with stakeholders.
+                                    </p>
+                                </div> 
+                                <div className="flex justify-end gap-4 mb-8">
                                     {!enableRowOrdering && (
                                         <button
-                                            className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
+                                            className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings h-fit"
                                             onClick={() =>
                                                 setEnableRowOrdering(true)
                                             }
@@ -203,17 +210,15 @@ const ClimateActions = ({selectedCity, data, loading, error, onBack}) => {
                                                 CANCEL SORTING
                                             </button>
                                             <button
-                                                className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
+                                                className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
                                                 onClick={onSaveRankings}
                                                 disabled={isSaving}
                                             >
-                                                <div>
                                                     {isSaving ? (
-                                                        <GiSandsOfTime/>
+                                                        <GiSandsOfTime className="text-lg"/>
                                                     ) : (
-                                                        <MdOutlineSave/>
+                                                        <MdOutlineSave lassName="text-lg"/>
                                                     )}
-                                                </div>
                                                 SAVE RANKINGS
                                             </button>
                                         </>
@@ -230,7 +235,6 @@ const ClimateActions = ({selectedCity, data, loading, error, onBack}) => {
                                         <FiDownload/>
                                         DOWNLOAD CSV
                                     </CSVLink>
-                                </div>
                             </div>
                             <MRT_TableContainer
                                 table={
