@@ -141,7 +141,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                 {topActions.map(({action}, index) => (
                     /* Mitigation Card */
                     <div
-                        key={action.ActionID}
+                        key={index}
                         className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${
                     index === 0 
                             ? 'border-t-4 border-t-primary first-card ring-1 ring-blue-100' 
