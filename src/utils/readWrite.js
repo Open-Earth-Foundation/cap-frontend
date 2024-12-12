@@ -26,13 +26,13 @@ const streamToString = async (stream) => {
     return result;
 };
 
-function getFileName(cityName) {
-    return `data/${toSnakeCase(cityName)}.json`;
+function getFileName(cityName, type) {
+    return `data/${type}/${toSnakeCase(cityName)}.json`;
 }
 
-export const readFile = async (cityName) => {
+export const readFile = async (cityName, type) => {
     try {
-        const command = new GetObjectCommand({Bucket: bucketName, Key: getFileName(cityName),});
+        const command = new GetObjectCommand({Bucket: bucketName, Key: getFileName(cityName, type)});
         const response = await s3Client.send(command);
         const data = await streamToString(response.Body);
         return JSON.parse(data);
@@ -42,12 +42,12 @@ export const readFile = async (cityName) => {
     }
 };
 
-export const writeFile = async (cityName, data) => {
+export const writeFile = async (cityName, data, type) => {
     try {
         const dataJson = JSON.stringify(data, null, 2);
         const command = new PutObjectCommand({
             Bucket: bucketName,
-            Key: getFileName(cityName),
+            Key: getFileName(cityName, type),
             Body: dataJson,
             ContentType: "application/json",
         });
