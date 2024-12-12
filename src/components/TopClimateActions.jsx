@@ -12,8 +12,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
     const [generatedPlan, setGeneratedPlan] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     // Get top 3 actions of the specified type
+
     const topActions = actions
-        .filter((action) => action.action.ActionType.toLowerCase() === type)
         .sort((a, b) => a.actionPriority - b.actionPriority)
         .slice(0, 3);
 
@@ -29,7 +29,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
     };
 
     const getProgressBars = (action) => {
-            if (isAdaptation(type)) {
+        if (isAdaptation(type)) {
                 const level = action.AdaptationEffectiveness;
                 const filledBars = level === "High" ? 3 : level === "Medium" ? 2 : 1;
                 const color = level === "High"
@@ -48,7 +48,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
         } else {
                 // Mitigation logic
                 const potential = getReductionPotential(action);
-                const potentialValue = parseInt(potential.split('-')[0]); // Get the lower bound
+                const potentialValue = potential ? parseInt(potential.split('-')[0]) : 0; // Get the lower bound
 
                 const getBarColor = (value) => {
                             if (value >= 80) return "bg-blue-500";    // Very high 
@@ -79,6 +79,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
 
             const generateActionPlan = async (action, type) => {
                 setIsGenerating(true);
+                 console.log(type)
                 try {
                     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
                     const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
@@ -134,7 +135,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
     return (
         <div className="space-y-6">
             <h1 className="text-2xl font-normal text-gray-900 font-poppins">
-                Top {type.toLowerCase()} climate actions
+                Top {type?.toLowerCase()} climate actions
             </h1>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

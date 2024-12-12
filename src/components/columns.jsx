@@ -13,7 +13,7 @@ const getImpactLevelClass = (level) => {
 
 export const mitigationColumns = [
   {
-    accessorKey: "id",
+    accessorKey: "actionPriority",
     header: "Rank",
     size: 50,
   },
@@ -84,7 +84,7 @@ export const adaptationColumns = [
     header: "Hazard",
        Cell: ({ cell }) => (
       <div>
-      {cell.getValue().join(", ")}
+      {cell.getValue()?.join(", ")}
       </div>
     ),
     size: 150,

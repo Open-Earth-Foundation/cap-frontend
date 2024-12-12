@@ -101,7 +101,7 @@ const ClimateActions = ({
         mitigationData,
         (newRanking) => {
             setMitigationData(newRanking);
-            saveNewRanking("Mitigation");
+            saveNewRanking(MITIGATION);
         },
         MITIGATION,
     );
@@ -111,12 +111,12 @@ const ClimateActions = ({
         adaptationData,
         (newRanking) => {
             setAdaptationData(newRanking);
-            saveNewRanking("Adaptation");
+            saveNewRanking(ADAPTATION);
         },
         ADAPTATION,
     );
 
-    const onSaveRankings = async () => {
+    const onSaveRankings = async (type) => {
         setIsSaving(true);
         if (isAdaptation(type)) {
             await writeFile(selectedCity, adaptationData, ADAPTATION);
@@ -162,13 +162,14 @@ const ClimateActions = ({
                         <span className="tab-text">Adaptation</span>
                     </Tab>
                 </TabList>
-                {[MITIGATION, ADAPTATION].map((type) => (
+                {[MITIGATION, ADAPTATION].map((type) =>
                     <TabPanel key={type}>
                         <ActionDetailsModal type={type} cityAction={selectedAction}
                                             onClose={() => setSelectedAction(null)}/>
 
                         <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions actions={data} type={type} setSelectedAction={setSelectedAction}
+                            <TopClimateActions actions={isAdaptation(type) ? adaptationData : mitigationData}
+                                               type={type} setSelectedAction={setSelectedAction}
                                                selectedCity={selectedCity}/>
                             <div className="mt-12 mb-8">
                                 <h2 className="text-2xl font-normal text-gray-900 font-poppins">
@@ -181,46 +182,42 @@ const ClimateActions = ({
                                 </p>
                             </div>
                             <div className="flex justify-end gap-4 mb-8">
-                                {!enableRowOrdering && (
+                                {!enableRowOrdering && <button
+                                    className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings h-fit"
+                                    onClick={() =>
+                                        setEnableRowOrdering(true)
+                                    }
+                                >
+                                    <div>
+                                        <MdOutlineLowPriority/>
+                                    </div>
+                                    MODIFY RANKINGS
+                                </button>}
+                                {enableRowOrdering && <>
                                     <button
-                                        className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings h-fit"
+                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
                                         onClick={() =>
-                                            setEnableRowOrdering(true)
+                                            setEnableRowOrdering(false)
                                         }
                                     >
                                         <div>
                                             <MdOutlineLowPriority/>
                                         </div>
-                                        MODIFY RANKINGS
+                                        CANCEL SORTING
                                     </button>
-                                )}
-                                {enableRowOrdering && (
-                                    <>
-                                        <button
-                                            className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
-                                            onClick={() =>
-                                                setEnableRowOrdering(false)
-                                            }
-                                        >
-                                            <div>
-                                                <MdOutlineLowPriority/>
-                                            </div>
-                                            CANCEL SORTING
-                                        </button>
-                                        <button
-                                            className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
-                                            onClick={onSaveRankings}
-                                            disabled={isSaving}
-                                        >
-                                            {isSaving ? (
-                                                <GiSandsOfTime className="text-lg"/>
-                                            ) : (
-                                                <MdOutlineSave lassName="text-lg"/>
-                                            )}
-                                            SAVE RANKINGS
-                                        </button>
-                                    </>
-                                )}
+                                    <button
+                                        className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
+                                        onClick={(data) => onSaveRankings(type, data)}
+                                        disabled={isSaving}
+                                    >
+                                        {isSaving ? (
+                                            <GiSandsOfTime className="text-lg"/>
+                                        ) : (
+                                            <MdOutlineSave lassName="text-lg"/>
+                                        )}
+                                        SAVE RANKINGS
+                                    </button>
+                                </>}
                                 <CSVLink
                                     data={
                                         isAdaptation(type)
@@ -242,8 +239,7 @@ const ClimateActions = ({
                                 }
                             />
                         </div>
-                    </TabPanel>
-                ))}
+                    </TabPanel>)}
             </Tabs>
         </div>
     );

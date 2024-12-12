@@ -18,7 +18,6 @@ export function getReductionPotential(action) {
     //         break;
     // }
     // const fullField = `GHGReductionPotential.${field}`
-    //console.log("action", JSON.stringify(action, null, 2)) // TODO NINA
     return Object.values(action.GHGReductionPotential).find((value) => {
         return value !== 'none'
     })
@@ -28,7 +27,7 @@ export const toTitleCase = str => str.replace(
     /\w\S*/g,
     text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
 );
-export const isAdaptation = type => type.toLowerCase() === ADAPTATION.toLowerCase();
+export const isAdaptation = type => type?.toLowerCase  && type.toLowerCase() === ADAPTATION.toLowerCase();
 
 // Function to get nested property value
 const getNestedValue = (obj, path) => {
