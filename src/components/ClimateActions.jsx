@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from "react";
+import {React, useState} from "react";
 import "./ClimateActions.css";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -22,10 +22,13 @@ const getImpactLevelClass = (level) => {
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
 
-const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) => {
+const ClimateActions = ({
+                            selectedCity, mitigationData,
+                            setMitigationData,
+                            adaptationData,
+                            setAdaptationData
+                        }) => {
     const [enableRowOrdering, setEnableRowOrdering] = useState(false);
-    const [rankedDataMitigation, setRankedDataMitigation] = useState([]);
-    const [rankedDataAdaptation, setRankedDataAdaptation] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
     const [selectedAction, setSelectedAction] = useState()
 
@@ -39,21 +42,12 @@ const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) =
         }));
 
         if (isAdaptation(type)) {
-            setRankedDataAdaptation(addRank(updatedRanking));
+            setAdaptationData(addRank(updatedRanking));
         } else {
-            setRankedDataMitigation(addRank(updatedRanking));
+            setMitigationData(addRank(updatedRanking));
         }
     };
 
-    useEffect(() => {
-        const filterActions = (type) =>
-            data
-                .filter((action) => action.action.ActionType === type)
-                .sort((a, b) => a.actionPriority - b.actionPriority);
-
-        setRankedDataMitigation(addRank(filterActions("Mitigation")));
-        setRankedDataAdaptation(addRank(filterActions("Adaptation")));
-    }, [data]);
 
     const infoColumn = {
         id: "infoButton",
@@ -104,9 +98,9 @@ const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) =
     const mitigationTable = createTable(
         mitigationColumns,
         enableRowOrdering,
-        rankedDataMitigation,
+        mitigationData,
         (newRanking) => {
-            setRankedDataMitigation(newRanking);
+            setMitigationData(newRanking);
             saveNewRanking("Mitigation");
         },
         MITIGATION,
@@ -114,9 +108,9 @@ const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) =
     const adaptationTable = createTable(
         adaptationColumns,
         enableRowOrdering,
-        rankedDataAdaptation,
+        adaptationData,
         (newRanking) => {
-            setRankedDataAdaptation(newRanking);
+            setAdaptationData(newRanking);
             saveNewRanking("Adaptation");
         },
         ADAPTATION,
@@ -124,22 +118,23 @@ const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) =
 
     const onSaveRankings = async () => {
         setIsSaving(true);
-        await writeFile(selectedCity, [
-            ...rankedDataMitigation,
-            ...rankedDataAdaptation,
-        ]);
+        if (isAdaptation(type)) {
+            await writeFile(selectedCity, adaptationData, ADAPTATION);
+            setAdaptationData(adaptationData);
+        } else {
+            await writeFile(selectedCity, mitigationData, MITIGATION);
+            setMitigationData(mitigationData)
+        }
         // Force a refresh of the data after saving
-        const updatedData = [...rankedDataMitigation, ...rankedDataAdaptation];
-        setData(updatedData); // Add this line to update the parent data
         setEnableRowOrdering(false);
         setIsSaving(false);
     };
     const mitigationCsvData = prepareCsvData(
-        rankedDataMitigation,
+        mitigationData,
         mitigationColumns,
     );
     const adaptationCsvData = prepareCsvData(
-        rankedDataAdaptation,
+        adaptationData,
         adaptationColumns,
     );
 
@@ -173,68 +168,71 @@ const ClimateActions = ({selectedCity, data, setData, loading, error, onBack}) =
                                             onClose={() => setSelectedAction(null)}/>
 
                         <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions actions={data} type={type} setSelectedAction={setSelectedAction} selectedCity={selectedCity}/>
+                            <TopClimateActions actions={data} type={type} setSelectedAction={setSelectedAction}
+                                               selectedCity={selectedCity}/>
                             <div className="mt-12 mb-8">
-                                    <h2 className="text-2xl font-normal text-gray-900 font-poppins">
-                                        Ranking list of climate actions
-                                    </h2>
-                                    <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
-                                        Apply your local expertise to customize action priorities. Reorder based on your city's specific needs, feasibility, and potential impacts. Save your changes and download the complete table to share with stakeholders.
-                                    </p>
-                                </div> 
-                                <div className="flex justify-end gap-4 mb-8">
-                                    {!enableRowOrdering && (
+                                <h2 className="text-2xl font-normal text-gray-900 font-poppins">
+                                    Ranking list of climate actions
+                                </h2>
+                                <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
+                                    Apply your local expertise to customize action priorities. Reorder based on your
+                                    city's specific needs, feasibility, and potential impacts. Save your changes and
+                                    download the complete table to share with stakeholders.
+                                </p>
+                            </div>
+                            <div className="flex justify-end gap-4 mb-8">
+                                {!enableRowOrdering && (
+                                    <button
+                                        className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings h-fit"
+                                        onClick={() =>
+                                            setEnableRowOrdering(true)
+                                        }
+                                    >
+                                        <div>
+                                            <MdOutlineLowPriority/>
+                                        </div>
+                                        MODIFY RANKINGS
+                                    </button>
+                                )}
+                                {enableRowOrdering && (
+                                    <>
                                         <button
-                                            className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings h-fit"
+                                            className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
                                             onClick={() =>
-                                                setEnableRowOrdering(true)
+                                                setEnableRowOrdering(false)
                                             }
                                         >
                                             <div>
                                                 <MdOutlineLowPriority/>
                                             </div>
-                                            MODIFY RANKINGS
+                                            CANCEL SORTING
                                         </button>
-                                    )}
-                                    {enableRowOrdering && (
-                                        <>
-                                            <button
-                                                className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold modify-rankings"
-                                                onClick={() =>
-                                                    setEnableRowOrdering(false)
-                                                }
-                                            >
-                                                <div>
-                                                    <MdOutlineLowPriority/>
-                                                </div>
-                                                CANCEL SORTING
-                                            </button>
-                                            <button
-                                                className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
-                                                onClick={onSaveRankings}
-                                                disabled={isSaving}
-                                            >
-                                                    {isSaving ? (
-                                                        <GiSandsOfTime className="text-lg"/>
-                                                    ) : (
-                                                        <MdOutlineSave lassName="text-lg"/>
-                                                    )}
-                                                SAVE RANKINGS
-                                            </button>
-                                        </>
-                                    )}
-                                    <CSVLink
-                                        data={
-                                            isAdaptation(type)
-                                                ? adaptationCsvData
-                                                : mitigationCsvData
-                                        }
-                                        filename={`${selectedCity}_${type}_actions.csv`}
-                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
-                                    >
-                                        <FiDownload/>
-                                        DOWNLOAD CSV
-                                    </CSVLink>
+                                        <button
+                                            className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
+                                            onClick={onSaveRankings}
+                                            disabled={isSaving}
+                                        >
+                                            {isSaving ? (
+                                                <GiSandsOfTime className="text-lg"/>
+                                            ) : (
+                                                <MdOutlineSave lassName="text-lg"/>
+                                            )}
+                                            SAVE RANKINGS
+                                        </button>
+                                    </>
+                                )}
+                                <CSVLink
+                                    data={
+                                        isAdaptation(type)
+                                            ? adaptationCsvData
+                                            : mitigationCsvData
+                                    }
+                                    filename={`${selectedCity}_${type}_actions.csv`}
+                                    className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
+                                >
+                                    <FiDownload/>
+                                    DOWNLOAD CSV
+                                </CSVLink>
                             </div>
                             <MRT_TableContainer
                                 table={

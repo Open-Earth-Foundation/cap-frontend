@@ -4,21 +4,28 @@ import ClimateActions from "./components/ClimateActions.jsx";
 import CityMap from "./components/CityMap.jsx";
 import "./index.css";
 import {readFile} from "./utils/readWrite.js";
+import {ADAPTATION, MITIGATION} from "./utils/helpers.js";
 
 
 const App = () => {
     const [selectedCity, setSelectedCity] = useState("");
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const fetchData = async (city) => {
+    const [adaptationData, setAdaptationData] = useState(
+        []
+    )
+    const [mitigationData, setMitigationData] = useState([])
+    const fetchData = async (city, type) => {
         if (!city) return;
         setLoading(true);
         setError(null);
         try {
-            const data = await readFile(city);
-            setData(data);
+            const data = await readFile(city, type);
+            if (type === ADAPTATION) {
+                setAdaptationData(data);
+            } else {
+                setMitigationData(data);
+            }
         } catch (err) {
             setError(`Failed to fetch data: ${err.message}`);
         } finally {
@@ -29,7 +36,8 @@ const App = () => {
     const handleSearch = (searchTerm) => {
         setSelectedCity(searchTerm);
         if (searchTerm) {
-            fetchData(searchTerm);
+            fetchData(searchTerm, ADAPTATION);
+            fetchData(searchTerm, MITIGATION)
         }
     };
 
@@ -81,8 +89,10 @@ const App = () => {
                     <div className="container mx-auto px-4 py-10 text-gray-500">
                         <ClimateActions
                             selectedCity={selectedCity}
-                            data={data}
-                            setData={setData}
+                            mitigationData={mitigationData}
+                            setMitigationData={setMitigationData}
+                            adaptationData={adaptationData}
+                            setAdaptationData={setAdaptationData}
                             loading={loading}
                             error={error}
                             onBack={handleBack}
