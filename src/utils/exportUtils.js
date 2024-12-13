@@ -301,8 +301,14 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     yPos += 15;
     
     doc.setFontSize(10);
-    const splitText = doc.splitTextToSize(generatedPlan, pageWidth - 2 * margin);
-    doc.text(splitText, margin, yPos);
+    if (generatedPlan) {
+      const lines = generatedPlan.split('\n');
+      lines.forEach(line => {
+        const splitText = doc.splitTextToSize(line, pageWidth - 2 * margin);
+        doc.text(splitText, margin, yPos);
+        yPos += 10;
+      });
+    }
   }
 
   doc.save(`${cityName}_climate_actions.pdf`);

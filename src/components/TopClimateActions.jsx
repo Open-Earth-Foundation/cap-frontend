@@ -149,11 +149,12 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                     'Content-Type': 'application/json'
                 }
             });
-            const generatedPlan = response.data.choices[0].message.content;
-            console.log('Generated Plan:', generatedPlan);
-            setGeneratedPlan(response.data.choices[0].message.content); 
+            const plan = response.data.choices[0].message.content;
+            console.log('Generated Plan:', plan);
+            setGeneratedPlan(plan); 
+            props.setGeneratedPlan(plan);
             setIsPlanModalOpen(true);
-            return generatedPlan;
+            return plan;
             
         } catch (error) {
             console.error('Error generating plan:', error);
