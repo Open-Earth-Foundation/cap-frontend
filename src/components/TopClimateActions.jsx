@@ -152,7 +152,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
             const plan = response.data.choices[0].message.content;
             console.log('Generated Plan:', plan);
             setGeneratedPlan(plan);
-            setGeneratedPlan(plan); // Update local state
+            props.setGeneratedPlan(plan); // Update parent state
+            console.log('Setting generated plan in parent:', plan);
             setIsPlanModalOpen(true);
             return plan;
             

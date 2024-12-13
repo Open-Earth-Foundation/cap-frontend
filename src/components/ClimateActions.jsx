@@ -239,6 +239,7 @@ const ClimateActions = ({
                                 </CSVLink>
                                 <button
                                     onClick={() => {
+                                        console.log('Current generatedPlan state:', generatedPlan);
                                         console.log('Exporting PDF with plan:', generatedPlan);
                                         exportToPDF(selectedCity, mitigationData, adaptationData, generatedPlan);
                                     }}
