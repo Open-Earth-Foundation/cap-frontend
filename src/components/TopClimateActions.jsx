@@ -232,7 +232,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                             <div className="flex justify-between ">
                                 <span className="text-gray-600">Estimated cost</span>
                                 <span className="text-gray-600 font-semibold">
-                  {action.CostInvestmentNeeded}
+                  {toTitleCase(action.CostInvestmentNeeded)}
                 </span>
                             </div>
 

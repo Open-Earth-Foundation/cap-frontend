@@ -118,13 +118,17 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">Sector</span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                  {action.Sector || action.Hazard}
+                  {action?.Sector?.join ? 
+                    action.Sector.map(s => toTitleCase(s)).join(', ') 
+                    : action?.Hazard?.join ?
+                      action.Hazard.map(h => toTitleCase(h)).join(', ')
+                      : toTitleCase(String(action.Sector || action.Hazard || ''))}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">Estimated cost</span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                  {action.CostInvestmentNeeded}
+                  {toTitleCase(action.CostInvestmentNeeded)}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
