@@ -339,6 +339,12 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
 
   // Add generated plans
   const pageHeight = doc.internal.pageSize.height;
+  const styles = {
+    h2: { style: 'bold', fontSize: 14, spacing: 10 },
+    normal: { style: 'normal', fontSize: 12, spacing: 7 },
+    small: { style: 'italic', fontSize: 10, spacing: 5 }
+  };
+
 
   if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
     doc.addPage();
@@ -353,21 +359,30 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
         yPos = 20;
       }
 
-      // Title and timestamp for each plan
-      doc.setFontSize(14);
+      // Plan header with background
+      doc.setFillColor(230, 240, 255);
+      doc.rect(margin - 2, yPos - 6, pageWidth - 2 * margin + 4, 12, 'F');
+      doc.setFont(undefined, styles.h2.style);
+      doc.setFontSize(styles.h2.fontSize);
       doc.text(`Plan ${index + 1}: ${planData.actionName}`, margin, yPos);
-      yPos += 8;
-
-      doc.setFontSize(10);
+      yPos += styles.h2.spacing;
+      
+      // Timestamp
+      doc.setFont(undefined, 'italic');
+      doc.setFontSize(styles.small.fontSize);
+      doc.setTextColor(100, 100, 100);
       doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos);
-      yPos += 12;
-
-      // Process the plan text
-      doc.setFontSize(12);
-      const splitText = doc.splitTextToSize(planData.plan, pageWidth - 2 * margin);
+      yPos += styles.small.spacing + 4;
+      
+      // Process the plan text with markdown support
+      doc.setFont(undefined, 'normal');
+      doc.setFontSize(styles.normal.fontSize);
+      doc.setTextColor(0, 0, 0);
+      const plainText = convertMarkdownToPlainText(planData.plan);
+      const splitText = doc.splitTextToSize(plainText, pageWidth - 2 * margin);
 
       // Calculate lines per page (accounting for margins)
-      const lineHeight = 7;
+      const lineHeight = styles.normal.spacing;
       const linesPerPage = Math.floor((pageHeight - 40) / lineHeight);
 
       // Process text line by line
@@ -399,3 +414,6 @@ export const exportUtils = {
 };
 
 export default exportUtils;
+
+// Placeholder for markdown conversion function.  Replace with your actual implementation.
+const convertMarkdownToPlainText = (markdown) => markdown.replace(/`/g, '');
