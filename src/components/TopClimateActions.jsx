@@ -6,10 +6,10 @@ import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers
 import PlanModal from "./PlanModal";
 
 
-const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => {
+const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setGeneratedPlan}) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedPrompt, setGeneratedPrompt] = useState('');
-    const [generatedPlan, setGeneratedPlan] = useState('');
+    const [localGeneratedPlan, setLocalGeneratedPlan] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
     // Get top 3 actions of the specified type
@@ -151,8 +151,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
             });
             const plan = response.data.choices[0].message.content;
             console.log('Generated Plan:', plan);
-            setGeneratedPlan(plan);
-            props.setGeneratedPlan(plan); // Update parent state
+            setLocalGeneratedPlan(plan);
+            setGeneratedPlan(plan); // Update parent state
             console.log('Setting generated plan in parent:', plan);
             setIsPlanModalOpen(true);
             return plan;
@@ -271,7 +271,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                     isOpen={isPlanModalOpen}
                     onClose={() => setIsPlanModalOpen(false)}
                     prompt={generatedPrompt}
-                    plan={generatedPlan}
+                    plan={localGeneratedPlan}
                 />
         </div>
     );
