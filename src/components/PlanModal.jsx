@@ -33,7 +33,7 @@ const PlanModal = ({ isOpen, onClose, prompt, plan }) => {
 
                             <div className="bg-white p-4 rounded-lg">
                                 <h4 className="text-sm font-medium text-gray-500 mb-2">Response:</h4>
-                                <ReactMarkdown className="prose max-w-none">
+                                <ReactMarkdown className="prose prose-lg max-w-none prose-headings:text-blue-600 prose-h2:border-b prose-h2:pb-2 prose-h2:mb-4 prose-ul:list-disc prose-ul:pl-5 prose-li:mb-1">
                                     {plan}
                                 </ReactMarkdown>
                             </div>
