@@ -13,7 +13,6 @@ export const DataProvider = ({ children }) => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data); // Log the fetched cities to inspect structure
         setCities(data);
       } catch (err) {
         console.error(err);

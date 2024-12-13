@@ -153,12 +153,12 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                             </>
                         )}
 
-                        {action.CoBenefits && (
+                        {action.CoBenefits.map && (
                             <>
                                 <div className="mb-8">
                                     <h3 className="text-lg font-medium text-[#232640] mb-3">Co-benefits</h3>
                                     <ul className="list-disc list-inside text-sm text-[#4B4C63]">
-                                        {action.CoBenefits.map((coBenefit, index) => (
+                                        {(action.CoBenefits).map((coBenefit, index) => (
                                             <li key={index}>{coBenefit}</li>
                                         ))}
                                     </ul>

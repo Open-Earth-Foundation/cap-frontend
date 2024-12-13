@@ -24,8 +24,6 @@ export const mitigationColumns = [
     Cell: ({ cell }) => (
       <div>
         <strong>{cell.getValue()}</strong>
-        <br />
-        <span className="text-gray-500">{cell.row.original.action.ActionName}</span>
       </div>
     ),
   },

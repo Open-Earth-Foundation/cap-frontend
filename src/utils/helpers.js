@@ -18,8 +18,9 @@ export function getReductionPotential(action) {
     //         break;
     // }
     // const fullField = `GHGReductionPotential.${field}`
+    if (!action.GHGReductionPotential) return ''
     return Object.values(action.GHGReductionPotential).find((value) => {
-        return value !== 'none'
+        return !!value
     })
 }
 

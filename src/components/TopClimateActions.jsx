@@ -11,30 +11,21 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
     const [generatedPrompt, setGeneratedPrompt] = useState('');
     const [generatedPlan, setGeneratedPlan] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
-    // Get top 3 actions of the specified type
 
+    // Get top 3 actions of the specified type
     const topActions = actions
         .sort((a, b) => a.actionPriority - b.actionPriority)
         .slice(0, 3);
 
-    const getReductionColor = (level) => {
-        switch (level) {
-            case "High":
-                return "text-red-500 font-bold";
-            case "Medium":
-                return "text-amber-500 font-bold";
-            case "Low":
-                return "text-blue-500 font-bold";
-        }
-    };
+
 
     const getProgressBars = (action) => {
         if (isAdaptation(type)) {
                 const level = action.AdaptationEffectiveness;
-                const filledBars = level === "High" ? 3 : level === "Medium" ? 2 : 1;
-                const color = level === "High"
+                const filledBars = level === "high" ? 3 : level === "medium" ? 2 : 1;
+                const color = level === "high"
                 ? "bg-blue-500"
-                : level === "Medium"
+                : level === "medium"
                     ? "bg-blue-400"
                     : "bg-blue-300";
 
@@ -49,7 +40,6 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                 // Mitigation logic
                 const potential = getReductionPotential(action);
                 const potentialValue = potential ? parseInt(potential.split('-')[0]) : 0; // Get the lower bound
-
                 const getBarColor = (value) => {
                             if (value >= 80) return "bg-blue-500";    // Very high 
                             if (value >= 60) return "bg-blue-400";    // High 
@@ -79,7 +69,6 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
 
             const generateActionPlan = async (action, type) => {
                 setIsGenerating(true);
-                 console.log(type)
                 try {
                     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
                     const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
