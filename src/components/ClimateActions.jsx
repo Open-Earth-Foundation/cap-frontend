@@ -6,14 +6,13 @@ import {adaptationColumns, mitigationColumns} from "./columns";
 import {MRT_TableContainer, useMaterialReactTable,} from "material-react-table";
 import TopClimateActions from "./TopClimateActions.jsx";
 import {MdInfoOutline, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from "react-icons/md";
-import {FiArrowDownRight, FiDownload} from "react-icons/fi";
+import {FiArrowDownRight, FiDownload, FiFilePdf} from "react-icons/fi";
 import {CSVLink} from "react-csv";
 import {writeFile} from "../utils/readWrite.js";
 import {ADAPTATION, isAdaptation, MITIGATION, prepareCsvData,} from "../utils/helpers.js";
 import {GiSandsOfTime} from "react-icons/gi";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import { exportToPDF } from "../utils/exportUtils.js";
-import { FiDownload, FiFilePdf } from "react-icons/fi";
 
 const getImpactLevelClass = (level) => {
     const classes = {
