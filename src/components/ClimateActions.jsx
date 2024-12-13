@@ -233,7 +233,7 @@ const ClimateActions = ({
                                     DOWNLOAD CSV
                                 </CSVLink>
                                 <button
-                                    onClick={() => exportToPDF(selectedCity, mitigationData, adaptationData)}
+                                    onClick={() => exportToPDF(selectedCity, mitigationData, adaptationData, generatedPlan)}
                                     className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold"
                                 >
                                     <FiFileText />

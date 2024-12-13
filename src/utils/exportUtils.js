@@ -209,7 +209,7 @@ export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRisk
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
-export const exportToPDF = (cityName, mitigationData, adaptationData) => {
+export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlan) => {
   const doc = new jsPDF();
   let yPos = 20;
   const margin = 20;
@@ -291,6 +291,19 @@ export const exportToPDF = (cityName, mitigationData, adaptationData) => {
     body: adaptationRows,
     margin: { left: margin }
   });
+
+  // Add generated plan if available
+  if (generatedPlan) {
+    doc.addPage();
+    yPos = 20;
+    doc.setFontSize(16);
+    doc.text("Generated Action Plan", margin, yPos);
+    yPos += 15;
+    
+    doc.setFontSize(10);
+    const splitText = doc.splitTextToSize(generatedPlan, pageWidth - 2 * margin);
+    doc.text(splitText, margin, yPos);
+  }
 
   doc.save(`${cityName}_climate_actions.pdf`);
 };
