@@ -72,7 +72,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                 try {
                     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
                     const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
-
+console.log("action.CoBenefits", JSON.stringify(action.CoBenefits, null, 2)) // TODO NINA
                     // Get the potential based on the type
                     const potential = isAdaptation(type) 
                         ? action.AdaptationEffectiveness 
@@ -84,10 +84,10 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                         ${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${action.Sector || action.Hazard}
                         Cost: ${action.CostInvestmentNeeded}
                         Implementation Timeline: ${action.TimelineForImplementation}
-                        ${action.CoBenefits ? `\nCo-benefits:\n${action.CoBenefits.join('\n')}` : ''}
-                        ${action.EquityAndInclusionConsiderations ? `\nEquity and Inclusion Considerations:\n${action.EquityAndInclusionConsiderations}` : ''}
-                        ${action.KeyPartnersAndResources ? `\nKey Partners and Resources:\n${action.KeyPartnersAndResources}` : ''}
-                        ${action.Barriers ? `\nPotential Barriers:\n${action.Barriers}` : ''}`;
+                        ${action.CoBenefits ? `Co-benefits:\n${Object.keys(action.CoBenefits).join(', ')}` : action.CoBenefits}
+                        ${action.EquityAndInclusionConsiderations ? `Equity and Inclusion Considerations: ${action.EquityAndInclusionConsiderations}` : ''}
+                        ${action.KeyPartnersAndResources ? `Key Partners and Resources: ${action.KeyPartnersAndResources}` : ''}
+                        ${action.Barriers ? `Potential Barriers: ${action.Barriers}` : ''}`;
                     setGeneratedPrompt(prompt);
                     
             const response = await axios.post('https://api.openai.com/v1/chat/completions', {
