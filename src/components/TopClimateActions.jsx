@@ -207,7 +207,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                                     className="text-gray-600 ">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
-                                    {isAdaptation(type) ? action.AdaptationEffectiveness : getReductionPotential(action)}
+                                    {isAdaptation(type) ? action.AdaptationEffectiveness : `${getReductionPotential(action)}%`}
                                 </p>
                                 {/*</span>*/}
                             </div>
