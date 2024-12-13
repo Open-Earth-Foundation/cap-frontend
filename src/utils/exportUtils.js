@@ -209,6 +209,92 @@ export const exportToPDF = (cityName, ccraData, qualitativeScore, customRiskLeve
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
+export const exportToPDF = (cityName, mitigationData, adaptationData) => {
+  const doc = new jsPDF();
+  let yPos = 20;
+  const margin = 20;
+  const pageWidth = doc.internal.pageSize.width;
+
+  // Title
+  doc.setFontSize(20);
+  doc.text(`Climate Actions Report - ${cityName}`, margin, yPos);
+  yPos += 20;
+
+  // Top Mitigation Actions
+  doc.setFontSize(16);
+  doc.text("Top Mitigation Actions", margin, yPos);
+  yPos += 15;
+
+  mitigationData.slice(0, 3).forEach((item, index) => {
+    doc.setFontSize(12);
+    doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.text(`Reduction Potential: ${item.action.GHGReductionPotential || 'N/A'}`, margin + 5, yPos);
+    yPos += 15;
+  });
+
+  // Full Mitigation List
+  yPos += 10;
+  doc.setFontSize(16);
+  doc.text("All Mitigation Actions", margin, yPos);
+  yPos += 10;
+
+  const mitigationHeaders = [['Priority', 'Action Name', 'Reduction Potential']];
+  const mitigationRows = mitigationData.map((item, index) => [
+    index + 1,
+    item.action.ActionName,
+    item.action.GHGReductionPotential || 'N/A'
+  ]);
+
+  doc.autoTable({
+    startY: yPos,
+    head: mitigationHeaders,
+    body: mitigationRows,
+    margin: { left: margin }
+  });
+
+  // Add new page for adaptation actions
+  doc.addPage();
+  yPos = 20;
+
+  // Top Adaptation Actions
+  doc.setFontSize(16);
+  doc.text("Top Adaptation Actions", margin, yPos);
+  yPos += 15;
+
+  adaptationData.slice(0, 3).forEach((item, index) => {
+    doc.setFontSize(12);
+    doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.text(`Adaptation Potential: ${item.action.AdaptationEffectiveness || 'N/A'}`, margin + 5, yPos);
+    yPos += 15;
+  });
+
+  // Full Adaptation List
+  yPos += 10;
+  doc.setFontSize(16);
+  doc.text("All Adaptation Actions", margin, yPos);
+  yPos += 10;
+
+  const adaptationHeaders = [['Priority', 'Action Name', 'Adaptation Potential']];
+  const adaptationRows = adaptationData.map((item, index) => [
+    index + 1,
+    item.action.ActionName,
+    item.action.AdaptationEffectiveness || 'N/A'
+  ]);
+
+  doc.autoTable({
+    startY: yPos,
+    head: adaptationHeaders,
+    body: adaptationRows,
+    margin: { left: margin }
+  });
+
+  doc.save(`${cityName}_climate_actions.pdf`);
+};
+
 export const exportUtils = {
   exportToCSV,
   exportToPDF

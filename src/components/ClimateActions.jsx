@@ -12,6 +12,8 @@ import {writeFile} from "../utils/readWrite.js";
 import {ADAPTATION, isAdaptation, MITIGATION, prepareCsvData,} from "../utils/helpers.js";
 import {GiSandsOfTime} from "react-icons/gi";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
+import { exportToPDF } from "../utils/exportUtils.js";
+import { FiDownload, FiFilePdf } from "react-icons/fi";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -231,6 +233,13 @@ const ClimateActions = ({
                                     <FiDownload/>
                                     DOWNLOAD CSV
                                 </CSVLink>
+                                <button
+                                    onClick={() => exportToPDF(selectedCity, mitigationData, adaptationData)}
+                                    className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold"
+                                >
+                                    <FiFilePdf />
+                                    EXPORT PDF
+                                </button>
                             </div>
                             <MRT_TableContainer
                                 table={
