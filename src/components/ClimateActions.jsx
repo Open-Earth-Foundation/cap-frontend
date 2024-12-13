@@ -73,6 +73,7 @@ const ClimateActions = ({
             data: rankedData,
             enableRowOrdering,
             initialState: {},
+            enablePagination: false,
             muiTableHeadCellProps: {
                 sx: {
                     backgroundColor: '#E8EAFB', // Desired background color
