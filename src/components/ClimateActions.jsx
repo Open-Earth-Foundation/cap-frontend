@@ -6,7 +6,7 @@ import {adaptationColumns, mitigationColumns} from "./columns";
 import {MRT_TableContainer, useMaterialReactTable,} from "material-react-table";
 import TopClimateActions from "./TopClimateActions.jsx";
 import {MdInfoOutline, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from "react-icons/md";
-import {FiArrowDownRight, FiDownload, FiFilePdf} from "react-icons/fi";
+import {FiArrowDownRight, FiDownload, FiFileText} from "react-icons/fi";
 import {CSVLink} from "react-csv";
 import {writeFile} from "../utils/readWrite.js";
 import {ADAPTATION, isAdaptation, MITIGATION, prepareCsvData,} from "../utils/helpers.js";
@@ -236,7 +236,7 @@ const ClimateActions = ({
                                     onClick={() => exportToPDF(selectedCity, mitigationData, adaptationData)}
                                     className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold"
                                 >
-                                    <FiFilePdf />
+                                    <FiFileText />
                                     EXPORT PDF
                                 </button>
                             </div>
