@@ -72,7 +72,6 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                 try {
                     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
                     const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
-console.log("action.CoBenefits", JSON.stringify(action.CoBenefits, null, 2)) // TODO NINA
                     // Get the potential based on the type
                     const potential = isAdaptation(type) 
                         ? action.AdaptationEffectiveness 
@@ -84,7 +83,7 @@ console.log("action.CoBenefits", JSON.stringify(action.CoBenefits, null, 2)) // 
                         ${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${action.Sector || action.Hazard}
                         Cost: ${action.CostInvestmentNeeded}
                         Implementation Timeline: ${action.TimelineForImplementation}
-                        ${action.CoBenefits ? `Co-benefits:\n${Object.keys(action.CoBenefits).join(', ')}` : action.CoBenefits}
+                        ${action.CoBenefits ? `Co-benefits:${Object.keys(action.CoBenefits).join(',  ')}` : action.CoBenefits}
                         ${action.EquityAndInclusionConsiderations ? `Equity and Inclusion Considerations: ${action.EquityAndInclusionConsiderations}` : ''}
                         ${action.KeyPartnersAndResources ? `Key Partners and Resources: ${action.KeyPartnersAndResources}` : ''}
                         ${action.Barriers ? `Potential Barriers: ${action.Barriers}` : ''}`;
@@ -179,7 +178,7 @@ console.log("action.CoBenefits", JSON.stringify(action.CoBenefits, null, 2)) // 
                                   {isAdaptation(action.ActionType) ? "Hazard" : "Sector"}
                                 </span>
                                 <span className="text-gray-600  flex-1 ml-4 text-right font-semibold">
-                                    {action.Sector || action.Hazard}
+                                    {action?.Sector?.join ? action.Sector.map(s => s.replace('_', ' ')).join(', ') : action.Sector || action.Hazard}
                                 </span>
                             </div>
 
