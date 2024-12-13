@@ -209,7 +209,7 @@ export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRisk
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
-export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlan) => {
+export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlans) => {
   const doc = new jsPDF();
   let yPos = 20;
   const margin = 20;
