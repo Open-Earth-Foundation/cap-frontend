@@ -93,7 +93,23 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                 model: "gpt-3.5-turbo",
                 messages: [{
                     role: "system",
-                    content: `You are a climate action planning expert specializing in ${action.actionType} strategies, with deep experience in urban planning. Create concise, actionable implementation plans for a city planner to use. Propose rapid action that can be taken in the first year, try to instill a sense of urgency that shows impact in the short term, and extended impact in time. Be realistic, and specific. Generic proposals are of no use. Focus on real impact. Take into account the reality of the city selected. Use this template and Markdown formatting for the action plan:
+                    content: `You are a climate action planning expert specializing in ${action.actionType} strategies, with deep experience in urban planning. Create concise, actionable implementation plans for a city planner to use. Propose rapid action that can be taken in the first year, try to instill a sense of urgency that shows impact in the short term, and extended impact in time. Be realistic, and specific. Generic proposals are of no use. Focus on real impact. Take into account the reality of the city selected. Use proper markdown headers (#) and this template for the action plan:
+
+# 1. In-depth main action description
+
+# 2. Proposed sub-actions
+
+# 3. Involved municipal institutions and partners
+
+# 4. Goals and milestones
+
+# 5. Action timeline
+
+# 6. Costs and budget considerations
+
+# 7. Monitoring, Evaluation and Reporting (MER) indicators
+
+# 8. Relationship with SDGs
 
 ## 1. In-depth main action description
 [Provide a detailed description]
