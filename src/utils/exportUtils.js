@@ -230,7 +230,9 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 10;
     doc.setFontSize(10);
-    doc.text(`Reduction Potential: ${item.action.GHGReductionPotential || 'N/A'}`, margin + 5, yPos);
+    const potential = item.action.GHGReductionPotential ? 
+      `${getReductionPotential(item.action)}%` : 'N/A';
+    doc.text(`Reduction Potential: ${potential}`, margin + 5, yPos);
     yPos += 15;
   });
 
@@ -268,7 +270,9 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 10;
     doc.setFontSize(10);
-    doc.text(`Adaptation Potential: ${item.action.AdaptationEffectiveness || 'N/A'}`, margin + 5, yPos);
+    const effectiveness = item.action.AdaptationEffectiveness ? 
+      toTitleCase(item.action.AdaptationEffectiveness) : 'N/A';
+    doc.text(`Adaptation Potential: ${effectiveness}`, margin + 5, yPos);
     yPos += 15;
   });
 
