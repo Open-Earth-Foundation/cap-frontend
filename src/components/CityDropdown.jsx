@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import Select from "react-select";
 import {CITIES} from "./constants.js";
+import {useTranslation} from "react-i18next";
 
 const CityDropdown = ({onCityChange, styles}) => {
     const [cities, setCities] = useState(CITIES);
@@ -8,36 +9,7 @@ const CityDropdown = ({onCityChange, styles}) => {
     const [selectedCity, setSelectedCity] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // useEffect(() => {
-    //   const fetchCities = async () => {
-    //     //console.log(climateActions)
-    //     try {
-    //       const uniqueCities = new Set();
-    //       const cityOptions = climateActions
-    //         .filter((city) => {
-    //           if (!uniqueCities.has(city.city_name)) {
-    //             uniqueCities.add(city.city_name);
-    //             return true;
-    //           }
-    //           return false;
-    //         })
-    //         .map((city) => ({
-    //           value: city.city_name,
-    //           label: `${city.city_name} - ${city.region}`,
-    //         }));
-    //
-    //       setCities(cityOptions);
-    //     } catch (error) {
-    //       console.error("Error fetching cities:", error);
-    //       setError(error.message);
-    //     } finally {
-    //       setIsLoading(false);
-    //     }
-    //   };
-    //
-    //   fetchCities();
-    // }, []);
+    const {t} = useTranslation();
 
     const handleCityChange = (selectedOption) => {
         setSelectedCity(selectedOption);
@@ -48,7 +20,7 @@ const CityDropdown = ({onCityChange, styles}) => {
 
     if (error)
         return (
-            <div className="text-red-500 text-sm">Error loading cities: {error}</div>
+            <div className="text-red-500 text-sm">{t("errorLoadingCities")}: {error}</div>
         );
 
     return (
@@ -56,7 +28,7 @@ const CityDropdown = ({onCityChange, styles}) => {
             value={selectedCity}
             onChange={handleCityChange}
             options={cities}
-            placeholder="Search for a city..."
+            placeholder={t("searchForACity")}
             isClearable
             isLoading={isLoading}
             styles={styles}

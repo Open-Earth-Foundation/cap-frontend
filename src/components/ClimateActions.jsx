@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {useState} from "react";
 import "./ClimateActions.css";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -13,6 +13,7 @@ import {ADAPTATION, isAdaptation, MITIGATION, prepareCsvData,} from "../utils/he
 import {GiSandsOfTime} from "react-icons/gi";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import { exportToPDF } from "../utils/exportUtils.js";
+import {useTranslation} from "react-i18next";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -35,6 +36,7 @@ const ClimateActions = ({
     const [generatedPlan, setGeneratedPlan] = useState('');
     const [generatedPlans, setGeneratedPlans] = useState([]);
 
+    const {t} = useTranslation();
     const addRank = (actions) =>
         actions.map((action, index) => ({...action, id: index + 1}));
 
@@ -100,7 +102,7 @@ const ClimateActions = ({
     };
 
     const mitigationTable = createTable(
-        mitigationColumns,
+        mitigationColumns(t),
         enableRowOrdering,
         mitigationData,
         (newRanking) => {
@@ -110,7 +112,7 @@ const ClimateActions = ({
         MITIGATION,
     );
     const adaptationTable = createTable(
-        adaptationColumns,
+        adaptationColumns(t),
         enableRowOrdering,
         adaptationData,
         (newRanking) => {
@@ -135,35 +137,33 @@ const ClimateActions = ({
     };
     const mitigationCsvData = prepareCsvData(
         mitigationData,
-        mitigationColumns,
+        mitigationColumns(t),
     );
     const adaptationCsvData = prepareCsvData(
         adaptationData,
-        adaptationColumns,
+        adaptationColumns(t),
     );
 
     return (
         <div className="max-w-screen-xl mx-auto p-12">
 
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
-                Climate actions prioritization for your city
+                {t("climateActionsPrioritizationForYourCity")}
             </h1>
             <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-                Discover the ranking of your city's climate actions according to
-                their effectiveness, costs and benefits, helping you to
-                prioritize those with the greatest potential for impact.
+                {t("discover")}
             </p>
             <Tabs>
                 <TabList className="flex justify-left mb-12 my-8 tab-actions">
                     <Tab onClick={() => setEnableRowOrdering(false)}>
                         <FiArrowDownRight/>
-                        <span className="tab-text">Mitigation</span>
+                        <span className="tab-text">{t("mitigation")}</span>
                     </Tab>
                     <Tab onClick={() => setEnableRowOrdering(false)}>
                         <div>
                             <MdOutlineFlood/>
                         </div>
-                        <span className="tab-text">Adaptation</span>
+                        <span className="tab-text">{t("adaptation")}</span>
                     </Tab>
                 </TabList>
                 {[MITIGATION, ADAPTATION].map((type) =>
@@ -183,12 +183,10 @@ const ClimateActions = ({
                             />
                             <div className="mt-12 mb-8">
                                 <h2 className="text-2xl font-normal text-gray-900 font-poppins">
-                                    Ranking list of climate actions
+                                    {t("rankingListOfClimateActions")}
                                 </h2>
                                 <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
-                                    Apply your local expertise to customize action priorities. Reorder based on your
-                                    city's specific needs, feasibility, and potential impacts. Save your changes and
-                                    download the complete table to share with stakeholders.
+                                    {t("applyYourLocalExpertise")}
                                 </p>
                             </div>
                             <div className="flex justify-end gap-4 mb-8">
@@ -201,7 +199,7 @@ const ClimateActions = ({
                                     <div>
                                         <MdOutlineLowPriority/>
                                     </div>
-                                    MODIFY RANKINGS
+                                    {t("modifyRankings")}
                                 </button>}
                                 {enableRowOrdering && <>
                                     <button
@@ -213,7 +211,7 @@ const ClimateActions = ({
                                         <div>
                                             <MdOutlineLowPriority/>
                                         </div>
-                                        CANCEL SORTING
+                                        {t("cancelSorting")}
                                     </button>
                                     <button
                                         className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold save-rankings"
@@ -225,7 +223,7 @@ const ClimateActions = ({
                                         ) : (
                                             <MdOutlineSave lassName="text-lg"/>
                                         )}
-                                        SAVE RANKINGS
+                                        {t("saveRankings")}
                                     </button>
                                 </>}
                                 <CSVLink
@@ -238,7 +236,7 @@ const ClimateActions = ({
                                     className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
                                 >
                                     <FiDownload/>
-                                    DOWNLOAD CSV
+                                    {t("downloadCsv")}
                                 </CSVLink>
                                 <button
                                     onClick={() => exportToPDF(selectedCity, mitigationData, adaptationData, generatedPlans)}

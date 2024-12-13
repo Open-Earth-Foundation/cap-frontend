@@ -1,21 +1,24 @@
 import React from 'react';
 import CityDropdown from './CityDropdown';
+import { useTranslation } from 'react-i18next';
 
 const Hero = ({ onSearch }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="container mx-auto px-4 py-36 flex justify-center items-center gap-32 max-w-[1200px]">
       {/* Left column with text */}
       <div className="flex-1 flex flex-col justify-center items-start gap-6">
         <h1 className="w-full">
           <span className="block text-5xl font-normal leading-tight font-poppins">
-            Take action.
+            {t('takeAction')}
           </span>
           <span className="block text-5xl font-bold leading-tight font-poppins">
-            Drive Impact.
+            {t('driveImpact')}
           </span>
         </h1>
         <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-          Empower your city to prioritize climate actions that make a difference with data-driven insights.
+          {t('empowerYourCity')}
         </p>
       </div>
 
@@ -38,7 +41,7 @@ const Hero = ({ onSearch }) => {
               />
             </svg>
           </div>
-          <CityDropdown 
+          <CityDropdown
             onCityChange={onSearch}
             styles={{
               control: (base) => ({

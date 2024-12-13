@@ -4,6 +4,7 @@ import { FiLoader } from "react-icons/fi";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
+import {useTranslation} from "react-i18next";
 
 
 const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setGeneratedPlan, generatedPlans, setGeneratedPlans}) => {
@@ -14,83 +15,83 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
     
     const [isPlansListModalOpen, setIsPlansListModalOpen] = useState(false);
 
+    const {t} = useTranslation();
     // Get top 3 actions of the specified type
     const topActions = actions
         .sort((a, b) => a.actionPriority - b.actionPriority)
         .slice(0, 3);
 
 
-
     const getProgressBars = (action) => {
         if (isAdaptation(type)) {
-                const level = action.AdaptationEffectiveness;
-                const filledBars = level === "high" ? 3 : level === "medium" ? 2 : 1;
-                const color = level === "high"
+            const level = action.AdaptationEffectiveness;
+            const filledBars = level === "high" ? 3 : level === "medium" ? 2 : 1;
+            const color = level === "high"
                 ? "bg-blue-500"
                 : level === "medium"
                     ? "bg-blue-400"
                     : "bg-blue-300";
 
-                return Array(3).fill().map((_, i) => (
-                    <div
-                        key={i}
-                        className={`h-1 w-1/2 rounded ${i < filledBars ? color : "bg-gray-200"}`}
-                    />
-                ));
-                
-        } else {
-                // Mitigation logic
-                const potential = getReductionPotential(action);
-                const potentialValue = potential ? parseInt(potential.split('-')[0]) : 0; // Get the lower bound
-                const getBarColor = (value) => {
-                            if (value >= 80) return "bg-blue-500";    // Very high 
-                            if (value >= 60) return "bg-blue-400";    // High 
-                            if (value >= 40) return "bg-blue-300";  // Medium
-                            if (value >= 20) return "bg-blue-200"; // Low 
-                            return "bg-blue-100";                    // Very low
-                        };
-            
-                        const filledBars = potentialValue >= 80 ? 5 
-                            : potentialValue >= 60 ? 4 
-                            : potentialValue >= 40 ? 3 
-                            : potentialValue >= 20 ? 2 
-                            : 1;
-            
-                        const color = getBarColor(potentialValue);
-            
-                        return Array(5).fill().map((_, i) => (
-                            <div
-                                key={i}
-                                className={`h-1 w-1/3 rounded ${
-                                    i < filledBars ? color : "bg-gray-200"
-                                }`}
-                            />
-                        ));
-                    }
-                };
+            return Array(3).fill().map((_, i) => (
+                <div
+                    key={i}
+                    className={`h-1 w-1/2 rounded ${i < filledBars ? color : "bg-gray-200"}`}
+                />
+            ));
 
-            const generateActionPlan = async (action, type) => {
-                setIsGenerating(true);
-                try {
-                    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-                    const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
-                    // Get the potential based on the type
-                    const potential = isAdaptation(type) 
-                        ? action.AdaptationEffectiveness 
-                        : getReductionPotential(action);
-                    const prompt = `Draft a brief step by step plan for this ${actionType} climate action in ${selectedCity}, Brazil:
+        } else {
+            // Mitigation logic
+            const potential = getReductionPotential(action);
+            const potentialValue = potential ? parseInt(potential.split('-')[0]) : 0; // Get the lower bound
+            const getBarColor = (value) => {
+                if (value >= 80) return "bg-blue-500";    // Very high
+                if (value >= 60) return "bg-blue-400";    // High
+                if (value >= 40) return "bg-blue-300";  // Medium
+                if (value >= 20) return "bg-blue-200"; // Low
+                return "bg-blue-100";                    // Very low
+            };
+
+            const filledBars = potentialValue >= 80 ? 5
+                : potentialValue >= 60 ? 4
+                    : potentialValue >= 40 ? 3
+                        : potentialValue >= 20 ? 2
+                            : 1;
+
+            const color = getBarColor(potentialValue);
+
+            return Array(5).fill().map((_, i) => (
+                <div
+                    key={i}
+                    className={`h-1 w-1/3 rounded ${
+                        i < filledBars ? color : "bg-gray-200"
+                    }`}
+                />
+            ));
+        }
+    };
+
+    const generateActionPlan = async (action, type) => {
+        setIsGenerating(true);
+        try {
+            const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+            const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
+            // Get the potential based on the type
+            const potential = isAdaptation(type)
+                ? action.AdaptationEffectiveness
+                : getReductionPotential(action);
+            const prompt = `Draft a brief step by step plan for this ${actionType} climate action in ${selectedCity}, Brazil:
                         Name: ${action.ActionName}
                         Description: ${action.Description}
                         ${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}
                         ${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${action.Sector || action.Hazard}
                         Cost: ${action.CostInvestmentNeeded}
                         Implementation Timeline: ${action.TimelineForImplementation}
-                        ${action.CoBenefits ? `Co-benefits:${Object.keys(action.CoBenefits).join(',  ')}` : action.CoBenefits}
+                        ${action.CoBenefits ? `Co-benefits: ${Object.keys(action.CoBenefits).join(',  ')}` : action.CoBenefits}
                         ${action.EquityAndInclusionConsiderations ? `Equity and Inclusion Considerations: ${action.EquityAndInclusionConsiderations}` : ''}
                         ${action.KeyPartnersAndResources ? `Key Partners and Resources: ${action.KeyPartnersAndResources}` : ''}
                         ${action.Barriers ? `Potential Barriers: ${action.Barriers}` : ''}`;
-                    setGeneratedPrompt(prompt);
-                    
+            setGeneratedPrompt(prompt);
+
             const response = await axios.post('https://api.openai.com/v1/chat/completions', {
                 model: "gpt-3.5-turbo",
                 messages: [{
@@ -177,7 +178,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
     return (
         <div className="space-y-6">
             <h1 className="text-2xl font-normal text-gray-900 font-poppins">
-                Top {type?.toLowerCase()} climate actions
+                {t(`top${type}ClimateActions`)}
             </h1>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -186,11 +187,11 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                     <div
                         key={index}
                         className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${
-                    index === 0 
-                            ? 'border-t-4 border-t-primary first-card ring-1 ring-blue-100' 
-                            : 'shadow-sm'
+                            index === 0
+                                ? 'border-t-4 border-t-primary first-card ring-1 ring-blue-100'
+                                : 'shadow-sm'
                         }`}
-                        >
+                    >
                         {/*Index*/}
                         <div>
               <span className="text-4xl font-bold text-gray-900 font-poppins">
@@ -215,7 +216,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                             </div>
                             <div className="flex justify-between items-center pt-2">
                                 <span
-                                    className="text-gray-600 ">{isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}</span>
+                                    className="text-gray-600 ">{isAdaptation(type) ? t("adaptationPotential") : t("reductionPotential")}</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
                                     {isAdaptation(type) ? toTitleCase(action.AdaptationEffectiveness) : `${getReductionPotential(action)}%`}
@@ -229,7 +230,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                         <div className="space-y-3">
                             <div className="flex justify-between">
                                 <span className="text-gray-600">
-                                  {isAdaptation(action.ActionType) ? "Hazard" : "Sector"}
+                                  {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
                                 </span>
                                 <span className="text-gray-600  flex-1 ml-4 text-right font-semibold">
                                     {action?.Sector?.join ? 
@@ -241,14 +242,14 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                             </div>
 
                             <div className="flex justify-between ">
-                                <span className="text-gray-600">Estimated cost</span>
+                                <span className="text-gray-600">{t("estimatedCost")}</span>
                                 <span className="text-gray-600 font-semibold">
                   {toTitleCase(action.CostInvestmentNeeded)}
                 </span>
                             </div>
 
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Implementation time</span>
+                                <span className="text-gray-600">{t("implementationTime")}</span>
                                 <span className="text-gray-600 font-semibold">
                   {action.TimelineForImplementation}
                 </span>
@@ -257,7 +258,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
 
                         <div className="flex justify-between items-center gap-2">
                             <button onClick={() => setSelectedAction(action)} className="button-link">
-                                See more details
+                                {t("seeMoreDetails")}
                             </button>
                             {index === 0 && (
                                 <button
@@ -266,9 +267,9 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                                     className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-colors"
                                 >
                                     {isGenerating ? (
-                                        <FiLoader className="animate-spin" />
+                                        <FiLoader className="animate-spin"/>
                                     ) : (
-                                        'Generate Plan'
+                                        t('generatePlan')
                                     )}
                                 </button>
                             )}

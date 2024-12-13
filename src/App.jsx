@@ -1,20 +1,21 @@
 import React, {useState} from "react";
+import i18n from "i18next";
 import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
 import CityMap from "./components/CityMap.jsx";
 import "./index.css";
 import {readFile} from "./utils/readWrite.js";
 import {ADAPTATION, MITIGATION} from "./utils/helpers.js";
-
+import {useTranslation} from 'react-i18next';
 
 const App = () => {
     const [selectedCity, setSelectedCity] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [adaptationData, setAdaptationData] = useState(
-        []
-    )
-    const [mitigationData, setMitigationData] = useState([])
+    const [adaptationData, setAdaptationData] = useState([]);
+    const [mitigationData, setMitigationData] = useState([]);
+    const {t} = useTranslation();
+
     const fetchData = async (city, type) => {
         if (!city) return;
         setLoading(true);
@@ -37,22 +38,34 @@ const App = () => {
         setSelectedCity(searchTerm);
         if (searchTerm) {
             fetchData(searchTerm, ADAPTATION);
-            fetchData(searchTerm, MITIGATION)
+            fetchData(searchTerm, MITIGATION);
         }
     };
 
     const handleBack = () => {
         setSelectedCity("");
-        setData([]);
+        setAdaptationData([]);
+        setMitigationData([]);
         setError(null);
+    };
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
     };
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
             {/* Header */}
-            <header className="bg-primary text-white p-4 ">
-                <div className="container mx-auto max-w-[1160px] align-center">
+            <header className="bg-primary text-white p-4">
+                <div className="container mx-auto max-w-[1160px] flex justify-between items-center">
                     <h1 className="text-xl font-semibold">CityCatalyst CAP</h1>
+                    <div>
+                         <button onClick={() => changeLanguage('en')} className="mx-1">EN</button>
+                        <span>|</span>
+                        <button onClick={() => changeLanguage('es')} className="mx-1">ES</button>
+                        <span>|</span>
+                        <button onClick={() => changeLanguage('pt')} className="mx-1">PT</button>
+                     </div>
                 </div>
             </header>
 
@@ -75,10 +88,10 @@ const App = () => {
                                 className="mx-auto mb-6 h-32 w-auto"
                             />
                             <h2 className="text-xl font-semibold mb-2">
-                                Select a city to explore climate actions
+                                {t("selectACityToExploreClimateActions")}
                             </h2>
                             <p className="text-gray-500">
-                                Discover top actions tailored to the city's climate needs.
+                                {t("discoverTopActionsTailoredToTheCitysClimateNeeds")}
                             </p>
                         </div>
                     </div>
