@@ -1,5 +1,5 @@
 import React from 'react';
-import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
+import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers.js";
 import {FiX} from 'react-icons/fi';
 
 const ActionDetailsModal = ({cityAction, onClose}) => {
