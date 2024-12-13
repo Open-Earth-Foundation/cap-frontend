@@ -304,9 +304,36 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     if (generatedPlan) {
       const lines = generatedPlan.split('\n');
       lines.forEach(line => {
-        const splitText = doc.splitTextToSize(line, pageWidth - 2 * margin);
-        doc.text(splitText, margin, yPos);
-        yPos += 10;
+        // Handle markdown headers
+        if (line.startsWith('##')) {
+          doc.setFontSize(14);
+          doc.setFont(undefined, 'bold');
+          const headerText = line.replace(/^##\s+/, '');
+          doc.text(headerText, margin, yPos);
+          yPos += 15;
+        } else if (line.startsWith('*')) {
+          // Handle bullet points
+          doc.setFontSize(10);
+          doc.setFont(undefined, 'normal');
+          const bulletText = line.replace(/^\*\s+/, '• ');
+          const splitText = doc.splitTextToSize(bulletText, pageWidth - 2 * margin - 5);
+          doc.text(splitText, margin + 5, yPos);
+          yPos += 10 * splitText.length;
+        } else {
+          // Handle normal text
+          doc.setFontSize(10);
+          doc.setFont(undefined, 'normal');
+          const splitText = doc.splitTextToSize(line, pageWidth - 2 * margin);
+          if (splitText.length > 0 && splitText[0].trim() !== '') {
+            doc.text(splitText, margin, yPos);
+            yPos += 10 * splitText.length;
+          }
+        }
+        
+        // Add some padding after each section
+        if (line.startsWith('##')) {
+          yPos += 5;
+        }
       });
     }
   }

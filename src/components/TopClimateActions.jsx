@@ -151,8 +151,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
             });
             const plan = response.data.choices[0].message.content;
             console.log('Generated Plan:', plan);
-            setGeneratedPlan(plan); 
-            props.setGeneratedPlan(plan);
+            setGeneratedPlan(plan);
+            setGeneratedPlan(plan);
             setIsPlanModalOpen(true);
             return plan;
             
