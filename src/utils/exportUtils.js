@@ -308,29 +308,40 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
         yPos = 20;
       }
 
+      // Title and timestamp for each plan
       doc.setFontSize(14);
       doc.text(`Plan ${index + 1}: ${planData.actionName}`, margin, yPos);
-      yPos += 10;
+      yPos += 8;
       
       doc.setFontSize(10);
       doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos);
-      yPos += 15;
+      yPos += 12;
 
+      // Process the plan text
       doc.setFontSize(12);
       const splitText = doc.splitTextToSize(planData.plan, pageWidth - 2 * margin);
       
-      // Check if text will overflow page
-      if (yPos + (splitText.length * 7) > pageHeight - 40) {
+      // Calculate lines per page (accounting for margins)
+      const lineHeight = 7;
+      const linesPerPage = Math.floor((pageHeight - 40) / lineHeight);
+      
+      // Process text line by line
+      for (let i = 0; i < splitText.length; i++) {
+        if (yPos > pageHeight - 40) {
+          doc.addPage();
+          yPos = 20;
+        }
+        
+        doc.text(splitText[i], margin, yPos);
+        yPos += lineHeight;
+      }
+      
+      // Add some spacing between plans
+      yPos += 20;
+      if (yPos > pageHeight - 60) {
         doc.addPage();
         yPos = 20;
       }
-      
-      doc.text(splitText, margin, yPos);
-      yPos += splitText.length * 7 + 20; // Adjust spacing based on text length
-      
-      // Add page break after each plan
-      doc.addPage();
-      yPos = 20;
     });
   }
 
