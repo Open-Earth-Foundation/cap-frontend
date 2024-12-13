@@ -110,10 +110,10 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                         <div className="space-y-4 mb-6 font-poppins">
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">
-                                    {isAdaptation(action.ActionType) ? "Adaptation Potential" : "Reduction Potential"}
+                                    {isAdaptation(action.type) ? "Adaptation Potential" : "Reduction Potential"}
                                 </span>
                                 <span className="text-md font-semibold text-[#4B4C63]">
-                                    {isAdaptation(action.ActionType) ? toTitleCase(action.AdaptationEffectiveness || '') : `${getReductionPotential(action)}%`}
+                                    {isAdaptation(action.type) ? toTitleCase(action.AdaptationEffectiveness || '') : `${getReductionPotential(action)}%`}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
