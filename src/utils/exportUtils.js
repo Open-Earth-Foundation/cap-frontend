@@ -293,7 +293,9 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   });
 
   // Add generated plans
-  if (generatedPlans && generatedPlans.length > 0) {
+  const pageHeight = doc.internal.pageSize.height;
+  
+  if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
     doc.addPage();
     yPos = 20;
     doc.setFontSize(16);
