@@ -11,6 +11,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
     const [generatedPrompt, setGeneratedPrompt] = useState('');
     const [localGeneratedPlan, setLocalGeneratedPlan] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
+    const [generatedPlans, setGeneratedPlans] = useState([]);
+    const [isPlansListModalOpen, setIsPlansListModalOpen] = useState(false);
 
     // Get top 3 actions of the specified type
     const topActions = actions
@@ -151,6 +153,13 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
             });
             const plan = response.data.choices[0].message.content;
             console.log('Generated Plan:', plan);
+            const newPlan = {
+                plan,
+                prompt: generatedPrompt,
+                timestamp: new Date().toISOString(),
+                actionName: action.ActionName
+            };
+            setGeneratedPlans(prevPlans => [...prevPlans, newPlan]);
             setLocalGeneratedPlan(plan);
             setGeneratedPlan(plan); // Update parent state
             console.log('Setting generated plan in parent:', plan);
@@ -267,12 +276,26 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                     </div>
                 ))}
             </div>
+            {generatedPlans.length > 0 && (
+                <button
+                    onClick={() => setIsPlansListModalOpen(true)}
+                    className="mt-6 flex items-center gap-2 px-4 py-2 bg-white text-primary border border-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                >
+                    See Generated Plans ({generatedPlans.length})
+                </button>
+            )}
             <PlanModal 
-                    isOpen={isPlanModalOpen}
-                    onClose={() => setIsPlanModalOpen(false)}
-                    prompt={generatedPrompt}
-                    plan={localGeneratedPlan}
-                />
+                isOpen={isPlanModalOpen}
+                onClose={() => setIsPlanModalOpen(false)}
+                prompt={generatedPrompt}
+                plan={localGeneratedPlan}
+            />
+            <PlanModal 
+                isOpen={isPlansListModalOpen}
+                onClose={() => setIsPlansListModalOpen(false)}
+                plans={generatedPlans}
+                isListView={true}
+            />
         </div>
     );
 };
