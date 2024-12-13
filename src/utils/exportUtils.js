@@ -217,6 +217,7 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   let yPos = 20;
   const margin = 20;
   const pageWidth = doc.internal.pageSize.width;
+  const defaultFont = { normal: 'helvetica', bold: 'helvetica' }; // Added default font definition
 
   // Title
   doc.setFontSize(20);
@@ -229,12 +230,12 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   yPos += 15;
 
   mitigationData.slice(0, 3).forEach((item, index, type = 'mitigation') => {
-    doc.setFont('Poppins');
+    doc.setFont(defaultFont.normal, 'bold'); // Changed to default font
     doc.setFontSize(14);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 12;
 
-    doc.setFont('Open Sans');
+    doc.setFont(defaultFont.normal, 'normal'); // Changed to default font
     doc.setFontSize(11);
     // Description with proper text wrapping
     const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
@@ -292,12 +293,12 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   yPos += 15;
 
   adaptationData.slice(0, 3).forEach((item, index, type = 'adaptation') => {
-    doc.setFont('Poppins');
+    doc.setFont(defaultFont.normal, 'bold'); // Changed to default font
     doc.setFontSize(14);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 12;
 
-    doc.setFont('Open Sans');
+    doc.setFont(defaultFont.normal, 'normal'); // Changed to default font
     doc.setFontSize(11);
     // Description with proper text wrapping
     const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
