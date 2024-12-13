@@ -6,7 +6,7 @@ import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers
 import PlanModal from "./PlanModal";
 
 
-const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setGeneratedPlan}) => {
+const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setGeneratedPlan, generatedPlans, setGeneratedPlans}) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedPrompt, setGeneratedPrompt] = useState('');
     const [localGeneratedPlan, setLocalGeneratedPlan] = useState('');
