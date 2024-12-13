@@ -229,13 +229,17 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   yPos += 15;
 
   mitigationData.slice(0, 3).forEach((item, index, type = 'mitigation') => {
-    doc.setFontSize(12);
+    doc.setFont('Poppins');
+    doc.setFontSize(14);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
-    yPos += 10;
-    doc.setFontSize(10);
-    // Description
-    doc.text(`Description: ${item.action.Description}`, margin + 5, yPos);
-    yPos += 15;
+    yPos += 12;
+
+    doc.setFont('Open Sans');
+    doc.setFontSize(11);
+    // Description with proper text wrapping
+    const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
+    doc.text(descriptionText, margin + 5, yPos);
+    yPos += (descriptionText.length * 7) + 8;
     // Reduction/Adaptation Potential
     const potential = item.action.GHGReductionPotential ? 
       `${getReductionPotential(item.action)}%` : 
@@ -288,13 +292,17 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   yPos += 15;
 
   adaptationData.slice(0, 3).forEach((item, index, type = 'adaptation') => {
-    doc.setFontSize(12);
+    doc.setFont('Poppins');
+    doc.setFontSize(14);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
-    yPos += 10;
-    doc.setFontSize(10);
-    // Description
-    doc.text(`Description: ${item.action.Description}`, margin + 5, yPos);
-    yPos += 15;
+    yPos += 12;
+
+    doc.setFont('Open Sans');
+    doc.setFontSize(11);
+    // Description with proper text wrapping
+    const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
+    doc.text(descriptionText, margin + 5, yPos);
+    yPos += (descriptionText.length * 7) + 8;
     // Reduction/Adaptation Potential
     const potential = item.action.GHGReductionPotential ?
       `${getReductionPotential(item.action)}%` :
