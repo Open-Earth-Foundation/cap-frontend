@@ -292,30 +292,33 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     margin: { left: margin }
   });
 
-  // Add generated plan if available
-  console.log('Checking for plan in PDF export. Plan:', generatedPlan);
-  console.log('Plan type:', typeof generatedPlan);
-  console.log('Plan length:', generatedPlan?.length);
-  
-  if (generatedPlan) {
-    console.log('Adding plan page to PDF');
+  // Add generated plans
+  if (generatedPlans && generatedPlans.length > 0) {
     doc.addPage();
     yPos = 20;
     doc.setFontSize(16);
-    doc.text("Generated Action Plan", margin, yPos);
-    yPos += 15;
-    
-    doc.setFontSize(10);
-    if (generatedPlan) {
-      console.log('Adding plan to PDF:', generatedPlan);
+    doc.text("Generated Action Plans", margin, yPos);
+    yPos += 20;
+
+    generatedPlans.forEach((planData, index) => {
+      if (yPos > pageHeight - 40) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.text(`Plan ${index + 1}: ${planData.actionName}`, margin, yPos);
+      yPos += 10;
+      
+      doc.setFontSize(10);
+      doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos);
+      yPos += 15;
+
       doc.setFontSize(12);
-      doc.setFont(undefined, 'normal');
-      const splitText = doc.splitTextToSize(generatedPlan, pageWidth - 2 * margin);
+      const splitText = doc.splitTextToSize(planData.plan, pageWidth - 2 * margin);
       doc.text(splitText, margin, yPos);
-      yPos += 10 * splitText.length;
-    } else {
-      console.log('No plan available for PDF export');
-    }
+      yPos += 10 * splitText.length + 20;
+    });
   }
 
   doc.save(`${cityName}_climate_actions.pdf`);
