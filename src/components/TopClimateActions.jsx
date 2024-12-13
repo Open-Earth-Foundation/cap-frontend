@@ -221,7 +221,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity}) => 
                                   {isAdaptation(action.ActionType) ? "Hazard" : "Sector"}
                                 </span>
                                 <span className="text-gray-600  flex-1 ml-4 text-right font-semibold">
-                                    {action?.Sector?.join ? action.Sector.map(s => s.replace('_', ' ')).join(', ') : action.Sector || action.Hazard}
+                                    {action?.Sector?.join ? action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') : toTitleCase(action.Sector || action.Hazard)}
                                 </span>
                             </div>
 
