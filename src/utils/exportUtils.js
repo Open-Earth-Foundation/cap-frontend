@@ -318,8 +318,19 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
 
       doc.setFontSize(12);
       const splitText = doc.splitTextToSize(planData.plan, pageWidth - 2 * margin);
+      
+      // Check if text will overflow page
+      if (yPos + (splitText.length * 7) > pageHeight - 40) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
       doc.text(splitText, margin, yPos);
-      yPos += 10 * splitText.length + 20;
+      yPos += splitText.length * 7 + 20; // Adjust spacing based on text length
+      
+      // Add page break after each plan
+      doc.addPage();
+      yPos = 20;
     });
   }
 
