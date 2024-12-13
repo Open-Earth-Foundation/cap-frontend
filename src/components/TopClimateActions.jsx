@@ -11,7 +11,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
     const [generatedPrompt, setGeneratedPrompt] = useState('');
     const [localGeneratedPlan, setLocalGeneratedPlan] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
-    const [generatedPlans, setGeneratedPlans] = useState([]);
+    
     const [isPlansListModalOpen, setIsPlansListModalOpen] = useState(false);
 
     // Get top 3 actions of the specified type

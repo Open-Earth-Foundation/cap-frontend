@@ -27,12 +27,6 @@ const PlanModal = ({ isOpen, onClose, prompt, plan, plans, isListView }) => {
                                         </span>
                                     </div>
                                     <div className="space-y-4">
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h4 className="text-sm font-medium text-gray-500 mb-2">Prompt:</h4>
-                                            <ReactMarkdown className="text-sm text-gray-700 whitespace-pre-wrap">
-                                                {planData.prompt}
-                                            </ReactMarkdown>
-                                        </div>
                                         <div className="bg-white p-4 rounded-lg">
                                             <h4 className="text-sm font-medium text-gray-500 mb-2">Response:</h4>
                                             <ReactMarkdown className="prose prose-lg max-w-none prose-headings:font-poppins prose-h2:text-2xl prose-h2:font-bold prose-h2:text-blue-600 prose-h2:mt-8 prose-h2:mb-4 prose-h2:border-b-2 prose-h2:border-blue-100 prose-h2:pb-3 prose-ul:list-disc prose-ul:pl-5 prose-li:mb-1 prose-strong:text-gray-700">

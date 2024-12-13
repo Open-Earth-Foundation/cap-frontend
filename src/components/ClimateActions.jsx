@@ -33,6 +33,7 @@ const ClimateActions = ({
     const [isSaving, setIsSaving] = useState(false);
     const [selectedAction, setSelectedAction] = useState();
     const [generatedPlan, setGeneratedPlan] = useState('');
+    const [generatedPlans, setGeneratedPlans] = useState([]);
 
     const addRank = (actions) =>
         actions.map((action, index) => ({...action, id: index + 1}));
@@ -177,6 +178,8 @@ const ClimateActions = ({
                                 setSelectedAction={setSelectedAction}
                                 selectedCity={selectedCity}
                                 setGeneratedPlan={setGeneratedPlan}
+                                generatedPlans={generatedPlans}
+                                setGeneratedPlans={setGeneratedPlans}
                             />
                             <div className="mt-12 mb-8">
                                 <h2 className="text-2xl font-normal text-gray-900 font-poppins">
