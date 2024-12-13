@@ -31,7 +31,8 @@ const ClimateActions = ({
                         }) => {
     const [enableRowOrdering, setEnableRowOrdering] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [selectedAction, setSelectedAction] = useState()
+    const [selectedAction, setSelectedAction] = useState();
+    const [generatedPlan, setGeneratedPlan] = useState('');
 
     const addRank = (actions) =>
         actions.map((action, index) => ({...action, id: index + 1}));
@@ -170,9 +171,13 @@ const ClimateActions = ({
                                             onClose={() => setSelectedAction(null)}/>
 
                         <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions actions={isAdaptation(type) ? adaptationData : mitigationData}
-                                               type={type} setSelectedAction={setSelectedAction}
-                                               selectedCity={selectedCity}/>
+                            <TopClimateActions 
+                                actions={isAdaptation(type) ? adaptationData : mitigationData}
+                                type={type} 
+                                setSelectedAction={setSelectedAction}
+                                selectedCity={selectedCity}
+                                setGeneratedPlan={setGeneratedPlan}
+                            />
                             <div className="mt-12 mb-8">
                                 <h2 className="text-2xl font-normal text-gray-900 font-poppins">
                                     Ranking list of climate actions
