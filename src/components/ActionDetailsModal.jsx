@@ -2,7 +2,7 @@ import React from 'react';
 import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers.js";
 import {FiX} from 'react-icons/fi';
 
-const ActionDetailsModal = ({cityAction, onClose}) => {
+const ActionDetailsModal = ({cityAction, onClose, type}) => {
     if (!cityAction) return null;
     const action = cityAction;
     // Helper function to render progress bars based on reduction potential
@@ -110,10 +110,10 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                         <div className="space-y-4 mb-6 font-poppins">
                             <div className="flex justify-between items-center">
                                 <span className="text-md text-[#4B4C63]">
-                                    {isAdaptation(action.ActionType) ? "Adaptation Potential" : "Reduction Potential"}
+                                    {isAdaptation(type) ? "Adaptation Potential" : "Reduction Potential"}
                                 </span>
                                 <span className="text-md font-semibold text-[#4B4C63]">
-                                    {isAdaptation(action.ActionType) ? action.AdaptationEffectiveness : `${getReductionPotential(action)}%`}
+                                    {isAdaptation(type) ? toTitleCase(action.AdaptationEffectiveness) : `${getReductionPotential(action)}%`}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
