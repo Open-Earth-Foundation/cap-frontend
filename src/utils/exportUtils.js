@@ -293,7 +293,12 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   });
 
   // Add generated plan if available
+  console.log('Checking for plan in PDF export. Plan:', generatedPlan);
+  console.log('Plan type:', typeof generatedPlan);
+  console.log('Plan length:', generatedPlan?.length);
+  
   if (generatedPlan) {
+    console.log('Adding plan page to PDF');
     doc.addPage();
     yPos = 20;
     doc.setFontSize(16);
