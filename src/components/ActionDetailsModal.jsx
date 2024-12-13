@@ -112,7 +112,7 @@ const ActionDetailsModal = ({cityAction, onClose}) => {
                                 <span
                                     className="text-md text-[#4B4C63]">{isAdaptation(action.ActionType) ? "Adaptation Potential" : "Reduction Potential"}</span>
                                 <span className="text-md font-semibold text-[#4B4C63]">
-                  {isAdaptation(action.ActionType) ? action.AdaptationEffectiveness : getReductionPotential(action)}
+                  {isAdaptation(action.ActionType) ? action.AdaptationEffectiveness : `${getReductionPotential(action)}%`}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
