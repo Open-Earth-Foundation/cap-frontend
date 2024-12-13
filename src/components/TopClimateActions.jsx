@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import axios from "axios";
 import { FiLoader } from "react-icons/fi";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
-import {getReductionPotential, isAdaptation} from "../utils/helpers.js";
+import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
 
 
