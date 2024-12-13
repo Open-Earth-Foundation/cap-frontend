@@ -204,7 +204,7 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
   return doc;
 };
 
-export const exportToPDF = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
+export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
   const doc = generatePdfReport(cityName, ccraData, qualitativeScore, customRiskLevels);
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
