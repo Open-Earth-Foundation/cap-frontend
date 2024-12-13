@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
+import { getReductionPotential, toTitleCase } from './helpers';
 
 const convertToCSV = (data) => {
   if (!data || !data.length) return '';
