@@ -210,6 +210,8 @@ export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRisk
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
+const isAdaptation = (type) => type === 'adaptation';
+
 export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlans) => {
   const doc = new jsPDF();
   let yPos = 20;
@@ -226,15 +228,34 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   doc.text("Top Mitigation Actions", margin, yPos);
   yPos += 15;
 
-  mitigationData.slice(0, 3).forEach((item, index) => {
+  mitigationData.slice(0, 3).forEach((item, index, type = 'mitigation') => {
     doc.setFontSize(12);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 10;
     doc.setFontSize(10);
-    const potential = item.action.GHGReductionPotential ? 
-      `${getReductionPotential(item.action)}%` : 'N/A';
-    doc.text(`Reduction Potential: ${potential}`, margin + 5, yPos);
+    // Description
+    doc.text(`Description: ${item.action.Description}`, margin + 5, yPos);
     yPos += 15;
+    // Reduction/Adaptation Potential
+    const potential = item.action.GHGReductionPotential ? 
+      `${getReductionPotential(item.action)}%` : 
+      toTitleCase(item.action.AdaptationEffectiveness || 'N/A');
+    doc.text(`${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}`, margin + 5, yPos);
+    yPos += 10;
+    // Sector/Hazard
+    const sectorOrHazard = item.action.Sector?.join ? 
+      item.action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') :
+      item.action.Hazard?.join ?
+        item.action.Hazard.map(h => toTitleCase(h)).join(', ') :
+        toTitleCase(String(item.action.Sector || item.action.Hazard || ''));
+    doc.text(`${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${sectorOrHazard}`, margin + 5, yPos);
+    yPos += 10;
+    // Cost
+    doc.text(`Estimated cost: ${toTitleCase(item.action.CostInvestmentNeeded || 'N/A')}`, margin + 5, yPos);
+    yPos += 10;
+    // Implementation time
+    doc.text(`Implementation time: ${item.action.TimelineForImplementation || 'N/A'}`, margin + 5, yPos);
+    yPos += 20;
   });
 
   // Full Mitigation List
@@ -266,15 +287,34 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   doc.text("Top Adaptation Actions", margin, yPos);
   yPos += 15;
 
-  adaptationData.slice(0, 3).forEach((item, index) => {
+  adaptationData.slice(0, 3).forEach((item, index, type = 'adaptation') => {
     doc.setFontSize(12);
     doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
     yPos += 10;
     doc.setFontSize(10);
-    const effectiveness = item.action.AdaptationEffectiveness ? 
-      toTitleCase(item.action.AdaptationEffectiveness) : 'N/A';
-    doc.text(`Adaptation Potential: ${effectiveness}`, margin + 5, yPos);
+    // Description
+    doc.text(`Description: ${item.action.Description}`, margin + 5, yPos);
     yPos += 15;
+    // Reduction/Adaptation Potential
+    const potential = item.action.GHGReductionPotential ?
+      `${getReductionPotential(item.action)}%` :
+      toTitleCase(item.action.AdaptationEffectiveness || 'N/A');
+    doc.text(`${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}`, margin + 5, yPos);
+    yPos += 10;
+    // Sector/Hazard
+    const sectorOrHazard = item.action.Sector?.join ?
+      item.action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') :
+      item.action.Hazard?.join ?
+        item.action.Hazard.map(h => toTitleCase(h)).join(', ') :
+        toTitleCase(String(item.action.Sector || item.action.Hazard || ''));
+    doc.text(`${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${sectorOrHazard}`, margin + 5, yPos);
+    yPos += 10;
+    // Cost
+    doc.text(`Estimated cost: ${toTitleCase(item.action.CostInvestmentNeeded || 'N/A')}`, margin + 5, yPos);
+    yPos += 10;
+    // Implementation time
+    doc.text(`Implementation time: ${item.action.TimelineForImplementation || 'N/A'}`, margin + 5, yPos);
+    yPos += 20;
   });
 
   // Full Adaptation List
@@ -299,7 +339,7 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
 
   // Add generated plans
   const pageHeight = doc.internal.pageSize.height;
-  
+
   if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
     doc.addPage();
     yPos = 20;
@@ -317,7 +357,7 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
       doc.setFontSize(14);
       doc.text(`Plan ${index + 1}: ${planData.actionName}`, margin, yPos);
       yPos += 8;
-      
+
       doc.setFontSize(10);
       doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos);
       yPos += 12;
@@ -325,22 +365,22 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
       // Process the plan text
       doc.setFontSize(12);
       const splitText = doc.splitTextToSize(planData.plan, pageWidth - 2 * margin);
-      
+
       // Calculate lines per page (accounting for margins)
       const lineHeight = 7;
       const linesPerPage = Math.floor((pageHeight - 40) / lineHeight);
-      
+
       // Process text line by line
       for (let i = 0; i < splitText.length; i++) {
         if (yPos > pageHeight - 40) {
           doc.addPage();
           yPos = 20;
         }
-        
+
         doc.text(splitText[i], margin, yPos);
         yPos += lineHeight;
       }
-      
+
       // Add some spacing between plans
       yPos += 20;
       if (yPos > pageHeight - 60) {
