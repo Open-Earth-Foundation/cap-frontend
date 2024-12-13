@@ -348,12 +348,17 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
 
   // Add generated plans
   const pageHeight = doc.internal.pageSize.height;
+  const contentHeight = pageHeight - 40; // Available content height per page
   const styles = {
     h2: { style: 'bold', fontSize: 14, spacing: 10 },
     normal: { style: 'normal', fontSize: 12, spacing: 7 },
     small: { style: 'italic', fontSize: 10, spacing: 5 }
   };
 
+  const calculateTextHeight = (text, fontSize, pageWidth) => {
+    const lines = doc.splitTextToSize(text, pageWidth - 2 * margin);
+    return lines.length * (fontSize * 0.3528); // Convert pt to mm
+  };
 
   if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
     doc.addPage();
@@ -364,6 +369,18 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
 
     generatedPlans.forEach((planData, index) => {
       if (yPos > pageHeight - 40) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      // Calculate required height for current plan
+      const plainText = convertMarkdownToPlainText(planData.plan);
+      const textHeight = calculateTextHeight(plainText, styles.normal.fontSize, pageWidth);
+      const headerHeight = styles.h2.spacing + styles.small.spacing + 8;
+      const totalRequiredHeight = textHeight + headerHeight;
+
+      // Check if we need a new page
+      if (yPos + totalRequiredHeight > contentHeight) {
         doc.addPage();
         yPos = 20;
       }
@@ -387,23 +404,16 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
       doc.setFont(undefined, 'normal');
       doc.setFontSize(styles.normal.fontSize);
       doc.setTextColor(0, 0, 0);
-      const plainText = convertMarkdownToPlainText(planData.plan);
       const splitText = doc.splitTextToSize(plainText, pageWidth - 2 * margin);
 
-      // Calculate lines per page (accounting for margins)
-      const lineHeight = styles.normal.spacing;
-      const linesPerPage = Math.floor((pageHeight - 40) / lineHeight);
-
-      // Process text line by line
-      for (let i = 0; i < splitText.length; i++) {
-        if (yPos > pageHeight - 40) {
+      splitText.forEach(line => {
+        if (yPos > contentHeight) {
           doc.addPage();
           yPos = 20;
         }
-
-        doc.text(splitText[i], margin, yPos);
-        yPos += lineHeight;
-      }
+        doc.text(line, margin, yPos);
+        yPos += styles.normal.spacing;
+      });
 
       // Add some spacing between plans
       yPos += 20;
