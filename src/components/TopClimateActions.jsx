@@ -282,7 +282,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                     onClick={() => setIsPlansListModalOpen(true)}
                     className="mt-6 flex items-center gap-2 px-4 py-2 bg-white text-primary border border-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
                 >
-                    See Generated Plans ({generatedPlans.length})
+                    {t("seeGeneratedPlans")} ({generatedPlans.length})
                 </button>
             )}
             <PlanModal 

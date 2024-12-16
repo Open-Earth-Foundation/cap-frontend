@@ -34,7 +34,6 @@
   "topadaptationClimateActions": "Top adaptation climate actions",
   "rank": "Rank",
   "action": "Action",
-  "sector": "Sector"
-
-
+  "sector": "Sector",
+  "seeGeneratedPlans": "See generated plans"
 }
