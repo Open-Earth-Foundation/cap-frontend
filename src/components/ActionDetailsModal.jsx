@@ -7,12 +7,12 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
     const action = cityAction;
     // Helper function to render progress bars based on reduction potential
     const renderReductionBars = () => {
-        if (isAdaptation(action.ActionType)) {
+        if (isAdaptation(type)) {
             const level = action.AdaptationEffectiveness;
-            const filledBars = level === "High" ? 3 : level === "Medium" ? 2 : 1;
-            const color = level === "High" 
+            const filledBars = level === "high" ? 3 : level === "medium" ? 2 : 1;
+            const color = level === "high" 
                 ? "bg-blue-500" 
-                : level === "Medium" 
+                : level === "medium" 
                     ? "bg-blue-400" 
                     : "bg-blue-300";
 
