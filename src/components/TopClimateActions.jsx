@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { FiLoader } from "react-icons/fi";
-import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import {getReductionPotential, isAdaptation, toTitleCase} from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
 import {useTranslation} from "react-i18next";
@@ -299,6 +298,6 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
             />
         </div>
     );
-};
+}
 
 export default TopClimateActions;

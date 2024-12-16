@@ -1,4 +1,5 @@
 import {GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
+import {CITIES} from "../components/constants.js";
 
 const s3Client = new S3Client({
     region: import.meta.env.VITE_AWS_REGION,
@@ -27,12 +28,13 @@ const streamToString = async (stream) => {
 };
 
 function getFileName(cityName, type) {
-    return `data/${type}/${toSnakeCase(cityName)}.json`;
+    const fileName = CITIES.find(city => city.value === cityName).locode
+    return `data/${type}/${fileName}.json`;
 }
 
 export const readFile = async (cityName, type) => {
     try {
-        const command = new GetObjectCommand({Bucket: bucketName, Key: getFileName(cityName, type)});
+        const command = new GetObjectCommand({ Bucket: bucketName, Key: getFileName(cityName, type) });
         const response = await s3Client.send(command);
         const data = await streamToString(response.Body);
         return JSON.parse(data);
@@ -59,12 +61,3 @@ export const writeFile = async (cityName, data, type) => {
     }
 };
 
-/* Function to convert city name to snake_case and replace non-English characters */
-export const toSnakeCase = (str) => {
-    return str
-        .normalize('NFD') // Normalize the string
-        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-        .toLowerCase()
-        .replace(/[^a-z\s]/g, '') // Remove non-English characters
-        .replace(/\s+/g, '_'); // Replace spaces with underscores
-};
