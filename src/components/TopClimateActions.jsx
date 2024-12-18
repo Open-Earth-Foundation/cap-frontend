@@ -108,6 +108,8 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
 * [Action 5]
 * [Action 6]
 
+
+
 ## 3. Involved municipal institutions and partners
 * [Institution 1]
 * [Institution 2]
