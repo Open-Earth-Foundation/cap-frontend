@@ -1,20 +1,22 @@
+
 import React, {useState} from "react";
 import Select from "react-select";
 import {CITIES} from "./constants.js";
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
 
 const CityDropdown = ({onCityChange, styles}) => {
-    const [cities, setCities] = useState(CITIES);
-
+    const [cities] = useState(CITIES);
     const [selectedCity, setSelectedCity] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const {t} = useTranslation();
+    const navigate = useNavigate();
 
     const handleCityChange = (selectedOption) => {
         setSelectedCity(selectedOption);
         if (selectedOption) {
-            window.location.href = `/city/${selectedOption.value}`;
+            navigate(`/city/${selectedOption.value}`);
         }
     };
 

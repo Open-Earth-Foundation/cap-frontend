@@ -11,6 +11,10 @@ build = ["npm", "run", "build"]
 run = ["npm", "run", "preview"]
 publicDir = "dist"
 
+[[deployment.rewrites]]
+from = "/*"
+to = "/index.html"
+
 [[ports]]
 localPort = 3000
 externalPort = 80
