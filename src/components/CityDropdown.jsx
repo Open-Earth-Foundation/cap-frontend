@@ -14,7 +14,7 @@ const CityDropdown = ({onCityChange, styles}) => {
     const handleCityChange = (selectedOption) => {
         setSelectedCity(selectedOption);
         if (selectedOption) {
-            onCityChange(selectedOption.value);
+            window.location.href = `/city/${selectedOption.value}`;
         }
     };
 
