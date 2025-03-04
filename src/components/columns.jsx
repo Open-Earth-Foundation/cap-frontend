@@ -43,11 +43,7 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: () => (
-            <div className="whitespace-normal">
-                {t("estimatedCost")}
-            </div>
-        ),
+        header: t("estimatedCost"),
         size: 80,
         Cell: ({cell}) => (
             <div>
@@ -57,20 +53,12 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: () => (
-            <div className="whitespace-normal">
-                {t("implementationTime")}
-            </div>
-        ),
+        header: t("implementationTime"),
         size: 80,
     },
     {
         accessorKey: "explanation",
-        header: () => (
-            <div className="whitespace-normal text-xs">
-                {t("explanation")}
-            </div>
-        ),
+        header: t("explanation"),
         size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
@@ -120,11 +108,7 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: () => (
-            <div className="whitespace-normal">
-                {t("estimatedCost")}
-            </div>
-        ),
+        header: t("estimatedCost"),
         size: 80,
         Cell: ({cell}) => (
             <div>
@@ -134,20 +118,12 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: () => (
-            <div className="whitespace-normal">
-                {t("implementationTime")}
-            </div>
-        ),
+        header: t("implementationTime"),
         size: 80,
     },
     {
         accessorKey: "explanation",
-        header: () => (
-            <div className="whitespace-normal text-xs">
-                {t("explanation")}
-            </div>
-        ),
+        header: t("explanation"),
         size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
