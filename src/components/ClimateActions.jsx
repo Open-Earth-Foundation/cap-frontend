@@ -74,9 +74,9 @@ const ClimateActions = ({
                     </button>
                     
                     {showTooltip && (
-                        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10 p-4 text-left">
+                        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 rounded-md shadow-lg z-50 p-4 text-left">
                             <h3 className="text-sm font-semibold mb-2">{t("explanation")}</h3>
-                            <p className="text-xs text-gray-700">
+                            <p className="text-sm text-gray-700">
                                 {cell.row.original.Explanation 
                                     ? cell.row.original.Explanation 
                                     : t("explanationNotAvailable")}

@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 const ActionDetailsModal = ({ cityAction, onClose, type }) => {
     if (!cityAction) return null;
     const { t } = useTranslation();
-    skljfdsklfjsdkljflñj;
     const action = cityAction;
     // Helper function to render progress bars based on reduction potential
     const renderReductionBars = () => {

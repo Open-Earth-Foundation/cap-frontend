@@ -38,5 +38,7 @@
   "rank": "Rank",
   "action": "Action",
   "sector": "Sector",
-  "seeGeneratedPlans": "See generated plans"
+  "seeGeneratedPlans": "See generated plans",
+  "explanation": "Explanation",
+  "explanationNotAvailable": "Explanation not available for this action"
 }
