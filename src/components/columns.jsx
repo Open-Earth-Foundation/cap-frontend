@@ -29,12 +29,12 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "action.Sector",
         header: t("sector"),
-        size: 150,
+        size: 100,
     },
     {
         accessorKey: "action.GHGReductionPotential",
         header: t("reductionPotential"),
-        size: 150,
+        size: 100,
         Cell: ({cell}) => (
             <div>
                 {getReductionPotential(cell.row.original.action)}
@@ -44,7 +44,7 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "action.CostInvestmentNeeded",
         header: t("estimatedCost"),
-        size: 150,
+        size: 100,
         Cell: ({cell}) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -54,7 +54,7 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "action.TimelineForImplementation",
         header: t("implementationTime"),
-        size: 150,
+        size: 100,
     },
     {
         accessorKey: "explanation",
@@ -94,12 +94,12 @@ export const adaptationColumns = (t) => [
                 {cell.getValue()?.join(", ")}
             </div>
         ),
-        size: 150,
+        size: 100,
     },
     {
         accessorKey: "action.AdaptationEffectiveness",
         header: t("adaptationEffectiveness"),
-        size: 150,
+        size: 100,
         Cell: ({cell}) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -109,7 +109,7 @@ export const adaptationColumns = (t) => [
     {
         accessorKey: "action.CostInvestmentNeeded",
         header: t("estimatedCost"),
-        size: 150,
+        size: 100,
         Cell: ({cell}) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -119,7 +119,7 @@ export const adaptationColumns = (t) => [
     {
         accessorKey: "action.TimelineForImplementation",
         header: t("implementationTime"),
-        size: 150,
+        size: 100,
     },
     {
         accessorKey: "explanation",
