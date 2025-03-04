@@ -59,7 +59,7 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "explanation",
         header: t("explanation"),
-        size: 150,
+        size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
                 {cell.getValue() ? cell.getValue() : "N/A"}
@@ -124,7 +124,7 @@ export const adaptationColumns = (t) => [
     {
         accessorKey: "explanation",
         header: t("explanation"),
-        size: 150,
+        size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
                 {cell.getValue() ? cell.getValue() : "N/A"}
