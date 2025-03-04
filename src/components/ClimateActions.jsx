@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import "./ClimateActions.css";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -35,7 +35,7 @@ const ClimateActions = ({
     const [selectedAction, setSelectedAction] = useState();
     const [generatedPlan, setGeneratedPlan] = useState('');
     const [generatedPlans, setGeneratedPlans] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(true); // Add loading state
     const {t} = useTranslation();
     const addRank = (actions) =>
         actions.map((action, index) => ({...action, id: index + 1}));
@@ -135,6 +135,37 @@ const ClimateActions = ({
         adaptationColumns(t),
     );
 
+    useEffect(() => {
+        const fetchActions = async () => {
+            try {
+                const adaptationResponse = await fetch(`/api/climate-actions?city=${selectedCity}&type=adaptation`);
+                const adaptationData = await adaptationResponse.json();
+                console.log("API Response for adaptation actions:", adaptationData);
+                if (adaptationData.length > 0) {
+                    console.log("First adaptation action keys:", Object.keys(adaptationData[0]));
+                    console.log("First adaptation action full object:", adaptationData[0]);
+                }
+                setAdaptationData(adaptationData);
+
+                const mitigationResponse = await fetch(`/api/climate-actions?city=${selectedCity}&type=mitigation`);
+                const mitigationData = await mitigationResponse.json();
+                console.log("API Response for mitigation actions:", mitigationData);
+                if (mitigationData.length > 0) {
+                    console.log("First mitigation action keys:", Object.keys(mitigationData[0]));
+                    console.log("First mitigation action full object:", mitigationData[0]);
+                }
+                setMitigationData(mitigationData);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching climate actions:", error);
+                setIsLoading(false); // Set loading to false even on error
+            }
+        };
+
+        fetchActions();
+    }, [selectedCity]);
+
+
     return (
         <div className="max-w-screen-xl mx-auto p-12">
 
@@ -163,9 +194,9 @@ const ClimateActions = ({
                                             onClose={() => setSelectedAction(null)}/>
 
                         <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions 
+                            <TopClimateActions
                                 actions={isAdaptation(type) ? adaptationData : mitigationData}
-                                type={type} 
+                                type={type}
                                 setSelectedAction={setSelectedAction}
                                 selectedCity={selectedCity}
                                 setGeneratedPlan={setGeneratedPlan}

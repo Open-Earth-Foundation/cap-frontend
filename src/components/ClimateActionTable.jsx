@@ -1,9 +1,19 @@
+
 import React from "react";
 import { MdInfoOutline } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 
 const ClimateActionTable = ({ actions, onActionClick }) => {
   const { t } = useTranslation();
+  
+  // Log the first action object to inspect its structure
+  React.useEffect(() => {
+    if (actions && actions.length > 0) {
+      console.log("Action object structure:", actions[0]);
+      // List all keys in the action object
+      console.log("Available keys in action object:", Object.keys(actions[0]));
+    }
+  }, [actions]);
 
   return (
     <div className="overflow-x-auto">
@@ -39,18 +49,30 @@ const ClimateActionTable = ({ actions, onActionClick }) => {
               <td className="px-6 py-4 text-sm text-gray-500">
                 {action.Sector}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-500 max-w-md">
-                {action.Explanation ? action.Explanation : "N/A"}
+              <td className="px-6 py-4 text-sm text-gray-500">
+                {/* Try multiple possible field names for explanation */}
+                {action.Explanation || action.explanation || action.Description || action.description || t("explanationNotAvailable")}
               </td>
               <td className="px-6 py-4 text-right text-sm font-medium">
-                <div className="flex items-center justify-end">
-                  <button
-                    onClick={() => onActionClick(action)}
-                    className="text-indigo-600 hover:text-indigo-900"
+                <button
+                  onClick={() => onActionClick(action)}
+                  className="text-primary-600 hover:text-primary-900"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    {t("seeMoreDetails")}
-                  </button>
-                </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </button>
               </td>
             </tr>
           ))}
