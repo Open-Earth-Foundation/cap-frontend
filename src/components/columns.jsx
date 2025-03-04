@@ -14,12 +14,12 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "actionPriority",
         header: t("rank"),
-        size: 50,
+        size: 40,
     },
     {
         accessorKey: "action.ActionName",
         header: t("action"),
-        size: 200,
+        size: 150,
         Cell: ({cell}) => (
             <div>
                 <strong>{cell.getValue()}</strong>
@@ -43,8 +43,12 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
-        size: 100,
+        header: () => (
+            <div className="whitespace-normal">
+                {t("estimatedCost")}
+            </div>
+        ),
+        size: 80,
         Cell: ({cell}) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -53,8 +57,12 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
-        size: 100,
+        header: () => (
+            <div className="whitespace-normal">
+                {t("implementationTime")}
+            </div>
+        ),
+        size: 80,
     },
     {
         accessorKey: "explanation",
@@ -72,12 +80,12 @@ export const adaptationColumns = (t) => [
     {
         accessorKey: "actionPriority",
         header: t("rank"),
-        size: 50,
+        size: 40,
     },
     {
         accessorKey: "action.ActionName",
         header: t("action"),
-        size: 200,
+        size: 150,
         Cell: ({cell}) => (
             <div>
                 <strong>{cell.getValue()}</strong>
@@ -108,8 +116,12 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
-        size: 100,
+        header: () => (
+            <div className="whitespace-normal">
+                {t("estimatedCost")}
+            </div>
+        ),
+        size: 80,
         Cell: ({cell}) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -118,8 +130,12 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
-        size: 100,
+        header: () => (
+            <div className="whitespace-normal">
+                {t("implementationTime")}
+            </div>
+        ),
+        size: 80,
     },
     {
         accessorKey: "explanation",
