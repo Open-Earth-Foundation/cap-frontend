@@ -140,19 +140,45 @@ const ClimateActions = ({
             try {
                 const adaptationResponse = await fetch(`/api/climate-actions?city=${selectedCity}&type=adaptation`);
                 const adaptationData = await adaptationResponse.json();
-                console.log("API Response for adaptation actions:", adaptationData);
+                console.log("%c COMPLETE API RESPONSE FOR ADAPTATION", "background: #ff0000; color: white; font-size: 20px");
+                console.log(JSON.stringify(adaptationData, null, 2)); // Pretty print the full response
                 if (adaptationData.length > 0) {
-                    console.log("First adaptation action keys:", Object.keys(adaptationData[0]));
-                    console.log("First adaptation action full object:", adaptationData[0]);
+                    console.log("%c FIRST ADAPTATION ACTION COMPLETE STRUCTURE", "background: #00ff00; color: black; font-size: 20px");
+                    console.log(JSON.stringify(adaptationData[0], null, 2)); // Pretty print the first item
+                    console.log("%c ADAPTATION ACTION KEYS (ALL FIELDS)", "background: #0000ff; color: white; font-size: 20px");
+                    console.log(Object.keys(adaptationData[0]));
+
+                    // Log all properties with their data types
+                    console.log("%c ADAPTATION ACTION FIELDS WITH DATA TYPES", "background: #9900ff; color: white; font-size: 20px");
+                    const fieldTypes = {};
+                    Object.entries(adaptationData[0]).forEach(([key, value]) => {
+                        fieldTypes[key] = typeof value;
+                        if (Array.isArray(value)) fieldTypes[key] = "array";
+                        if (value === null) fieldTypes[key] = "null";
+                    });
+                    console.log(fieldTypes);
                 }
                 setAdaptationData(adaptationData);
 
                 const mitigationResponse = await fetch(`/api/climate-actions?city=${selectedCity}&type=mitigation`);
                 const mitigationData = await mitigationResponse.json();
-                console.log("API Response for mitigation actions:", mitigationData);
+                console.log("%c COMPLETE API RESPONSE FOR MITIGATION", "background: #ff0000; color: white; font-size: 20px");
+                console.log(JSON.stringify(mitigationData, null, 2)); // Pretty print the full response
                 if (mitigationData.length > 0) {
-                    console.log("First mitigation action keys:", Object.keys(mitigationData[0]));
-                    console.log("First mitigation action full object:", mitigationData[0]);
+                    console.log("%c FIRST MITIGATION ACTION COMPLETE STRUCTURE", "background: #00ff00; color: black; font-size: 20px");
+                    console.log(JSON.stringify(mitigationData[0], null, 2)); // Pretty print the first item
+                    console.log("%c MITIGATION ACTION KEYS (ALL FIELDS)", "background: #0000ff; color: white; font-size: 20px");
+                    console.log(Object.keys(mitigationData[0]));
+
+                    // Log all properties with their data types
+                    console.log("%c MITIGATION ACTION FIELDS WITH DATA TYPES", "background: #9900ff; color: white; font-size: 20px");
+                    const fieldTypes = {};
+                    Object.entries(mitigationData[0]).forEach(([key, value]) => {
+                        fieldTypes[key] = typeof value;
+                        if (Array.isArray(value)) fieldTypes[key] = "array";
+                        if (value === null) fieldTypes[key] = "null";
+                    });
+                    console.log(fieldTypes);
                 }
                 setMitigationData(mitigationData);
                 setIsLoading(false);
