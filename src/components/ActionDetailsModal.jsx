@@ -107,6 +107,14 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                     {/* Divider */}
                     <div className="border-b-2 border-[#E8EAFB]" />
 
+                    {/* Explanation Section - if available */}
+                    {action.Explanation && (
+                        <div className="px-12 py-6">
+                            <h4 className="text-lg font-medium text-[#00001F] mb-2">{t("explanation")}</h4>
+                            <p className="text-gray-600">{action.Explanation}</p>
+                        </div>
+                    )}>
+
                     {/* Content */}
                     <div className="px-12 py-8">
                         {/* Title and Description */}
