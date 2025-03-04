@@ -1,11 +1,10 @@
-
 import React from "react";
 import { MdInfoOutline } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 
 const ClimateActionTable = ({ actions, onActionClick }) => {
   const { t } = useTranslation();
-  
+
   // Log the first action object to inspect its structure
   React.useEffect(() => {
     if (actions && actions.length > 0) {
@@ -51,7 +50,14 @@ const ClimateActionTable = ({ actions, onActionClick }) => {
               </td>
               <td className="px-6 py-4 text-sm text-gray-500">
                 {/* Try multiple possible field names for explanation */}
-                {action.Explanation || action.explanation || action.Description || action.description || t("explanationNotAvailable")}
+                {action.explanation || action.Explanation || action.Description || action.description || t("explanationNotAvailable")}
+                {/* Debug log for this specific field */}
+                {console.log(`Checking explanation for action ${index}:`, {
+                  lowercase: action.explanation,
+                  uppercase: action.Explanation, 
+                  description: action.description,
+                  Description: action.Description
+                })}
               </td>
               <td className="px-6 py-4 text-right text-sm font-medium">
                 <button
