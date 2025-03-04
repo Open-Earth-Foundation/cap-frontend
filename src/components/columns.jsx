@@ -66,7 +66,11 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "explanation",
-        header: t("explanation"),
+        header: () => (
+            <div className="whitespace-normal text-xs">
+                {t("explanation")}
+            </div>
+        ),
         size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
@@ -139,7 +143,11 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "explanation",
-        header: t("explanation"),
+        header: () => (
+            <div className="whitespace-normal text-xs">
+                {t("explanation")}
+            </div>
+        ),
         size: 300,
         Cell: ({cell}) => (
             <div className="max-w-xs break-words">
