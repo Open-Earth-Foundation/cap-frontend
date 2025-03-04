@@ -54,52 +54,7 @@ const ClimateActions = ({
     };
 
 
-    const infoColumn = {
-        id: "infoButton",
-        header: "",
-        size: 50,
-        Cell: ({cell}) => {
-            const [showTooltip, setShowTooltip] = useState(false);
-            
-            const handleInfoClick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowTooltip(!showTooltip);
-            };
-            
-            return (
-                <div className="relative">
-                    <button 
-                        onClick={handleInfoClick}
-                        className="p-2 hover:bg-gray-100 rounded-full"
-                    >
-                        <MdInfoOutline size={20} />
-                    </button>
-                    
-                    {showTooltip && (
-                        <div className="fixed transform -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2 w-96 max-w-[80vw] bg-white border border-gray-300 rounded-md shadow-xl z-50 p-6 text-left">
-                            <div className="flex justify-between items-center mb-3">
-                                <h3 className="text-lg font-semibold">{t("explanation")}</h3>
-                                <button 
-                                    onClick={handleInfoClick}
-                                    className="text-gray-500 hover:text-gray-700"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-                            <div className="max-h-[60vh] overflow-y-auto">
-                                <p className="text-base text-gray-700">
-                                    {cell.row.original.Explanation 
-                                        ? cell.row.original.Explanation 
-                                        : t("explanationNotAvailable")}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        },
-    }
+    // Explanation is now added directly in the columns
 
     const createTable = (
         columns,
@@ -110,7 +65,7 @@ const ClimateActions = ({
     ) => {
         return useMaterialReactTable({
             autoResetPageIndex: false,
-            columns: [...columns, infoColumn],
+            columns: [...columns], // infoColumn removed
             data: rankedData,
             enableRowOrdering,
             initialState: {},

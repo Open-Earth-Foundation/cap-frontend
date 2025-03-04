@@ -56,6 +56,16 @@ export const mitigationColumns = (t) => [
         header: t("implementationTime"),
         size: 150,
     },
+    {
+        accessorKey: "action.Explanation",
+        header: t("explanation"),
+        size: 250,
+        Cell: ({cell}) => (
+            <div className="max-w-xs break-words">
+                {cell.getValue() ? cell.getValue() : "N/A"}
+            </div>
+        ),
+    },
 ];
 
 export const adaptationColumns = (t) => [
@@ -110,5 +120,15 @@ export const adaptationColumns = (t) => [
         accessorKey: "action.TimelineForImplementation",
         header: t("implementationTime"),
         size: 150,
+    },
+    {
+        accessorKey: "action.Explanation",
+        header: t("explanation"),
+        size: 250,
+        Cell: ({cell}) => (
+            <div className="max-w-xs break-words">
+                {cell.getValue() ? cell.getValue() : "N/A"}
+            </div>
+        ),
     },
 ];
