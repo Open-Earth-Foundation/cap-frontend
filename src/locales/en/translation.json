@@ -22,6 +22,7 @@
   "takeAction": "Take action.",
   "driveImpact": "Drive Impact.",
   "explanation": "Explanation",
+  "explanationNotAvailable": "Explanation not available for this action",
   "available": "available",
   "empowerYourCity": "Empower your city to prioritize climate actions that make a difference with data-driven insights.",
   "cityClimateActionPrioritization": "City Climate Action Prioritization",

@@ -1,11 +1,16 @@
-
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { FiInfo } from 'react-icons/fi';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { MdInfoOutline } from "react-icons/md";
 
 const ClimateActionTable = ({ actions, onActionClick }) => {
   const { t } = useTranslation();
-  
+  const [tooltipAction, setTooltipAction] = useState(null);
+
+  const handleInfoClick = (e, action) => {
+    e.stopPropagation();
+    setTooltipAction(tooltipAction === action ? null : action);
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -37,20 +42,33 @@ const ClimateActionTable = ({ actions, onActionClick }) => {
               <td className="px-6 py-4 text-sm text-gray-500">
                 {action.Sector}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
-                  onClick={() => onActionClick(action)}
-                  className="text-indigo-600 hover:text-indigo-900 relative group"
-                >
-                  <FiInfo className="w-5 h-5" />
-                  
-                  {/* Tooltip para explicación si existe */}
-                  {action.Explanation && (
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-10 right-0 bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-                      {t("explanation")} {t("available")}
-                    </span>
-                  )}
-                </button>
+              <td className="px-6 py-4 text-right text-sm font-medium relative">
+                <div className="flex items-center justify-end space-x-3">
+                  <div className="relative">
+                    <button
+                      onClick={(e) => handleInfoClick(e, action)}
+                      className="text-gray-500 hover:text-gray-700 p-1 rounded-full"
+                    >
+                      <MdInfoOutline size={20} />
+                    </button>
+
+                    {tooltipAction === action && (
+                      <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10 p-4 text-left">
+                        <h3 className="text-sm font-semibold mb-2">{t("explanation")}</h3>
+                        <p className="text-xs text-gray-700">
+                          {action.Explanation ? action.Explanation : t("explanationNotAvailable")}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => onActionClick(action)}
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
+                    {t("seeMoreDetails")}
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

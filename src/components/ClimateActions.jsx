@@ -58,11 +58,34 @@ const ClimateActions = ({
         id: "infoButton",
         header: "",
         size: 50,
-        Cell: ({cell}) => (
-            <button onClick={() => setSelectedAction(cell.row.original.action)}>
-                <MdInfoOutline/>
-            </button>
-        ),
+        Cell: ({cell}) => {
+            const [showTooltip, setShowTooltip] = useState(false);
+            
+            const handleInfoClick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowTooltip(!showTooltip);
+            };
+            
+            return (
+                <div className="relative">
+                    <button onClick={handleInfoClick}>
+                        <MdInfoOutline/>
+                    </button>
+                    
+                    {showTooltip && (
+                        <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10 p-4 text-left">
+                            <h3 className="text-sm font-semibold mb-2">{t("explanation")}</h3>
+                            <p className="text-xs text-gray-700">
+                                {cell.row.original.Explanation 
+                                    ? cell.row.original.Explanation 
+                                    : t("explanationNotAvailable")}
+                            </p>
+                        </div>
+                    )}
+                </div>
+            );
+        },
     }
 
     const createTable = (
