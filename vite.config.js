@@ -1,4 +1,3 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -16,7 +15,11 @@ export default defineConfig({
       "/plan-api": {
         target: "https://cap-plan-creator.openearth.dev",
         changeOrigin: true,
-        secure: false,
+        secure: true,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
         rewrite: (path) => path.replace(/^\/plan-api/, ""),
       },
     },
@@ -32,7 +35,11 @@ export default defineConfig({
       "/plan-api": {
         target: "https://cap-plan-creator.openearth.dev",
         changeOrigin: true,
-        secure: false,
+        secure: true,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
         rewrite: (path) => path.replace(/^\/plan-api/, ""),
       },
     },

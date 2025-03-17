@@ -1,3 +1,4 @@
+
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const cors = require("cors");
@@ -26,10 +27,14 @@ app.use(
 app.use(
   "/plan-api",
   createProxyMiddleware({
-    target: process.env.PLAN_API_URL || "https://cap-plan-creator.openearth.dev",
+    target: "https://cap-plan-creator.openearth.dev",
     changeOrigin: true,
     pathRewrite: { "^/plan-api": "" },
     secure: true,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
     onProxyReq: (proxyReq, req) => {
       if (req.body) {
         const bodyData = JSON.stringify(req.body);
@@ -37,10 +42,6 @@ app.use(
         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
         proxyReq.write(bodyData);
       }
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['content-type'] = 'application/json';
-      console.log(`[${req.method}] ${req.path} => ${proxyRes.statusCode}`);
     }
   })
 );
@@ -50,7 +51,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${port}`);
 });
