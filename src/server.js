@@ -88,16 +88,6 @@ app.use(
       }
     },
     onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['content-type'] = 'application/json';
-    },
-    onError: (err, req, res) => {
-      console.error("Plan Creator Proxy Error:", err);
-      res
-        .status(500)
-        .json({ error: "Plan Creator Proxy Error", details: err.message });
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      // Log the full response details
       console.log("Plan Creator Proxy Response:", {
         statusCode: proxyRes.statusCode,
         headers: proxyRes.headers,
@@ -111,7 +101,20 @@ app.use(
 
       proxyRes.on("end", () => {
         console.log("Plan Creator Response Body:", responseBody);
+        try {
+          // Only set content-type if it's actually JSON
+          const parsedBody = JSON.parse(responseBody);
+          proxyRes.headers['content-type'] = 'application/json';
+        } catch (e) {
+          console.error("Response is not JSON:", e.message);
+        }
       });
+    },
+    onError: (err, req, res) => {
+      console.error("Plan Creator Proxy Error:", err);
+      res
+        .status(500)
+        .json({ error: "Plan Creator Proxy Error", details: err.message });
     },
     onProxyReq: (proxyReq, req, res) => {
       // Log the outgoing request
