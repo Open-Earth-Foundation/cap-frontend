@@ -1,8 +1,12 @@
 import {GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {CITIES} from "../components/constants.js";
 
+console.log("AWS Region:", import.meta.env.VITE_AWS_REGION);
+console.log("AWS Access Key ID:", import.meta.env.VITE_AWS_ACCESS_KEY_ID);
+console.log("AWS S3 Bucket ID:", import.meta.env.VITE_AWS_S3_BUCKET_ID);
+
 const s3Client = new S3Client({
-    region: import.meta.env.VITE_AWS_REGION,
+    region: import.meta.env.VITE_AWS_REGION || "us-east-2",
     credentials: {
         accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
         secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
