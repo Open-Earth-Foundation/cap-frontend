@@ -13,20 +13,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// Proxy for adapta-brasil-api
-app.use(
-  "/api",
-  createProxyMiddleware({
-    target: "https://adapta-brasil-api.replit.app",
-    changeOrigin: true,
-    pathRewrite: { "^/api": "" },
-    logLevel: "debug"
-  })
-);
-
 // Proxy for cap-plan-creator
 app.use(
   "/plan-api",
@@ -50,7 +36,21 @@ app.use(
   })
 );
 
-// Handle React routing
+// Proxy for adapta-brasil-api
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: "https://adapta-brasil-api.replit.app",
+    changeOrigin: true,
+    pathRewrite: { "^/api": "" },
+    logLevel: "debug"
+  })
+);
+
+// Serve static files AFTER API routes
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// Handle React routing LAST
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
