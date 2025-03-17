@@ -50,6 +50,16 @@ app.use(
       Accept: "application/json",
       "Content-Type": "application/json",
     },
+    onProxyReq: (proxyReq, req, res) => {
+      if (req.body) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      proxyRes.headers['content-type'] = 'application/json';
+    },
     onError: (err, req, res) => {
       console.error("Plan Creator Proxy Error:", err);
       res
