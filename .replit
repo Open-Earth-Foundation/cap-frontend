@@ -7,8 +7,8 @@ hidden = [".config", "package-lock.json"]
 channel = "stable-24_05"
 
 [deployment]
-build = ["npm", "run", "build"]
-run = ["npm", "run", "preview"]
+build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "concurrently \"node src/server.js\" \"npm run preview\""]
 publicDir = "dist"
 
 [[deployment.rewrites]]
@@ -18,3 +18,7 @@ to = "/index.html"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
