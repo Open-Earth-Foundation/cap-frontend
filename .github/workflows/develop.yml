@@ -15,7 +15,10 @@ jobs:
 
     env:
       REGISTRY: ghcr.io
-      REPOSITORY: open-earth-foundation/cap-frontend  # Replace with your GitHub username
+      REPOSITORY: open-earth-foundation/cap-frontend
+      VITE_AWS_REGION: us-east-2
+      VITE_AWS_S3_BUCKET_ID: openearth.cap
+      VITE_API_URL: http://cap-api:8080
 
     steps:
       - name: Checkout repository
@@ -38,8 +41,12 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
-          context: .  # TODO This I'm not sure about
+          context: .
           push: true
+          build-args: |
+            VITE_AWS_REGION=${{ env.VITE_AWS_REGION }}
+            VITE_AWS_S3_BUCKET_ID=${{ env.VITE_AWS_S3_BUCKET_ID }}
+            VITE_API_URL=${{ env.VITE_API_URL }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ steps.vars.outputs.commit_hash }}
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
