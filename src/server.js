@@ -135,8 +135,11 @@ app.use(
 );
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Proxy server listening on port ${port}`);
+  console.log('Proxy routes:');
+  console.log('- /api -> https://adapta-brasil-api.replit.app');
+  console.log('- /plan-api -> ', process.env.PLAN_API_URL || 'https://cap-plan-creator.openearth.dev');
 });
 
 // Add a test route
