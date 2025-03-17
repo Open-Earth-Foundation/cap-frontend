@@ -8,7 +8,7 @@ channel = "stable-24_05"
 
 [deployment]
 build = ["sh", "-c", "npm run build"]
-run = ["sh", "-c", "concurrently \"node src/server.js\" \"npm run preview\""]
+run = ["sh", "-c", "node src/server.js"]
 publicDir = "dist"
 
 [[deployment.rewrites]]
