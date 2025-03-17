@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cap-frontend
+  labels:
+    app: cap-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cap-frontend
+  template:
+    metadata:
+      labels:
+        app: cap-frontend
+    spec:
+      containers:
+      - name: cap-frontend
+        image: ghcr.io/open-earth-foundation/cap-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
