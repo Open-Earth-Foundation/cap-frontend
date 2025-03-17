@@ -131,3 +131,4 @@ dist
 .pnp.*
 
 .idea
+k8s/cap-frontend-deployment-keys.yml
