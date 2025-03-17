@@ -42,9 +42,7 @@ app.use(
     target: "https://cap-plan-creator.openearth.dev",
     changeOrigin: true,
     pathRewrite: {
-      "^/plan-api/start_plan_creation": "/start_plan_creation",
-      "^/plan-api/check_progress": "/check_progress",
-      "^/plan-api/get_plan": "/get_plan",
+      "^/plan-api": "",
     },
     logLevel: "debug",
     secure: true,
