@@ -16,8 +16,8 @@ from = "/*"
 to = "/index.html"
 
 [[ports]]
-localPort = 80
-externalPort = 3000
+localPort = 3000
+externalPort = 80
 
 [workflows]
 runButton = "Start Server"
