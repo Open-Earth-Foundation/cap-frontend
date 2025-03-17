@@ -51,6 +51,36 @@ app.use(
       "Content-Type": "application/json",
     },
     onProxyReq: (proxyReq, req, res) => {
+      console.log('\n=== Proxy Request ===');
+      console.log('Method:', req.method);
+      console.log('Path:', req.path);
+      console.log('Original URL:', req.originalUrl);
+      console.log('Target URL:', proxyReq.path);
+      console.log('Headers:', proxyReq.getHeaders());
+      if (req.body) {
+        console.log('Request Body:', JSON.stringify(req.body, null, 2));
+      }
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      console.log('\n=== Proxy Response ===');
+      console.log('Status:', proxyRes.statusCode);
+      console.log('Headers:', proxyRes.headers);
+      
+      let body = '';
+      proxyRes.on('data', function(chunk) {
+        body += chunk;
+      });
+      proxyRes.on('end', function() {
+        console.log('Response Body:', body);
+        try {
+          JSON.parse(body);
+          console.log('Response is valid JSON');
+        } catch (e) {
+          console.log('Response is not valid JSON:', e.message);
+        }
+      });
+    },
+    onProxyReq: (proxyReq, req, res) => {
       if (req.body) {
         const bodyData = JSON.stringify(req.body);
         proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
