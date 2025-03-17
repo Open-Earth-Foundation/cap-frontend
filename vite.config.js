@@ -4,24 +4,46 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 3000,
     proxy: {
-      '/api': {
-        target: 'https://adapta-brasil-api.replit.app',
+      "/api": {
+        target: "https://adapta-brasil-api.replit.app",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      }
-    }
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/plan-api": {
+        target: "https://cap-plan-creator.openearth.dev",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/plan-api/, ""),
+      },
+    },
   },
   esbuild: {
-    loader: 'jsx',
+    loader: "jsx",
   },
   optimizeDeps: {
     esbuildOptions: {
       loader: {
-        '.js': 'jsx',
+        ".js": "jsx",
       },
     },
   },
-})
+  preview: {
+    port: 4173,
+    proxy: {
+      "/api": {
+        target: "https://adapta-brasil-api.replit.app",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/plan-api": {
+        target: "https://cap-plan-creator.openearth.dev",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/plan-api/, ""),
+      },
+    },
+  },
+});
