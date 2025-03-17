@@ -39,7 +39,7 @@ app.use(
 app.use(
   "/plan-api",
   createProxyMiddleware({
-    target: "https://cap-plan-creator.openearth.dev",
+    target: process.env.PLAN_API_URL || "https://cap-plan-creator.openearth.dev",
     changeOrigin: true,
     pathRewrite: {
       "^/plan-api": "",
