@@ -112,7 +112,7 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                             <h4 className="text-lg font-medium text-[#00001F] mb-2">{t("explanation")}</h4>
                             <p className="text-gray-600">{action.Explanation}</p>
                         </div>
-                    )}>
+                    )}
 
                     {/* Content */}
                     <div className="px-12 py-8">
