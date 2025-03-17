@@ -8,7 +8,7 @@ channel = "stable-24_05"
 
 [deployment]
 build = ["sh", "-c", "npm run build"]
-run = ["sh", "-c", "PORT=3001 node src/server.js"]
+run = ["sh", "-c", "PORT=80 node src/server.js"]
 publicDir = "dist"
 
 [[deployment.rewrites]]
@@ -16,12 +16,8 @@ from = "/*"
 to = "/index.html"
 
 [[ports]]
-localPort = 3000
-externalPort = 80
-
-[[ports]]
-localPort = 3001
-externalPort = 3001
+localPort = 80
+externalPort = 3000
 
 [workflows]
 runButton = "Start Server"
