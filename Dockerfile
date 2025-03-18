@@ -5,7 +5,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM busybox:1.30 AS runner
+FROM nginx:1.25-alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/dist .
-CMD ["busybox", "httpd", "-f", "-v", "-p", "80"]
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+CMD ["nginx", "-g", "daemon off;"]
