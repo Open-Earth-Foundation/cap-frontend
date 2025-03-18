@@ -23,13 +23,15 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
 
     const getProgressBars = (action) => {
         if (isAdaptation(type)) {
-            const level = action.AdaptationEffectiveness;
-            const filledBars = level === "high" ? 3 : level === "medium" ? 2 : 1;
-            const color = level === "high"
-                ? "bg-blue-500"
-                : level === "medium"
-                    ? "bg-blue-400"
-                    : "bg-blue-300";
+            const level = action?.AdaptationEffectiveness;
+            const filledBars =
+                level === "high" ? 3 : level === "medium" ? 2 : 1;
+            const color =
+                level === "high"
+                    ? "bg-blue-500"
+                    : level === "medium"
+                      ? "bg-blue-400"
+                      : "bg-blue-300";
 
             return Array(3).fill().map((_, i) => (
                 <div
@@ -162,7 +164,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                 plan,
                 prompt: generatedPrompt,
                 timestamp: new Date().toISOString(),
-                actionName: action.ActionName
+                actionName: action?.ActionName,
             };
             setGeneratedPlans(prevPlans => [...prevPlans, newPlan]);
             setLocalGeneratedPlan(plan);
@@ -206,10 +208,10 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                         {/* Description */}
                         <div className="space-y-2">
                             <h2 className="text-xl font-semibold text-gray-900 font-poppins">
-                                {action.ActionName}
+                                {action?.ActionName}
                             </h2>
                             <p className="text-gray-600 text-md line-clamp-2 font-opensans">
-                                {action.Description}
+                                {action?.Description}
                             </p>
                         </div>
 
@@ -223,7 +225,11 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                                     className="text-gray-600 ">{isAdaptation(type) ? t("adaptationPotential") : t("reductionPotential")}</span>
                                 {/*<span className={getReductionColor(action.estimated_cost)}>*/}
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
-                                    {isAdaptation(type) ? toTitleCase(action.AdaptationEffectiveness) : `${getReductionPotential(action)}%`}
+                                    {isAdaptation(type)
+                                        ? toTitleCase(
+                                              action?.AdaptationEffectiveness,
+                                          )
+                                        : getReductionPotential(action)}
                                 </p>
                                 {/*</span>*/}
                             </div>
@@ -236,27 +242,25 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                                 <span className="text-gray-600">
                                   {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
                                 </span>
-                                <span className="text-gray-600  flex-1 ml-4 text-right font-semibold">
-                                    {action?.Sector?.join ? 
-                                        action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') 
-                                        : action?.Hazard?.join ? 
-                                            action.Hazard.map(h => toTitleCase(h)).join(', ')
-                                            : toTitleCase(String(action.Sector || action.Hazard || ''))}
+                                <span className="text-gray-600 font-semibold">
+                                    {toTitleCase(
+                                        action?.Sector || action?.Hazard,
+                                    )}
                                 </span>
                             </div>
 
                             <div className="flex justify-between ">
                                 <span className="text-gray-600">{t("estimatedCost")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {toTitleCase(action.CostInvestmentNeeded)}
-                </span>
+                                    {toTitleCase(action?.CostInvestmentNeeded)}
+                                </span>
                             </div>
 
                             <div className="flex justify-between">
                                 <span className="text-gray-600">{t("implementationTime")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {action.TimelineForImplementation}
-                </span>
+                                    {action?.TimelineForImplementation}
+                                </span>
                             </div>
                         </div>
 
