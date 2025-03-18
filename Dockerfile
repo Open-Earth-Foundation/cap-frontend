@@ -8,5 +8,5 @@ RUN npm run build
 FROM nginx:1.25-alpine AS runner
 WORKDIR /app
 COPY --from=builder /app/dist .
-COPY ./nginx.conf /etc/nginx/nginx.conf
+# COPY ./nginx.conf /etc/nginx/nginx.conf
 CMD ["nginx", "-g", "daemon off;"]
