@@ -78,26 +78,26 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
             const actionType = isAdaptation(type) ? 'adaptation' : 'mitigation';
             // Get the potential based on the type
             const potential = isAdaptation(type)
-                ? action.AdaptationEffectiveness
+                ? action?.AdaptationEffectiveness
                 : getReductionPotential(action);
             const prompt = `Draft a brief step by step plan for this ${actionType} climate action in ${selectedCity}, Brazil:
-                        Name: ${action.ActionName}
-                        Description: ${action.Description}
+                        Name: ${action?.ActionName}
+                        Description: ${action?.Description}
                         ${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}
-                        ${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${action.Sector || action.Hazard}
-                        Cost: ${action.CostInvestmentNeeded}
-                        Implementation Timeline: ${action.TimelineForImplementation}
-                        ${action.CoBenefits ? `Co-benefits: ${Object.keys(action.CoBenefits).join(',  ')}` : action.CoBenefits}
-                        ${action.EquityAndInclusionConsiderations ? `Equity and Inclusion Considerations: ${action.EquityAndInclusionConsiderations}` : ''}
-                        ${action.KeyPartnersAndResources ? `Key Partners and Resources: ${action.KeyPartnersAndResources}` : ''}
-                        ${action.Barriers ? `Potential Barriers: ${action.Barriers}` : ''}`;
+                        ${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${action?.Sector || action?.Hazard}
+                        Cost: ${action?.CostInvestmentNeeded}
+                        Implementation Timeline: ${action?.TimelineForImplementation}
+                        ${action?.CoBenefits ? `Co-benefits: ${Object.keys(action?.CoBenefits).join(',  ')}` : action?.CoBenefits}
+                        ${action?.EquityAndInclusionConsiderations ? `Equity and Inclusion Considerations: ${action?.EquityAndInclusionConsiderations}` : ''}
+                        ${action?.KeyPartnersAndResources ? `Key Partners and Resources: ${action?.KeyPartnersAndResources}` : ''}
+                        ${action?.Barriers ? `Potential Barriers: ${action?.Barriers}` : ''}`;
             setGeneratedPrompt(prompt);
 
             const response = await axios.post('https://api.openai.com/v1/chat/completions', {
                 model: "gpt-3.5-turbo",
                 messages: [{
                     role: "system",
-                    content: `You are a climate action planning expert specializing in ${action.actionType} strategies, with deep experience in urban planning. Create concise, actionable implementation plans for a city planner to use. Propose rapid action that can be taken in the first year, try to instill a sense of urgency that shows impact in the short term, and extended impact in time. Be realistic, and specific. Generic proposals are of no use. Focus on real impact. Take into account the reality of the city selected. Use this template and Markdown formatting for the action plan:
+                    content: `You are a climate action planning expert specializing in ${action?.actionType} strategies, with deep experience in urban planning. Create concise, actionable implementation plans for a city planner to use. Propose rapid action that can be taken in the first year, try to instill a sense of urgency that shows impact in the short term, and extended impact in time. Be realistic, and specific. Generic proposals are of no use. Focus on real impact. Take into account the reality of the city selected. Use this template and Markdown formatting for the action plan:
 
 ## 1. In-depth main action description
 [Provide a detailed description]
@@ -223,7 +223,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                             <div className="flex justify-between items-center pt-2">
                                 <span
                                     className="text-gray-600 ">{isAdaptation(type) ? t("adaptationPotential") : t("reductionPotential")}</span>
-                                {/*<span className={getReductionColor(action.estimated_cost)}>*/}
+                                {/*<span className={getReductionColor(action?.estimated_cost)}>*/}
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
                                     {isAdaptation(type)
                                         ? toTitleCase(
@@ -240,7 +240,7 @@ const TopClimateActions = ({actions, type, setSelectedAction, selectedCity, setG
                         <div className="space-y-3">
                             <div className="flex justify-between">
                                 <span className="text-gray-600">
-                                  {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
+                                  {isAdaptation(action?.ActionType) ? t("hazard") : t("sector")}
                                 </span>
                                 <span className="text-gray-600 font-semibold">
                                     {toTitleCase(

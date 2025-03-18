@@ -191,8 +191,6 @@ const ClimateActions = ({
     }, [selectedCity]);
 
 if (isLoading || (mitigationData.length  === 0 && adaptationData.length === 0)) return <>Loading</>
-    console.log('ClimateActions:196') // TODO NINA
-    console.log("ClimateActions.jsx mitigationData", JSON.stringify(mitigationData.length, null, 2)) // TODO NINA
     return (
         <div className="max-w-screen-xl mx-auto p-12">
 
