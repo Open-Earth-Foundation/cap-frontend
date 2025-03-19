@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(
   "/api",
   createProxyMiddleware({
-    target: "https://adapta-brasil-api.replit.app",
+    target: CAP_API_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/api": "",
@@ -39,7 +39,7 @@ app.use(
 app.use(
   "/plan-api",
   createProxyMiddleware({
-    target: "https://cap-plan-creator.openearth.dev",
+    target: VITE_PLAN_CREATOR_URL,
     changeOrigin: true,
     pathRewrite: {
       "^/plan-api/start_plan_creation": "/start_plan_creation",

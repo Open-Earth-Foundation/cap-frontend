@@ -8,7 +8,8 @@ lerna-debug.log*
 .pnpm-debug.log*
 *.txt
 k8s/cap-frontend-deployment-keys.yml
-
+k8s/local-test-deployment.yml
+k8s/local-secrets.yml
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
