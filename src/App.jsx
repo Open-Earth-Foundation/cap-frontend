@@ -56,7 +56,7 @@ const CityView = () => {
             <div className="container mx-auto px-4 flex justify-center items-center gap-32 max-w-[1200px]">
                 <CityMap selectedCity={validCity.value}/>
             </div>
-            <div className="container mx-auto px-4 py-10 text-gray-500">
+            <div className="w-full px-4 py-10 text-gray-500">
                 <ClimateActions
                     selectedCity={validCity.value}
                     mitigationData={mitigationData}
