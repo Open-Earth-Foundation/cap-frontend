@@ -35,7 +35,7 @@ export const mitigationColumns = (t) => [
     {
         accessorFn: (row) => row.action?.CostInvestmentNeeded,
         header: t("estimatedCost"),
-        size: 80,
+        size: 60,
         Cell: ({ cell }) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -45,7 +45,7 @@ export const mitigationColumns = (t) => [
     {
         accessorFn: (row) => row.action?.TimelineForImplementation,
         header: t("implementationTime"),
-        size: 80,
+        size: 60,
     },
     {
         accessorFn: (row) => row.explanation,
@@ -100,7 +100,7 @@ export const adaptationColumns = (t) => [
     {
         accessorFn: (row) => row.action?.CostInvestmentNeeded,
         header: t("estimatedCost"),
-        size: 80,
+        size: 60,
         Cell: ({ cell }) => (
             <div>
                 <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
@@ -110,7 +110,7 @@ export const adaptationColumns = (t) => [
     {
         accessorFn: (row) => row.action?.TimelineForImplementation,
         header: t("implementationTime"),
-        size: 80,
+        size: 60,
     },
     {
         accessorFn: (row) => row.explanation,
