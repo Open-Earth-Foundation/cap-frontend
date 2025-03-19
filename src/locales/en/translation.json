@@ -39,6 +39,6 @@
   "action": "Action",
   "sector": "Sector",
   "seeGeneratedPlans": "See generated plans",
-  "explanation": "Explanation",
-  "explanationNotAvailable": "Explanation not available for this action"
+  "hazard": "Hazard",
+  "adaptationEffectiveness": "Adaptation Effectiveness"
 }
