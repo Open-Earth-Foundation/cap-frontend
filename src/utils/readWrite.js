@@ -8,15 +8,23 @@ import { CITIES } from "../components/constants.js";
 console.log("AWS Region:", "VITE_AWS_REGION");
 console.log("AWS Access Key ID:", "VITE_AWS_ACCESS_KEY_ID");
 console.log("AWS S3 Bucket ID:", "VITE_AWS_S3_BUCKET_ID");
+console.log("AWS Region:", "VITE_AWS_REGION");
+console.log("AWS Secret Access Key:", "VITE_AWS_SECRET_ACCESS_KEY");
+
+const awsRegion = "us-east-2";
+const awsAccessKeyId = "VITE_AWS_ACCESS_KEY_ID";
+const awsSecretAccessKey = "VITE_AWS_SECRET_ACCESS_KEY";
+const awsS3BucketId = "VITE_AWS_S3_BUCKET_ID";
 
 const s3Client = new S3Client({
-  region: "VITE_AWS_REGION" || "us-east-2",
+  region: awsRegion,
   credentials: {
-    accessKeyId: "VITE_AWS_ACCESS_KEY_ID",
-    secretAccessKey: "VITE_AWS_SECRET_ACCESS_KEY",
+    accessKeyId: awsAccessKeyId,
+    secretAccessKey: awsSecretAccessKey,
   },
 });
 const bucketName = "VITE_AWS_S3_BUCKET_ID";
+console.log("Bucket Name:", bucketName);
 
 const streamToString = async (stream) => {
   const reader = stream.getReader();
