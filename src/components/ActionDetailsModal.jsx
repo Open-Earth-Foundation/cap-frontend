@@ -112,7 +112,7 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                             <h4 className="text-lg font-medium text-[#00001F] mb-2">{t("explanation")}</h4>
                             <p className="text-gray-600">{action.Explanation}</p>
                         </div>
-                    )}>
+                    )}
 
                     {/* Content */}
                     <div className="px-12 py-8">
@@ -228,9 +228,13 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                 <h3 className="text-lg font-medium text-[#232640] mb-3">
                                     {t("equityAndInclusionConsiderations")}
                                 </h3>
-                                <p className="text-sm text-[#4B4C63]">
-                                    {action.EquityAndInclusionConsiderations}
-                                </p>
+                                <div className="mt-2 text-sm text-[#4B4C63]">
+                                    {action.EquityAndInclusionConsiderations.split(/(?=\d+\.\s)/).map((paragraph, index) => (
+                                        <p key={index} className="mb-2">
+                                            {paragraph.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}
+                                        </p>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
