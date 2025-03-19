@@ -3,6 +3,7 @@ import {
     getReductionPotential,
     isAdaptation,
     toTitleCase,
+    joinToTitleCase
 } from "../utils/helpers.js";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
@@ -152,21 +153,7 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                     Sector
                                 </span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                                    {action?.Sector?.join
-                                        ? action.Sector.map((s) =>
-                                              toTitleCase(s),
-                                          ).join(", ")
-                                        : action?.Hazard?.join
-                                          ? action.Hazard.map((h) =>
-                                                toTitleCase(h),
-                                            ).join(", ")
-                                          : toTitleCase(
-                                                String(
-                                                    action.Sector ||
-                                                        action.Hazard ||
-                                                        "",
-                                                ),
-                                            )}
+                                    {joinToTitleCase(action?.Sector) || joinToTitleCase(action.Hazard)}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
