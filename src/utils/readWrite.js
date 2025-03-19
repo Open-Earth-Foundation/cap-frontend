@@ -1,18 +1,18 @@
 import {GetObjectCommand, PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import {CITIES} from "../components/constants.js";
 
-console.log("AWS Region:", import.meta.env.VITE_AWS_REGION);
-console.log("AWS Access Key ID:", import.meta.env.VITE_AWS_ACCESS_KEY_ID);
-console.log("AWS S3 Bucket ID:", import.meta.env.VITE_AWS_S3_BUCKET_ID);
+console.log("AWS Region:",  VITE_AWS_REGION);
+console.log("AWS Access Key ID:",  VITE_AWS_ACCESS_KEY_ID);
+console.log("AWS S3 Bucket ID:",  VITE_AWS_S3_BUCKET_ID);
 
 const s3Client = new S3Client({
-    region: import.meta.env.VITE_AWS_REGION || "us-east-2",
+    region:  VITE_AWS_REGION || "us-east-2",
     credentials: {
-        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+        accessKeyId:  VITE_AWS_ACCESS_KEY_ID,
+        secretAccessKey:  VITE_AWS_SECRET_ACCESS_KEY,
     },
 });
-const bucketName = import.meta.env.VITE_AWS_S3_BUCKET_ID;
+const bucketName =  VITE_AWS_S3_BUCKET_ID;
 
 const streamToString = async (stream) => {
     const reader = stream.getReader();

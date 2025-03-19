@@ -19,6 +19,7 @@ jobs:
       VITE_AWS_REGION: us-east-2
       VITE_AWS_S3_BUCKET_ID: openearth.cap
       VITE_API_URL: http://cap-api:8080
+      VITE_PLAN_CREATOR_URL: https://cap-plan-creator.openearth.dev
 
     steps:
       - name: Checkout repository
