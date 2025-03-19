@@ -19,19 +19,19 @@ const ClimateActionTable = ({ actions, onActionClick }) => {
       <table className="min-w-full divide-y divide-gray-200" id="climate-action-table">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-[8%] px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {t("rank")}
             </th>
-            <th className="w-[20%] px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {t("action")}
             </th>
-            <th className="w-[15%] px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {t("sector")}
             </th>
-            <th className="w-[40%] px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {t("explanation")}
             </th>
-            <th className="w-[17%] px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
               {t("details")}
             </th>
           </tr>
@@ -48,7 +48,7 @@ const ClimateActionTable = ({ actions, onActionClick }) => {
               <td className="px-6 py-4 text-sm text-gray-500">
                 {action.Sector}
               </td>
-              <td className="px-6 py-4 text-sm text-gray-500 whitespace-normal break-words">
+              <td className="px-6 py-4 text-sm text-gray-500">
                 {/* Try multiple possible field names for explanation */}
                 {action.explanation || action.Explanation || action.Description || action.description || t("explanationNotAvailable")}
                 {/* Debug log for this specific field */}
