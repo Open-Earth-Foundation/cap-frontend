@@ -21,17 +21,3 @@ h1 {
 h2 {
   margin-top: 2rem;
 }
-
-.container {
-  width: 100%;
-  max-width: none; /* This line was added to address the width issue */
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.content-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}

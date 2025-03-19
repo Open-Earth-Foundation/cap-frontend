@@ -192,7 +192,7 @@ const ClimateActions = ({
 
 if (isLoading || (mitigationData.length  === 0 && adaptationData.length === 0)) return <>Loading</>
     return (
-        <div className="max-w-screen-xl mx-auto p-12 content-section">
+        <div className="max-w-screen-xl mx-auto p-12">
 
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
                 {t("climateActionsPrioritizationForYourCity")}
