@@ -71,7 +71,7 @@ jobs:
             VITE_API_URL="http://cap-api:8080" \
             VITE_PLAN_CREATOR_URL="https://cap-plan-creator.openearth.dev" \
             VITE_AWS_S3_BUCKET_ID="${{ secrets.VITE_AWS_S3_BUCKET_ID }}" \
-            VITE_AWS_ACCESS_KEY_ID="${{ secrets.VITE_AWS_S3_BUCKET_ID }}" \
+            VITE_AWS_ACCESS_KEY_ID="${{ secrets.VITE_AWS_ACCESS_KEY_ID }}" \
             VITE_AWS_SECRET_ACCESS_KEY="${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}"
 
       - name: Re-deploying service
