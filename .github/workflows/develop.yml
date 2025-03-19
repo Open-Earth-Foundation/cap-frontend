@@ -6,8 +6,8 @@ on:
     branches:
       - develop
     paths:
-      - '**'
-      - '.github/workflows/develop.yml'
+      - "**"
+      - ".github/workflows/develop.yml"
 
 jobs:
   build:
@@ -43,10 +43,6 @@ jobs:
         with:
           context: .
           push: true
-          build-args: |
-            VITE_AWS_REGION=${{ env.VITE_AWS_REGION }}
-            VITE_AWS_S3_BUCKET_ID=${{ env.VITE_AWS_S3_BUCKET_ID }}
-            VITE_API_URL=${{ env.VITE_API_URL }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ steps.vars.outputs.commit_hash }}
             ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
@@ -66,6 +62,16 @@ jobs:
 
       - name: Testing connection to EKS
         run: kubectl get pods -n default
+
+      - name: Set environment variables in container on cluster
+        run: |
+          kubectl set env deployment/cap-frontend \
+            VITE_AWS_REGION=us-east-2 \
+            VITE_API_URL="http://cap-api:8080" \
+            VITE_PLAN_CREATOR_URL="https://cap-plan-creator.openearth.dev" \
+            VITE_AWS_S3_BUCKET_ID="${{ secrets.VITE_AWS_S3_BUCKET_ID }}" \
+            VITE_AWS_ACCESS_KEY_ID="${{ secrets.VITE_AWS_S3_BUCKET_ID }}" \
+            VITE_AWS_SECRET_ACCESS_KEY="${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}"
 
       - name: Re-deploying service
         run: |
