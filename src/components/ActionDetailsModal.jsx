@@ -3,9 +3,11 @@ import {
     getReductionPotential,
     isAdaptation,
     toTitleCase,
+    joinToTitleCase
 } from "../utils/helpers.js";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import ReactMarkdown from "react-markdown";
 
 const ActionDetailsModal = ({ cityAction, onClose, type }) => {
     if (!cityAction) return null;
@@ -151,21 +153,7 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                     Sector
                                 </span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                                    {action?.Sector?.join
-                                        ? action.Sector.map((s) =>
-                                              toTitleCase(s),
-                                          ).join(", ")
-                                        : action?.Hazard?.join
-                                          ? action.Hazard.map((h) =>
-                                                toTitleCase(h),
-                                            ).join(", ")
-                                          : toTitleCase(
-                                                String(
-                                                    action.Sector ||
-                                                        action.Hazard ||
-                                                        "",
-                                                ),
-                                            )}
+                                    {joinToTitleCase(action?.Sector) || joinToTitleCase(action.Hazard)}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
@@ -228,9 +216,9 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                 <h3 className="text-lg font-medium text-[#232640] mb-3">
                                     {t("equityAndInclusionConsiderations")}
                                 </h3>
-                                <p className="text-sm text-[#4B4C63]">
+                                <ReactMarkdown className="text-sm text-[#4B4C63]">
                                     {action.EquityAndInclusionConsiderations}
-                                </p>
+                                </ReactMarkdown>
                             </div>
                         )}
                     </div>

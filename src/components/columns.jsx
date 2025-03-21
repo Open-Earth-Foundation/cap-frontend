@@ -1,4 +1,4 @@
-import {getReductionPotential} from "../utils/helpers.js";
+import {getReductionPotential, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -29,6 +29,11 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "action.Sector",
         header: t("sector"),
+        Cell: ({cell}) => (
+            <div>
+                {joinToTitleCase(cell.getValue())}
+            </div>
+        ),
         size: 100,
     },
     {
@@ -47,7 +52,7 @@ export const mitigationColumns = (t) => [
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
             </div>
         ),
     },
@@ -81,8 +86,6 @@ export const adaptationColumns = (t) => [
         Cell: ({cell}) => (
             <div>
                 <strong>{cell.getValue()}</strong>
-                <br/>
-                <span className="text-gray-500">{cell.row.original.action.ActionName}</span>
             </div>
         ),
     },
@@ -91,7 +94,7 @@ export const adaptationColumns = (t) => [
         header: t("hazard"),
         Cell: ({cell}) => (
             <div>
-                {cell.getValue()?.join(", ")}
+                {joinToTitleCase(cell.getValue())}
             </div>
         ),
         size: 100,
@@ -102,7 +105,7 @@ export const adaptationColumns = (t) => [
         size: 100,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
             </div>
         ),
     },
@@ -112,7 +115,7 @@ export const adaptationColumns = (t) => [
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
             </div>
         ),
     },

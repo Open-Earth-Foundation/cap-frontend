@@ -1,4 +1,3 @@
-
 {
   "climateActionsPrioritizationForYourCity": "Priorización de acciones climáticas para tu ciudad",
   "discover": "Descubre la clasificación de las acciones climáticas de tu ciudad según su efectividad, costos y beneficios, ayudándote a priorizar aquellas con mayor potencial de impacto.",
@@ -36,8 +35,10 @@
   "discoverTopActionsTailoredToTheCitysClimateNeeds": "Descubre las principales acciones adaptadas a las necesidades climáticas de la ciudad.",
   "topmitigationClimateActions": "Principales acciones climáticas de mitigación",
   "topadaptationClimateActions": "Principales acciones climáticas de adaptación",
-  "rank": "Rank",
-  "action": "Action",
+  "rank": "Clasificación",
+  "action": "Acción",
   "sector": "Sector",
-  "seeGeneratedPlans": "Ver planes generados"
+  "seeGeneratedPlans": "Ver planes generados",
+  "hazard": "Riesgo",
+  "adaptationEffectiveness": "Efectividad de adaptación"
 }

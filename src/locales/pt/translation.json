@@ -39,5 +39,7 @@
   "rank": "Classificação",
   "action": "Ação",
   "sector": "Setor",
-  "seeGeneratedPlans": "Ver planos gerados"
+  "seeGeneratedPlans": "Ver planos gerados",
+  "hazard": "Risco",
+  "adaptationEffectiveness": "Eficácia da Adaptação"
 }

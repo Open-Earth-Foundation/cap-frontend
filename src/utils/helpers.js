@@ -8,14 +8,20 @@ export function getReductionPotential(action) {
         return !!value
     })
 }
-
 export const toTitleCase = str => {
     if (typeof str !== 'string') return '';
-    return str.replace(
-        /\w\S*/g,
-        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    );
+    return str
+        .replace(/_/g, ' ') // Remove underscores
+        .replace(
+            /\w\S*/g,
+            text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+        );
 };
+
+export const joinToTitleCase = (array) => {
+    if (!array) return null
+    return array.map(toTitleCase)?.join(', ');
+}
 
 export const isAdaptation = type => type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase();
 
