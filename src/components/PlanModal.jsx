@@ -1,8 +1,8 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import MarkdownRenderer from "./MarkdownRenderer.jsx";
+
 
 const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
     if (!isOpen) return null;
@@ -68,12 +68,7 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
                                         </span>
                                     </div>
                                     <div className="bg-white rounded-lg">
-                                        <ReactMarkdown
-                                            className={markdownClasses}
-                                            rehypePlugins={[rehypeRaw]}
-                                        >
-                                            {planData.plan}
-                                        </ReactMarkdown>
+                                        {planData.plan && <MarkdownRenderer markdownContent={planData.plan}/>}
                                     </div>
                                 </div>
                             ))}
@@ -104,12 +99,7 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
                         </button>
                     </div>
                     <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
-                        <ReactMarkdown
-                            className={markdownClasses}
-                            rehypePlugins={[rehypeRaw]}
-                        >
-                            {plan}
-                        </ReactMarkdown>
+                        {plan && <MarkdownRenderer markdownContent={plan}/>}
                     </div>
                 </div>
             </div>

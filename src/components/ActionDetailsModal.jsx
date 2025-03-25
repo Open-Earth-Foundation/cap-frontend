@@ -1,17 +1,11 @@
 import React from "react";
-import {
-    getReductionPotential,
-    isAdaptation,
-    toTitleCase,
-    joinToTitleCase
-} from "../utils/helpers.js";
-import { FiX } from "react-icons/fi";
-import { useTranslation } from "react-i18next";
-import ReactMarkdown from "react-markdown";
+import {getReductionPotential, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import {FiX} from "react-icons/fi";
+import {useTranslation} from "react-i18next";
 
-const ActionDetailsModal = ({ cityAction, onClose, type }) => {
+const ActionDetailsModal = ({cityAction, onClose, type}) => {
     if (!cityAction) return null;
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const action = cityAction;
     // Helper function to render progress bars based on reduction potential
     const renderReductionBars = () => {
@@ -23,8 +17,8 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                 level === "high"
                     ? "bg-blue-500"
                     : level === "medium"
-                      ? "bg-blue-400"
-                      : "bg-blue-300";
+                        ? "bg-blue-400"
+                        : "bg-blue-300";
 
             return (
                 <div className="flex gap-2 mb-8">
@@ -57,12 +51,12 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                 potentialValue >= 80
                     ? 5
                     : potentialValue >= 60
-                      ? 4
-                      : potentialValue >= 40
-                        ? 3
-                        : potentialValue >= 20
-                          ? 2
-                          : 1;
+                        ? 4
+                        : potentialValue >= 40
+                            ? 3
+                            : potentialValue >= 20
+                                ? 2
+                                : 1;
 
             const color = getBarColor(potentialValue);
 
@@ -94,19 +88,20 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                 />
 
                 {/* Modal */}
-                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full font-poppins">
+                <div
+                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full font-poppins">
                     {/* Header */}
                     <div className="flex justify-between items-center px-12 pt-8 pb-6">
                         <h3 className="text-xl font-bold text-[#00001F] font-poppins">
                             {t("climateActionDetails")}
                         </h3>
                         <button onClick={onClose} className="p-1">
-                            <FiX className="h-6 w-6" />
+                            <FiX className="h-6 w-6"/>
                         </button>
                     </div>
 
                     {/* Divider */}
-                    <div className="border-b-2 border-[#E8EAFB]" />
+                    <div className="border-b-2 border-[#E8EAFB]"/>
 
                     {/* Explanation Section - if available */}
                     {action.Explanation && (
@@ -127,7 +122,7 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                         </p>
 
                         {/* Divider */}
-                        <div className="border-b border-[#E4E4E4] mb-6" />
+                        <div className="border-b border-[#E4E4E4] mb-6"/>
 
                         {/* Reduction Potential Bars */}
                         {renderReductionBars()}
@@ -143,8 +138,8 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                 <span className="text-md font-semibold text-[#4B4C63]">
                                     {isAdaptation(type)
                                         ? toTitleCase(
-                                              action.AdaptationEffectiveness,
-                                          )
+                                            action.AdaptationEffectiveness,
+                                        )
                                         : `${getReductionPotential(action)}%`}
                                 </span>
                             </div>
@@ -175,12 +170,12 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                         </div>
 
                         {/* Divider */}
-                        <div className="border-b border-[#E4E4E4] mb-6" />
+                        <div className="border-b border-[#E4E4E4] mb-6"/>
 
                         {/* Additional sections if available in your data */}
                         {action.Impacts && (
                             <>
-                                <div className="border-b border-[#E4E4E4] mb-8" />
+                                <div className="border-b border-[#E4E4E4] mb-8"/>
                                 <div className="mb-8">
                                     <h3 className="text-lg font-medium text-[#232640] mb-3">
                                         {t("impacts")}
@@ -216,9 +211,9 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
                                 <h3 className="text-lg font-medium text-[#232640] mb-3">
                                     {t("equityAndInclusionConsiderations")}
                                 </h3>
-                                <ReactMarkdown className="text-sm text-[#4B4C63]">
-                                    {action.EquityAndInclusionConsiderations}
-                                </ReactMarkdown>
+                                {action.EquityAndInclusionConsiderations &&
+                                    <MarkdownRenderer markdownContent={action.EquityAndInclusionConsiderations}/>
+                                }
                             </div>
                         )}
                     </div>
