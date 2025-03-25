@@ -15,12 +15,12 @@ const getImpactLevelClass = (level) => {
 export const mitigationColumns = (t) => [
     {
         accessorKey: "actionPriority",
-        header: t("rank"),
+        header: toTitleCase(t("rank")) ,
         size: 40,
     },
     {
         accessorKey: "action.ActionName",
-        header: t("action"),
+        header: toTitleCase(t("action")) ,
         size: 150,
         Cell: ({cell}) => (
             <div>
@@ -30,7 +30,7 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.Sector",
-        header: t("sector"),
+        header: toTitleCase(t("sector")) ,
         Cell: ({cell}) => (
             <div>
                 {joinToTitleCase(cell.getValue())}
@@ -40,7 +40,7 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.GHGReductionPotential",
-        header: t("reductionPotential"),
+        header: toTitleCase(t("reductionPotential")) ,
         size: 100,
         Cell: ({cell}) => (
             <div>
@@ -50,7 +50,7 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
+        header: toTitleCase(t("estimatedCost")) ,
         size: 80,
         Cell: ({cell}) => (
             <div>
@@ -60,12 +60,12 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
+        header: toTitleCase(t("implementationTime")) ,
         size: 80,
     },
     {
         accessorKey: "explanation",
-        header: t("explanation"),
+        header: toTitleCase(t("explanation")) ,
         size: 40,
         Cell: ({cell}) => {
             // Create a unique ID for tooltip anchor and content
@@ -100,12 +100,12 @@ export const mitigationColumns = (t) => [
 export const adaptationColumns = (t) => [
     {
         accessorKey: "actionPriority",
-        header: t("rank"),
+        header: toTitleCase(t("rank")) ,
         size: 40,
     },
     {
         accessorKey: "action.ActionName",
-        header: t("action"),
+        header: toTitleCase(t("action")) ,
         size: 150,
         Cell: ({cell}) => (
             <div>
@@ -115,7 +115,7 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.Hazard",
-        header: t("hazard"),
+        header: toTitleCase(t("hazard")) ,
         Cell: ({cell}) => (
             <div>
                 {joinToTitleCase(cell.getValue())}
@@ -125,7 +125,7 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.AdaptationEffectiveness",
-        header: t("adaptationEffectiveness"),
+        header: toTitleCase(t("adaptationEffectiveness")) ,
         size: 100,
         Cell: ({cell}) => (
             <div>
@@ -135,7 +135,7 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
+        header: toTitleCase(t("estimatedCost")) ,
         size: 80,
         Cell: ({cell}) => (
             <div>
@@ -145,12 +145,12 @@ export const adaptationColumns = (t) => [
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
+        header: toTitleCase(t("implementationTime")) ,
         size: 80,
     },
  {
         accessorKey: "explanation",
-        header: t("explanation"),
+        header: toTitleCase(t("explanation")) ,
         size: 40,
         Cell: ({cell}) => {
             // Create a unique ID for tooltip anchor and content
