@@ -51,6 +51,7 @@
     "react-select": "^5.8.1",
     "react-syntax-highlighter": "^15.6.1",
     "react-tabs": "^6.0.2",
+    "react-tooltip": "^5.28.0",
     "recharts": "^2.12.7",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",

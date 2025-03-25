@@ -1,4 +1,6 @@
 import {getReductionPotential, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import { Tooltip } from 'react-tooltip'
+import { MdInfoOutline } from "react-icons/md";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -64,13 +66,35 @@ export const mitigationColumns = (t) => [
     {
         accessorKey: "explanation",
         header: t("explanation"),
-        size: 300,
-        Cell: ({cell}) => (
-            <div className="max-w-xs break-words">
-                {cell.getValue() ? cell.getValue() : "N/A"}
-            </div>
-        ),
-    },
+        size: 40,
+        Cell: ({cell}) => {
+            // Create a unique ID for tooltip anchor and content
+            const tooltipId = `explanation-tooltip-${cell.row.index}`;
+
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        id={tooltipId}
+                        className="flex items-center cursor-pointer"
+                        data-tooltip-id={`tooltip-content-${cell.row.index}`}
+                        data-tooltip-content={cell.getValue() || "N/A"}
+                    >
+                        <MdInfoOutline className="text-lg" />
+                    </div>
+
+                    <Tooltip
+                        id={`tooltip-content-${cell.row.index}`}
+                        place="left"
+                        className="z-[1000] max-w-xs"
+                        positionStrategy="fixed"
+                        style={{
+                            maxWidth: "300px",
+                            wordBreak: "break-word"
+                        }}
+                    />
+                </div>
+            );
+        },  }
 ];
 
 export const adaptationColumns = (t) => [
@@ -124,14 +148,36 @@ export const adaptationColumns = (t) => [
         header: t("implementationTime"),
         size: 80,
     },
-    {
+ {
         accessorKey: "explanation",
         header: t("explanation"),
-        size: 300,
-        Cell: ({cell}) => (
-            <div className="max-w-xs break-words">
-                {cell.getValue() ? cell.getValue() : "N/A"}
-            </div>
-        ),
-    },
+        size: 40,
+        Cell: ({cell}) => {
+            // Create a unique ID for tooltip anchor and content
+            const tooltipId = `explanation-tooltip-${cell.row.index}`;
+
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        id={tooltipId}
+                        className="flex items-center cursor-pointer"
+                        data-tooltip-id={`tooltip-content-${cell.row.index}`}
+                        data-tooltip-content={cell.getValue() || "N/A"}
+                    >
+                        <MdInfoOutline className="text-lg" />
+                    </div>
+
+                    <Tooltip
+                        id={`tooltip-content-${cell.row.index}`}
+                        place="left"
+                        className="z-[1000] max-w-xs"
+                        positionStrategy="fixed"
+                        style={{
+                            maxWidth: "300px",
+                            wordBreak: "break-word"
+                        }}
+                    />
+                </div>
+            );
+        },}
 ];
