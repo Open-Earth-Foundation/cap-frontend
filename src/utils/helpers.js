@@ -12,6 +12,7 @@ export const toTitleCase = str => {
     if (typeof str !== 'string') return '';
     return str
         .replace(/_/g, ' ') // Remove underscores
+        .replace(/-/g, ' ') // Remove underscores
         .replace(
             /\w\S*/g,
             text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
