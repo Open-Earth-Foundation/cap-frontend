@@ -85,8 +85,8 @@ const TopClimateActions = ({
         }
     };
 
-    const generateActionPlan = async (action, type) => {
-        setIsGenerating(true);
+    const generateActionPlan = async (action, type, index) => {
+        setIsGenerating(index);
         try {
             const actionType = isAdaptation(type) ? "adaptation" : "mitigation";
 
@@ -319,16 +319,16 @@ const TopClimateActions = ({
                                 {t("seeMoreDetails")}
                             </button>
                             <button
-                                onClick={() => generateActionPlan(action, type)}
-                                disabled={isGenerating}
+                                onClick={() => generateActionPlan(action, type, index)}
+                                disabled={!!isGenerating}
                                 className={`px-4 py-2 text-white font-semibold rounded-md transition-colors
                                     ${
-                                    isGenerating
+                                    isGenerating===index
                                         ? "bg-gray-400 cursor-not-allowed"
                                         : "bg-primary hover:bg-primary-dark"
                                 }`}
                             >
-                                {isGenerating ? (
+                                {isGenerating===index ? (
                                     <div className="flex items-center">
                                         <FiLoader className="animate-spin mr-2"/>
                                         {t("generating")}
