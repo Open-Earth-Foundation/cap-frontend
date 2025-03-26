@@ -40,5 +40,6 @@
   "sector": "Sector",
   "seeGeneratedPlans": "See generated plans",
   "hazard": "Hazard",
-  "adaptationEffectiveness": "Adaptation Effectiveness"
+  "adaptationEffectiveness": "Adaptation Effectiveness",
+  "generating": "Generating"
 }

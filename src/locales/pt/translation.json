@@ -1,4 +1,3 @@
-
 {
   "climateActionsPrioritizationForYourCity": "Priorização de ações climáticas para sua cidade",
   "discover": "Descubra a classificação das ações climáticas da sua cidade de acordo com sua eficácia, custos e benefícios, ajudando você a priorizar aquelas com maior potencial de impacto.",
@@ -41,5 +40,6 @@
   "sector": "Setor",
   "seeGeneratedPlans": "Ver planos gerados",
   "hazard": "Risco",
-  "adaptationEffectiveness": "Eficácia da Adaptação"
+  "adaptationEffectiveness": "Eficácia da Adaptação",
+  "generating": "Gerando"
 }
