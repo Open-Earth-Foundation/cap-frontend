@@ -21,7 +21,8 @@ const TopClimateActions = ({
 
     const [isPlansListModalOpen, setIsPlansListModalOpen] = useState(false);
 
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
+
     // Get top 3 actions of the specified type
     const topActions = actions
         .sort((a, b) => a.actionPriority - b.actionPriority)
@@ -92,6 +93,7 @@ const TopClimateActions = ({
             const payload = {
                 action: action, // Send the entire action object as-is
                 city_name: selectedCity, // Changed from 'city' to 'city_name'
+                language:  i18n.language,
             };
 
             console.log("Sending request to start plan creation:", {
