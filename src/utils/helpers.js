@@ -24,6 +24,14 @@ export const joinToTitleCase = (array) => {
     return array.map(toTitleCase)?.join(', ');
 }
 
+export const toSentenceCase = (text) => {
+    if (!text) return '';
+    // Replace underscores with spaces first
+    const withSpaces = text.replace(/_/g, ' ');
+    // Convert to sentence case (first letter uppercase, rest lowercase)
+    return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1).toLowerCase();
+  };
+
 export const isAdaptation = type => type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase();
 
 const getNestedValue = (obj, path) => {

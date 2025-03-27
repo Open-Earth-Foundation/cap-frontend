@@ -41,5 +41,6 @@
   "seeGeneratedPlans": "See generated plans",
   "hazard": "Hazard",
   "adaptationEffectiveness": "Adaptation Effectiveness",
-  "generating": "Generating"
+  "generating": "Generating",
+  "exportPdf": "EXPORT PDF"
 }

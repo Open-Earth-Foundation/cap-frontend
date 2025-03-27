@@ -233,11 +233,7 @@ const ClimateActions = ({
 
   if (isLoading || (mitigationData.length === 0 && adaptationData.length === 0))
     return <>Loading</>;
-  console.log("ClimateActions:196"); // TODO NINA
-  console.log(
-    "ClimateActions.jsx mitigationData",
-    JSON.stringify(mitigationData.length, null, 2),
-  ); // TODO NINA
+
   return (
     <div className="max-w-screen-xl mx-auto p-12">
       <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
@@ -344,7 +340,7 @@ const ClimateActions = ({
                   className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table"
                 >
                   <FiFileText />
-                  EXPORT PDF
+                  {t("exportPdf")}
                 </button>
               </div>
               <MRT_TableContainer
