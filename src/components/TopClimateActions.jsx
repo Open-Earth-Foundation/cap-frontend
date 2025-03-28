@@ -320,18 +320,17 @@ const TopClimateActions = ({
                             </button>
                             <button
                                 onClick={() => generateActionPlan(action, type, index)}
-                                disabled={!!isGenerating}
+                                disabled={isGenerating !== false}
                                 className={`px-4 py-2 text-white font-semibold rounded-md transition-colors
-                                    ${
-                                    isGenerating===index
+                                    ${isGenerating !== false
                                         ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-primary hover:bg-primary-dark"
-                                }`}
-                            >
-                                {isGenerating===index ? (
+                                        : "bg-primary hover:bg-primary-dark"}
+                                `}
+                                >
+                                {isGenerating === index ? (
                                     <div className="flex items-center">
-                                        <FiLoader className="animate-spin mr-2"/>
-                                        {t("generating")}
+                                    <FiLoader className="animate-spin mr-2" />
+                                    {t("generating")}
                                     </div>
                                 ) : (
                                     t("generatePlan")
