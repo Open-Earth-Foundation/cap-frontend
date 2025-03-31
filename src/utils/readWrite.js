@@ -4,6 +4,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { CITIES } from "../components/constants.js";
+import i18next from "i18next";
 
 console.log("AWS Region:", "VITE_AWS_REGION");
 console.log("AWS Access Key ID:", "VITE_AWS_ACCESS_KEY_ID");
@@ -45,7 +46,8 @@ const streamToString = async (stream) => {
 
 function getFileName(cityName, type) {
   const fileName = CITIES.find((city) => city.value === cityName).locode;
-  return `data/${type}/${fileName}.json`;
+  const language = i18next.language || "en"; // Default to 'en' if no language is set
+  return `data/${language}/${type}/${fileName}.json`;
 }
 
 export const readFile = async (cityName, type) => {
