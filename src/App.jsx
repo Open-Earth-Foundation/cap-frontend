@@ -22,7 +22,7 @@ const CityView = () => {
   const [error, setError] = useState(null);
   const [adaptationData, setAdaptationData] = useState([]);
   const [mitigationData, setMitigationData] = useState([]);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const validCity = CITIES.find(
     (city) => city.value.toLowerCase() === cityName?.toLowerCase(),
@@ -55,7 +55,7 @@ const CityView = () => {
       fetchData(validCity.value, ADAPTATION);
       fetchData(validCity.value, MITIGATION);
     }
-  }, [validCity]);
+  }, [validCity, i18n.language]);
 
   return (
     <>
