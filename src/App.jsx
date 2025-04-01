@@ -58,12 +58,20 @@ const CityView = () => {
   }, [validCity, i18n.language]);
 
   return (
-    <>
-      <Hero initialCity={validCity.value} />
-      <div className="container mx-auto px-4 flex justify-center items-center gap-32 max-w-[1200px]">
-        <CityMap selectedCity={validCity.value} />
-      </div>
+    <div className={"py-4"}>
+      {/*<Hero initialCity={validCity.value} />*/}
+      {/*<div className="container mx-auto px-4 flex justify-center items-center gap-32 max-w-[1200px]">*/}
+      {/*  <CityMap selectedCity={validCity.value} />*/}
+      {/*</div>*/}
+
       <div className="container mx-auto px-4 py-10 text-gray-500">
+        <> <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
+                    {t("topActionsTitle")}
+                </h1>
+                <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+                    {t("topActionsDescription")}
+                </p>
+                </>
         <ClimateActions
           selectedCity={validCity.value}
           mitigationData={mitigationData}
@@ -74,7 +82,7 @@ const CityView = () => {
           error={error}
         />
       </div>
-    </>
+    </div>
   );
 };
 

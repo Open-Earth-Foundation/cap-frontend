@@ -22,9 +22,10 @@
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
     position: relative;
 }
+
 /* Optional: you can add a hover effect */
 .first-card:hover {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important ;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5) !important;
     transition: box-shadow 0.3s ease-in-out;
 }
 
@@ -110,4 +111,21 @@ li.react-tabs__tab--selected, li.react-tabs__tab--selected::after {
 .table-header {
     background-color: #2351DC; /* Change this to your desired color */
     color: #2351DC;
+}
+
+.modify-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.button {
+    background-color: #2351DC !important;
+    color: white !important;
+}
+
+.button:hover {
+    background-color: #1e46c1 !important; /* Slightly darker blue for hover effect */
 }

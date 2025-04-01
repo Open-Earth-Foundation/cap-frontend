@@ -1,6 +1,6 @@
 import {getReductionPotential, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
 import { Tooltip } from 'react-tooltip'
-import { MdInfoOutline } from "react-icons/md";
+import { MdInfoOutline, MdZoomIn } from "react-icons/md";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -12,7 +12,7 @@ const getImpactLevelClass = (level) => {
 };
 
 
-export const mitigationColumns = (t) => [
+export const mitigationColumns = (t, setSelectedActionByIndex) => [
     {
         accessorKey: "actionPriority",
         header: toTitleCase(t("rank")) ,
@@ -28,6 +28,21 @@ export const mitigationColumns = (t) => [
             </div>
         ),
     },
+    {
+    accessorKey: "detail",
+    header: toTitleCase(t("detail")),
+    size: 40,
+    Cell: ({ cell }) => (
+        <div className="flex justify-center items-center">
+            <button
+                className="flex items-center cursor-pointer"
+                onClick={() => setSelectedActionByIndex(cell.row.index)}
+            >
+                <MdZoomIn className="text-lg" />
+            </button>
+        </div>
+    ),
+},
     {
         accessorKey: "action.Sector",
         header: toTitleCase(t("sector")) ,
@@ -113,6 +128,21 @@ export const adaptationColumns = (t) => [
             </div>
         ),
     },
+   {
+    accessorKey: "detail",
+    header: toTitleCase(t("detail")),
+    size: 40,
+    Cell: ({ cell }) => (
+        <div className="flex justify-center items-center">
+            <button
+                className="flex items-center cursor-pointer"
+                onClick={() => setSelectedActionByIndex(cell.row.index)}
+            >
+                <MdZoomIn className="text-lg" />
+            </button>
+        </div>
+    ),
+},
     {
         accessorKey: "action.Hazard",
         header: toTitleCase(t("hazard")) ,

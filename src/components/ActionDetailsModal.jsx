@@ -4,9 +4,10 @@ import {FiX} from "react-icons/fi";
 import {useTranslation} from "react-i18next";
 
 const ActionDetailsModal = ({cityAction, onClose, type}) => {
+    console.log("cityAction", JSON.stringify(cityAction, null, 2)) // TODO NINA
     if (!cityAction) return null;
     const {t} = useTranslation();
-    const action = cityAction;
+    const {action} = cityAction;
     // Helper function to render progress bars based on reduction potential
     const renderReductionBars = () => {
         if (isAdaptation(type)) {
@@ -181,7 +182,7 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
                                         {t("impacts")}
                                     </h3>
                                     <ul className="list-disc list-inside text-sm text-[#4B4C63]">
-                                        {action.Impacts.map((impact, index) => (
+                                        {action.Impacts?.map((impact, index) => (
                                             <li key={index}>{impact}</li>
                                         ))}
                                     </ul>
@@ -189,7 +190,7 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
                             </>
                         )}
 
-                        {action.CoBenefits.map && (
+                        {action.CoBenefits?.map && (
                             <>
                                 <div className="mb-8">
                                     <h3 className="text-lg font-medium text-[#232640] mb-3">

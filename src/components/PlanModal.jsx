@@ -1,18 +1,19 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { Disclosure } from "@headlessui/react";
+import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import MarkdownRenderer from "./MarkdownRenderer.jsx";
-
 
 const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
     if (!isOpen) return null;
     const { t } = useTranslation();
 
     const markdownClasses = `
-        prose prose-lg max-w-none 
-        prose-headings:font-poppins 
+        prose prose-lg max-w-none
+        prose-headings:font-poppins
         prose-h1:text-3xl prose-h1:font-bold prose-h1:text-gray-900 prose-h1:mb-6
-        prose-h2:text-2xl prose-h2:font-bold prose-h2:text-blue-600 prose-h2:mt-8 prose-h2:mb-4 
+        prose-h2:text-2xl prose-h2:font-bold prose-h2:text-blue-600 prose-h2:mt-8 prose-h2:mb-4
         prose-h2:border-b-2 prose-h2:border-blue-100 prose-h2:pb-3
         prose-h3:text-xl prose-h3:font-semibold prose-h3:text-gray-800 prose-h3:mt-6 prose-h3:mb-3
         prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-4
@@ -31,7 +32,7 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
         [&_li]:mb-0.5 [&_li]:leading-normal
     `;
 
-    if (isListView) {
+    if (isListView || !plan) {
         return (
             <div className="fixed z-50 inset-0 overflow-y-auto">
                 <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -53,24 +54,25 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
                         </div>
                         <div className="px-6 py-4 space-y-4 max-h-[70vh] overflow-y-auto">
                             {plans.map((planData, index) => (
-                                <div
-                                    key={index}
-                                    className="border-b border-gray-200 pb-4 mb-4"
-                                >
-                                    <div className="flex justify-between items-center mb-2">
-                                        <h4 className="text-lg font-medium text-gray-900">
-                                            {planData.actionName}
-                                        </h4>
-                                        <span className="text-sm text-gray-500">
-                                            {new Date(
-                                                planData.timestamp,
-                                            ).toLocaleString()}
-                                        </span>
-                                    </div>
-                                    <div className="bg-white rounded-lg">
-                                        {planData.plan && <MarkdownRenderer markdownContent={planData.plan}/>}
-                                    </div>
-                                </div>
+                                <Disclosure key={index}>
+                                    {({ open }) => (
+                                        <>
+                                            <Disclosure.Button className="flex justify-between items-center w-full px-4 py-2 text-sm font-medium text-left text-gray-900 bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                                                <span>{planData.actionName}</span>
+                                                {open ? (
+                                                    <FiChevronUp className="w-5 h-5 text-gray-500" />
+                                                ) : (
+                                                    <FiChevronDown className="w-5 h-5 text-gray-500" />
+                                                )}
+                                            </Disclosure.Button>
+                                            <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                                                <div className="bg-white rounded-lg">
+                                                    {planData.plan && <MarkdownRenderer markdownContent={planData.plan} />}
+                                                </div>
+                                            </Disclosure.Panel>
+                                        </>
+                                    )}
+                                </Disclosure>
                             ))}
                         </div>
                     </div>
@@ -99,7 +101,7 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
                         </button>
                     </div>
                     <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
-                        {plan && <MarkdownRenderer markdownContent={plan}/>}
+                        {plan && <MarkdownRenderer markdownContent={plan} />}
                     </div>
                 </div>
             </div>
