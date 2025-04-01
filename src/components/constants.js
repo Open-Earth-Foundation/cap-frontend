@@ -1,12 +1,11 @@
 export const CITIES = [
   { value: "Aracruz", label: "Aracruz", locode: "BR ACZ" },
   { value: "Arapiraca", label: "Arapiraca", locode: "BR ARC" },
-  { value: "Belo Horizonte", label: "Belo Horizonte", locode: "BR BHZ" },
+  { value: "Altamira", label: "Altamira", locode: "BR ATM" },
   { value: "Boa Vista", label: "Boa Vista", locode: "BR BVB" },
   { value: "Cajazeiras", label: "Cajazeiras", locode: "BR CAJ" },
   { value: "Crato", label: "Crato", locode: "BR CAT" },
   { value: "Cuiabá", label: "Cuiabá", locode: "BR CBA" },
-  { value: "Camaçari", label: "Camaçari", locode: "BR CCI" },
   { value: "Cáceres", label: "Cáceres", locode: "BR CCX" },
   { value: "Caracaraí", label: "Caracaraí", locode: "BR CCY" },
   { value: "Contagem", label: "Contagem", locode: "BR CGE" },
