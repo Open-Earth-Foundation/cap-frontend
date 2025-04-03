@@ -14,7 +14,7 @@ const Hero = ({ onSearch }) => {
             {t('takeAction')}
           </span>
         </h1>
-          
+
         <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
           {t('driveImpact')}
         </p>

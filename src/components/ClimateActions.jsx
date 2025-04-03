@@ -433,6 +433,7 @@ const ClimateActions = ({
                                     onClick={() => {
                                         setStage(1)
                                         setEnableRowSelection(true)
+                                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top of the screen
                                     }}
                                 >
                                     {t("selectActions")}
