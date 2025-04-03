@@ -13,12 +13,10 @@ const Hero = ({ onSearch }) => {
           <span className="block text-5xl font-normal leading-tight font-poppins">
             {t('takeAction')}
           </span>
-          <span className="block text-5xl font-bold leading-tight font-poppins">
-            {t('driveImpact')}
-          </span>
         </h1>
+          
         <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-          {t('empowerYourCity')}
+          {t('driveImpact')}
         </p>
       </div>
 

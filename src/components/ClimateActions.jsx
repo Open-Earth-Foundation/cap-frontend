@@ -289,6 +289,13 @@ const ClimateActions = ({
 
     return (
         <div className="max-w-screen-xl mx-auto p-12">
+            <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
+                    {t("topActionsTitle")}
+                </h1>
+                    <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+                        {t("topActionsDescription")}
+                    </p>
+
             <Tabs>
                 <TabList className="flex justify-left mb-0 my-8 tab-actions">
                     <Tab onClick={() => {
