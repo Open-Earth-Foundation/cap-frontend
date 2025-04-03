@@ -1,6 +1,6 @@
 import i18n from "i18next";
 
-const PLAN_CREATOR_URL = "VITE_PLAN_CREATOR_URL";
+const PLAN_CREATOR_URL = "https://cap-plan-creator.openearth.dev";
 
 export const generateActionPlan = async ({action, city}) => {
     try {
