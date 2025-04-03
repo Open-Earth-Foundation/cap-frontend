@@ -35,8 +35,18 @@ export const toSentenceCase = (text) => {
 export const isAdaptation = type => type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase();
 
 const getNestedValue = (obj, path) => {
-    if (!path) return null
-    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    if (!path) return null;
+    const value = path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    if (Array.isArray(value)) {
+        return value.join(', ');
+    }
+    if (typeof value === 'object' && value !== null) {
+        return Object.entries(value)
+            .filter(([key, val]) => val !== null)
+            .map(([key, val]) => `${key}: ${val}`)
+            .join('; ');
+    }
+    return value;
 };
 
 export const prepareCsvData = (tableData, columns) => {
