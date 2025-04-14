@@ -55,5 +55,6 @@
   "hazard": "Hazard",
   "adaptationEffectiveness": "Adaptation Effectiveness",
   "generating": "Generating... This might take a few minutes",
-  "exportPdf": "EXPORT PDF"
+  "exportPdf": "EXPORT PDF",
+  "goBack": "Go back"
 }

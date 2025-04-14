@@ -4,7 +4,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import {adaptationColumns, mitigationColumns} from "./columns";
 import {MRT_TableContainer, useMaterialReactTable,} from "material-react-table";
-import {MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from "react-icons/md";
+import {MdArrowBack, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from "react-icons/md";
 import {FiArrowDownRight, FiDownload, FiFileText} from "react-icons/fi";
 import {CSVLink} from "react-csv";
 import {writeFile} from "../utils/readWrite.js";
@@ -169,7 +169,7 @@ const ClimateActions = ({
     };
 
     const getCsvColumns = (columns) => {
-         columns.splice(2, 1); // Remove the 3rd item (index 2)
+        columns.splice(2, 1); // Remove the 3rd item (index 2)
         columns.pop(); // Remove the last item
         return columns;
     }
@@ -290,11 +290,11 @@ const ClimateActions = ({
     return (
         <div className="max-w-screen-xl mx-auto p-12">
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
-                    {t("topActionsTitle")}
-                </h1>
-                    <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-                        {t("topActionsDescription")}
-                    </p>
+                {t("topActionsTitle")}
+            </h1>
+            <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+                {t("topActionsDescription")}
+            </p>
 
             <Tabs>
                 <TabList className="flex justify-left mb-0 my-8 tab-actions">
@@ -392,6 +392,13 @@ const ClimateActions = ({
                                 )}
 
                                 {stage === 1 && (<>
+                                    <button
+                                        onClick={() => setStage(0)}
+                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"
+                                    >
+                                        <MdArrowBack/>
+                                        {t("goBack").toUpperCase()}
+                                    </button>
                                     <CSVLink
                                         data={
                                             isAdaptation(type) ? adaptationCsvData : mitigationCsvData
@@ -433,7 +440,7 @@ const ClimateActions = ({
                                     onClick={() => {
                                         setStage(1)
                                         setEnableRowSelection(true)
-                                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top of the screen
+                                        window.scrollTo({top: 0, behavior: 'smooth'}); // Scroll to the top of the screen
                                     }}
                                 >
                                     {t("selectActions")}
