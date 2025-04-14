@@ -65,7 +65,19 @@
   "floods": "Inundações",
   "heatwaves": "Ondas de calor",
   "landslides": "Deslizamentos de terra",
-  "sea-level-rise": "Aumento do nível do mar",
+  "sea_level_rise": "Aumento do nível do mar",
   "storms": "Tempestades",
-  "wildfires": "Incêndios florestais"
+  "wildfires": "Incêndios florestais",
+  "goBack": "Voltar",
+  "detail": "Detalhe",
+  "stationary_energy": "Energia Estacionária",
+  "transportation": "Transporte",
+  "waste": "Resíduos",
+  "ippu": "IPPU",
+  "afolu": "AFOLU",
+  "medium": "Médio",
+  "high": "Alto",
+  "low": "Baixo",
+  "very_low": "Muito Baixo",
+  "very_high": "Muito Alto"
 }
