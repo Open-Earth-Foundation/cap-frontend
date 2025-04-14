@@ -98,7 +98,7 @@ const ClimateActions = ({
             columns: [...columns],
             data: rankedData,
             enableRowOrdering,
-            // Only enable row selection when enableRowSelection is true
+            enableRowDragging: enableRowOrdering,
             enableRowSelection: enableRowSelection,
             state: {
                 rowSelection
@@ -127,6 +127,35 @@ const ClimateActions = ({
                     }
                 },
             }),
+            displayColumnDefOptions: {
+                'mrt-row-select': {
+                    size: 40,
+                    enableHiding: false,
+                    enableColumnActions: false,
+                    enableResizing: false,
+                    muiTableHeadCellProps: {
+                        align: 'center',
+                    },
+                },
+                'mrt-row-drag': {
+                    size: 40,
+                    enableHiding: false,
+                    enableColumnActions: false,
+                    enableResizing: false,
+                },
+            },
+            initialState: {
+                columnOrder: [
+                    ...(enableRowOrdering ? ['mrt-row-drag'] : []),
+                    'rank',
+                    ...(enableRowSelection ? ['mrt-row-select'] : []),
+                    'action',
+                    'sector',
+                    'reductionPotential',
+                    'costInvestmentNeeded',
+                    'timelineForImplementation',
+                ],
+            },
         });
     };
 
