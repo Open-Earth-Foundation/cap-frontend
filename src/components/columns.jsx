@@ -112,7 +112,7 @@ export const mitigationColumns = (t, setSelectedActionByIndex) => [
         },  }
 ];
 
-export const adaptationColumns = (t) => [
+export const adaptationColumns = (t, setSelectedActionByIndex) => [
     {
         accessorKey: "actionPriority",
         header: toTitleCase(t("rank")) ,
