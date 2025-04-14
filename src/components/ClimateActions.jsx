@@ -127,21 +127,6 @@ const ClimateActions = ({
                     }
                 },
             }),
-            // Position selection column first
-            displayColumnDefOptions: {
-                'mrt-row-select': {
-                    size: 40,
-                    enableHiding: false,
-                    enableColumnActions: false,
-                    enableResizing: false,
-                    muiTableHeadCellProps: {
-                        align: 'center',
-                    },
-                },
-            },
-            initialState: {
-                columnOrder: ['mrt-row-select', ...columns.map(col => col.accessorKey)],
-            },
         });
     };
 
