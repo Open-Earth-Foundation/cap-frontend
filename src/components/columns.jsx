@@ -16,6 +16,7 @@ export const mitigationColumns = (t, setSelectedActionByIndex) => [
         accessorKey: "actionPriority",
         header: toTitleCase(t("rank")) ,
         size: 40,
+        enableSorting: false,
     },
     {
         accessorKey: "action.ActionName",
@@ -121,6 +122,7 @@ export const adaptationColumns = (t, setSelectedActionByIndex) => [
         accessorKey: "actionPriority",
         header: toTitleCase(t("rank")) ,
         size: 40,
+        enableSorting: false,
     },
     {
         accessorKey: "action.ActionName",
