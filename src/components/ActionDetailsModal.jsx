@@ -1,7 +1,8 @@
 import React from "react";
-import {getReductionPotential, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import {getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
 import {FiX} from "react-icons/fi";
 import {useTranslation} from "react-i18next";
+import MarkdownRenderer from "./MarkdownRenderer";
 
 const ActionDetailsModal = ({cityAction, onClose, type}) => {
     console.log("cityAction", JSON.stringify(cityAction, null, 2)) // TODO NINA
@@ -144,12 +145,12 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
                                         : `${getReductionPotential(action)}%`}
                                 </span>
                             </div>
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center gap-4">
                                 <span className="text-md text-[#4B4C63]">
-                                    Sector
+                                    {isAdaptation(type) ? t("hazard") : t("sector")}
                                 </span>
-                                <span className="text-base font-semibold text-[#4B4C63]">
-                                    {joinToTitleCase(action?.Sector) || joinToTitleCase(action.Hazard)}
+                                <span className="text-base font-semibold text-[#4B4C63] ml-4">
+                                    {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action.Hazard, t)}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
@@ -157,7 +158,7 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
                                     {t("estimatedCost")}
                                 </span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                                    {toTitleCase(action.CostInvestmentNeeded)}
+                                    {toTitleCase(t(action.CostInvestmentNeeded))}
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
@@ -165,7 +166,7 @@ const ActionDetailsModal = ({cityAction, onClose, type}) => {
                                     {t("implementationTime")}
                                 </span>
                                 <span className="text-base font-semibold text-[#4B4C63]">
-                                    {action.TimelineForImplementation}
+                                    {t(getTimelineTranslationKey(action.TimelineForImplementation))}
                                 </span>
                             </div>
                         </div>

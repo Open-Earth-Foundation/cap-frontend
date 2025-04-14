@@ -55,5 +55,17 @@
   "hazard": "Risco",
   "adaptationEffectiveness": "Eficácia da Adaptação",
   "generating": "Generando... Isso pode demorar alguns minutos",
-  "exportPdf": "EXPORTAR PDF"
+  "exportPdf": "EXPORTAR PDF",
+  "moderate": "Moderado",
+  "timeline_5_10_years": "5-10 anos",
+  "timeline_less_than_5_years": "<5 anos",
+  "timeline_more_than_10_years": ">10 anos",
+  "diseases": "Doenças",
+  "droughts": "Secas",
+  "floods": "Inundações",
+  "heatwaves": "Ondas de calor",
+  "landslides": "Deslizamentos de terra",
+  "sea-level-rise": "Aumento do nível do mar",
+  "storms": "Tempestades",
+  "wildfires": "Incêndios florestais"
 }

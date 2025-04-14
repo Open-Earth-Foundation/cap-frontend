@@ -1,4 +1,4 @@
-import {getReductionPotential, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import {getReductionPotential, getTimelineTranslationKey, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
 import { Tooltip } from 'react-tooltip'
 import { MdInfoOutline, MdZoomIn } from "react-icons/md";
 
@@ -10,7 +10,6 @@ const getImpactLevelClass = (level) => {
     };
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
-
 
 export const mitigationColumns = (t, setSelectedActionByIndex) => [
     {
@@ -48,7 +47,7 @@ export const mitigationColumns = (t, setSelectedActionByIndex) => [
         header: toTitleCase(t("sector")) ,
         Cell: ({cell}) => (
             <div>
-                {joinToTitleCase(cell.getValue())}
+                {joinToTitleCase(cell.getValue(), t)}
             </div>
         ),
         size: 100,
@@ -69,7 +68,7 @@ export const mitigationColumns = (t, setSelectedActionByIndex) => [
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
@@ -77,6 +76,11 @@ export const mitigationColumns = (t, setSelectedActionByIndex) => [
         accessorKey: "action.TimelineForImplementation",
         header: toTitleCase(t("implementationTime")) ,
         size: 80,
+        Cell: ({cell}) => (
+            <div>
+                {t(getTimelineTranslationKey(cell.getValue()))}
+            </div>
+        ),
     },
     {
         accessorKey: "explanation",
@@ -148,7 +152,7 @@ export const adaptationColumns = (t, setSelectedActionByIndex) => [
         header: toTitleCase(t("hazard")) ,
         Cell: ({cell}) => (
             <div>
-                {joinToTitleCase(cell.getValue())}
+                {joinToTitleCase(cell.getValue(), t)}
             </div>
         ),
         size: 100,
@@ -159,7 +163,7 @@ export const adaptationColumns = (t, setSelectedActionByIndex) => [
         size: 100,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
@@ -169,7 +173,7 @@ export const adaptationColumns = (t, setSelectedActionByIndex) => [
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(cell.getValue())}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
@@ -177,6 +181,11 @@ export const adaptationColumns = (t, setSelectedActionByIndex) => [
         accessorKey: "action.TimelineForImplementation",
         header: toTitleCase(t("implementationTime")) ,
         size: 80,
+        Cell: ({cell}) => (
+            <div>
+                {t(getTimelineTranslationKey(cell.getValue()))}
+            </div>
+        ),
     },
  {
         accessorKey: "explanation",

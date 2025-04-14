@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {FiLoader} from "react-icons/fi";
-import {getReductionPotential, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import {getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
 import {useTranslation} from "react-i18next";
 
@@ -140,19 +140,19 @@ const TopClimateActions = ({
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("sector")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {joinToTitleCase(action?.Sector) || joinToTitleCase(action?.Hazard)}
+                  {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action?.Hazard, t)}
                 </span>
-                            </div>
+                            </div>  
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("estimatedCost")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {toTitleCase(action?.CostInvestmentNeeded)}
+                  {toTitleCase(t(action?.CostInvestmentNeeded))}
                 </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("implementationTime")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {action?.TimelineForImplementation}
+                  {t(getTimelineTranslationKey(action?.TimelineForImplementation))}
                 </span>
                             </div>
                         </div>

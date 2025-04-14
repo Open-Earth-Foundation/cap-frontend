@@ -1,4 +1,3 @@
-
 export const ADAPTATION = 'adaptation';
 export const MITIGATION = 'mitigation';
 
@@ -19,10 +18,15 @@ export const toTitleCase = str => {
         );
 };
 
-export const joinToTitleCase = (array) => {
-    if (!array) return null
-    return array.map(toTitleCase)?.join(', ');
-}
+export const joinToTitleCase = (array, t) => {
+    if (!array) return "";
+    if (!Array.isArray(array)) return array;
+    return array.map(item => {
+        // Replace hyphens with underscores for translation
+        const translationKey = item.replace(/-/g, '_');
+        return t(translationKey);
+    }).join(", ");
+};
 
 export const toSentenceCase = (text) => {
     if (!text) return '';
@@ -57,4 +61,13 @@ export const prepareCsvData = (tableData, columns) => {
             return acc;
         }, {})
     );
+};
+
+export const getTimelineTranslationKey = (value) => {
+    const mapping = {
+        "<5 years": "timeline_less_than_5_years",
+        "5-10 years": "timeline_5_10_years",
+        ">10 years": "timeline_more_than_10_years",
+    };
+    return mapping[value] || value;
 };
