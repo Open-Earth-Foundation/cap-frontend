@@ -79,5 +79,22 @@
   "landslides": "Deslizamientos de tierra",
   "sea_level_rise": "Aumento del nivel del mar",
   "storms": "Tormentas",
-  "wildfires": "Incendios forestales"
+  "wildfires": "Incendios forestales",
+  "pdf": {
+    "reportTitle": "Informe de Acciones Climáticas - {{cityName}}",
+    "topMitigationActions": "Principales Acciones de Mitigación",
+    "allMitigationActions": "Todas las Acciones de Mitigación",
+    "priority": "Prioridad",
+    "actionName": "Nombre de la Acción",
+    "reductionPotential": "Potencial de Reducción",
+    "headerMitigation": "Acciones Climáticas - {{cityName}} - Mitigación",
+    "topAdaptationActions": "Principales Acciones de Adaptación",
+    "allAdaptationActions": "Todas las Acciones de Adaptación",
+    "adaptationPotential": "Potencial de Adaptación",
+    "headerAdaptation": "Acciones Climáticas - {{cityName}} - Adaptación",
+    "generatedPlans": "Planes de Acción Generados",
+    "planTitle": "Plan {{index}}: {{actionName}}",
+    "page": "Página {{i}} de {{pageCount}}",
+    "filename": "{{cityName}}_acciones_climaticas.pdf"
+  }
 }

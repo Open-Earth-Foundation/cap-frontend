@@ -312,7 +312,6 @@ const ClimateActions = ({
 
     // Check if there are any selected actions
     const hasSelectedActions = (type) => {
-        console.log("getSelectedActions(type)", JSON.stringify(getSelectedActions(type), null, 2)) // TODO NINA
         return Object.keys(getSelectedActions(type)).length > 0;
     };
 
@@ -445,6 +444,7 @@ const ClimateActions = ({
                                                 mitigationData,
                                                 adaptationData,
                                                 generatedPlans,
+                                                t
                                             )
                                         }
                                         className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"

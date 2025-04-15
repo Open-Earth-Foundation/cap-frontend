@@ -79,5 +79,22 @@
   "high": "Alto",
   "low": "Baixo",
   "very_low": "Muito Baixo",
-  "very_high": "Muito Alto"
+  "very_high": "Muito Alto",
+  "pdf": {
+    "reportTitle": "Relatório de Ações Climáticas - {{cityName}}",
+    "topMitigationActions": "Principais Ações de Mitigação",
+    "allMitigationActions": "Todas as Ações de Mitigação",
+    "priority": "Prioridade",
+    "actionName": "Nome da Ação",
+    "reductionPotential": "Potencial de Redução",
+    "headerMitigation": "Ações Climáticas - {{cityName}} - Mitigação",
+    "topAdaptationActions": "Principais Ações de Adaptação",
+    "allAdaptationActions": "Todas as Ações de Adaptação",
+    "adaptationPotential": "Potencial de Adaptação",
+    "headerAdaptation": "Ações Climáticas - {{cityName}} - Adaptação",
+    "generatedPlans": "Planos de Ação Gerados",
+    "planTitle": "Plano {{index}}: {{actionName}}",
+    "page": "Página {{i}} de {{pageCount}}",
+    "filename": "{{cityName}}_acoes_climaticas.pdf"
+  }
 }

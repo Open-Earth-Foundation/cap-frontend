@@ -79,5 +79,22 @@
   "landslides": "Landslides",
   "sea_level_rise": "Sea Level Rise",
   "storms": "Storms",
-  "wildfires": "Wildfires"
+  "wildfires": "Wildfires",
+  "pdf": {
+    "reportTitle": "Climate Actions Report - {{cityName}}",
+    "topMitigationActions": "Top Mitigation Actions",
+    "allMitigationActions": "All Mitigation Actions",
+    "priority": "Priority",
+    "actionName": "Action Name",
+    "reductionPotential": "Reduction Potential",
+    "headerMitigation": "Climate Actions - {{cityName}} - Mitigation",
+    "topAdaptationActions": "Top Adaptation Actions",
+    "allAdaptationActions": "All Adaptation Actions",
+    "adaptationPotential": "Adaptation Potential",
+    "headerAdaptation": "Climate Actions - {{cityName}} - Adaptation",
+    "generatedPlans": "Generated Action Plans",
+    "planTitle": "Plan {{index}}: {{actionName}}",
+    "page": "Page {{i}} of {{pageCount}}",
+    "filename": "{{cityName}}_climate_actions.pdf"
+  }
 }
