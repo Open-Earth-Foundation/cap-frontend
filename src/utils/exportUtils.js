@@ -329,64 +329,72 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     return y + (lines.length * fontSize * 0.5) + (fontStyle === 'bold' ? 2 : 0);
   };
 
-// Helper to render a two-column table with keys and values
-const renderDetailsTable = (details, x, y, maxWidth) => {
-  const lineHeight = 8;
-  const keyWidth = maxWidth * 0.4;  // 40% width for key column
-  const valueWidth = maxWidth * 0.6; // 60% width for value column
-  const padding = 2;
+// Helper to render details in a 2x2 grid format
+const renderDetailsGrid = (details, x, y, maxWidth, doc, defaultFont) => {
+  if (!details || details.length === 0) return y;
 
-  // Draw the table border
-  doc.setDrawColor(200, 200, 200);
-  doc.setLineWidth(0.1);
-  const tableStartY = y - 5;
+  const colWidth = (maxWidth / 2) - 5; // Width per column with some spacing
+  const leftColX = x;
+  const rightColX = x + colWidth + 10;
+  const valueFontSize = 10;
+  const keyFontSize = 14;
+  const valueLineHeight = valueFontSize * 0.5;
+  const keyLineHeight = keyFontSize * 0.5;
 
-  // Calculate table height based on number of rows
-  const rows = details.length;
-  const tableHeight = rows * lineHeight + padding * 2;
+  let row1Y = y;
+  let row2Y = y; // Will be updated after row 1 is drawn
+  let maxRow1Y = y;
+  let maxRow2Y = y;
 
-  // Draw the table background
-  doc.setFillColor(248, 248, 248);
-  doc.rect(x, tableStartY, maxWidth, tableHeight, 'F');
-
-  // Draw table border
-  doc.rect(x, tableStartY, maxWidth, tableHeight, 'S');
-
-  // Draw vertical divider between key and value columns
-  doc.line(x + keyWidth, tableStartY, x + keyWidth, tableStartY + tableHeight);
-
-  // Draw horizontal dividers between rows
-  for (let i = 1; i < rows; i++) {
-    doc.line(x, tableStartY + (i * lineHeight) + padding,
-             x + maxWidth, tableStartY + (i * lineHeight) + padding);
-  }
-
-  // Draw data in two-column layout (key-value pairs)
-  doc.setFontSize(10);
-  let currentY = y;
-
-  details.forEach((detail, index) => {
-    // Split the detail into key and value
+  details.slice(0, 4).forEach((detail, index) => {
     const parts = detail.split(': ');
     const key = parts[0];
-    const value = parts.slice(1).join(': '); // In case value contains colons
+    const value = parts.slice(1).join(': ');
 
-    // Draw key in left column
-    doc.setFont(defaultFont.normal, 'bold');
-    const keyLines = doc.splitTextToSize(key, keyWidth - padding * 2);
-    doc.text(keyLines, x + padding, currentY);
+    let currentX;
+    let startY;
+    let isRow1 = index < 2;
 
-    // Draw value in right column
+    if (index % 2 === 0) { // Left column (index 0 or 2)
+      currentX = leftColX;
+      startY = isRow1 ? row1Y : row2Y;
+    } else { // Right column (index 1 or 3)
+      currentX = rightColX;
+      startY = isRow1 ? row1Y : row2Y;
+    }
+
+    let currentY = startY;
+
+    // Draw Value (Normal)
     doc.setFont(defaultFont.normal, 'normal');
-    const valueLines = doc.splitTextToSize(value, valueWidth - padding * 2);
-    doc.text(valueLines, x + keyWidth + padding, currentY);
+    doc.setFontSize(valueFontSize);
+    const valueLines = doc.splitTextToSize(value, colWidth);
+    doc.text(valueLines, currentX, currentY);
+    currentY += valueLines.length * valueLineHeight + 1; // Add small gap
 
-    // Move to next row
-    currentY += lineHeight;
+    // Draw Key (Bold)
+    doc.setFont(defaultFont.normal, 'bold');
+    doc.setFontSize(keyFontSize);
+    const keyLines = doc.splitTextToSize(key, colWidth);
+    doc.text(keyLines, currentX, currentY);
+    currentY += keyLines.length * keyLineHeight + 3; // Add gap after key
+
+    // Update max Y for the current row
+    if (isRow1) {
+      maxRow1Y = Math.max(maxRow1Y, currentY);
+    } else {
+      maxRow2Y = Math.max(maxRow2Y, currentY);
+    }
+
+    // After drawing the first row, set the starting Y for the second row
+    if (index === 1) { 
+      row2Y = maxRow1Y;
+      maxRow2Y = row2Y; // Initialize maxRow2Y
+    }
   });
 
-  // Return the Y position after the table
-  return tableStartY + tableHeight + 5;
+  // Return the Y position after the grid (based on the bottom-most element)
+  return maxRow2Y;
 };
 
   // Fixed function to safely get reduction potential
@@ -479,7 +487,7 @@ const getReductionPotentialSafe = (action) => {
     ];
 
     // Render the details in a nice table format
-    yPos = renderDetailsTable(details, margin, yPos, contentWidth);
+    yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
 
     // Add space after each action
     yPos += 12;
@@ -581,7 +589,7 @@ const getReductionPotentialSafe = (action) => {
     ];
 
     // Render the details in a nice table format
-    yPos = renderDetailsTable(details, margin, yPos, contentWidth);
+    yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
 
     // Add space after each action
     yPos += 12;
