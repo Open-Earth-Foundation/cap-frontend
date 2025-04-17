@@ -96,5 +96,8 @@
     "planTitle": "Plano {{index}}: {{actionName}}",
     "page": "Página {{i}} de {{pageCount}}",
     "filename": "{{cityName}}_acoes_climaticas.pdf"
+  },
+  "csv": {
+    "filename": "{{type}}_acoes_climaticas.csv"
   }
 }

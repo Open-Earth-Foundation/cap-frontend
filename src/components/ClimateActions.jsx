@@ -8,7 +8,8 @@ import {MdArrowBack, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from 
 import {FiArrowDownRight, FiDownload, FiFileText} from "react-icons/fi";
 import {CSVLink} from "react-csv";
 import {writeFile} from "../utils/readWrite.js";
-import {ADAPTATION, isAdaptation, MITIGATION, prepareCsvData,} from "../utils/helpers.js";
+import {ADAPTATION, isAdaptation, MITIGATION,} from "../utils/helpers.js";
+import { prepareCsvData } from "../utils/exportUtils.js";
 import {GiSandsOfTime} from "react-icons/gi";
 import {exportToPDF} from "../utils/exportUtils.js";
 import {useTranslation} from "react-i18next";
@@ -197,20 +198,43 @@ const ClimateActions = ({
         setIsSaving(false);
     };
 
-    const getCsvColumns = (columns) => {
-        columns.splice(2, 1); // Remove the 3rd item (index 2)
-        columns.pop(); // Remove the last item
-        return columns;
-    }
+    const getCsvColumns = (type) => {
+        const columns = isAdaptation(type) ? adaptationColumns(t) : mitigationColumns(t);
+        console.log('Original columns:', columns);
+        
+        // Create a copy of columns and remove unnecessary ones
+        const filteredColumns = [...columns];
+        filteredColumns.splice(2, 1); // Remove the third item
+        filteredColumns.pop(); // Remove the last item
+        
+        console.log('Filtered columns:', filteredColumns);
+        return filteredColumns;
+    };
 
-    const mitigationCsvData = prepareCsvData(
-        mitigationData,
-        getCsvColumns(mitigationColumns(t)),
-    );
-    const adaptationCsvData = prepareCsvData(
-        adaptationData,
-        getCsvColumns(adaptationColumns(t)),
-    );
+    const getCsvData = (type) => {
+        const columns = getCsvColumns(type);
+        const data = isAdaptation(type) ? adaptationData : mitigationData;
+        
+        const { headers, data: csvData } = prepareCsvData(data, columns, t);
+        console.log(`${type} CSV Data:`, { headers, csvData });
+        return { headers, data: csvData };
+    };
+
+    const renderCsvLink = (type) => {
+        const { headers, data } = getCsvData(type);
+        const filename = `${selectedCity}_${t(type)}_${t('actions')}.csv`;
+        return (
+            <CSVLink
+                headers={headers}
+                data={data}
+                filename={filename}
+                className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table button"
+            >
+                <FiDownload className="mr-2" />
+                {t('downloadCsv')}
+            </CSVLink>
+        );
+    };
 
     // Reset row selection when enableRowSelection changes
     useEffect(() => {
@@ -427,16 +451,8 @@ const ClimateActions = ({
                                         <MdArrowBack/>
                                         {t("goBack").toUpperCase()}
                                     </button>
-                                    <CSVLink
-                                        data={
-                                            isAdaptation(type) ? adaptationCsvData : mitigationCsvData
-                                        }
-                                        filename={`${selectedCity}_${type}_actions.csv`}
-                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table button"
-                                    >
-                                        <FiDownload/>
-                                        {t("downloadCsv")}
-                                    </CSVLink>
+                                    {/* Adaptation CSVLink */} 
+                                    {renderCsvLink(type)}
                                     <button
                                         onClick={() =>
                                             exportToPDF(

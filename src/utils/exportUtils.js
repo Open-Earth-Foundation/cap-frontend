@@ -1,33 +1,9 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-import {getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toSentenceCase, toTitleCase} from './helpers';
-
-const convertToCSV = (data) => {
-  if (!data || !data.length) return '';
-
-  const headers = Object.keys(data[0]);
-  const csvRows = [
-    headers.join(','),
-    ...data.map(row => 
-      headers.map(header => {
-        let cell = row[header] ?? '';
-        if (cell.toString().includes(',')) {
-          cell = `"${cell}"`;
-        }
-        return cell;
-      }).join(',')
-    )
-  ];
-
-  return csvRows.join('\n');
-};
-
-export const exportToCSV = (data, filename) => {
-  const csv = convertToCSV(data);
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  saveAs(blob, filename);
-};
+import { getNestedValue, getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toSentenceCase, toTitleCase } from './helpers';
+import { useTranslation } from 'react-i18next';
+import { CSVLink } from 'react-csv';
 
 const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
   const doc = new jsPDF();
@@ -260,7 +236,7 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
       8: { cellWidth: 10 },  // Risk Level
       9: { cellWidth: 10 }   // Custom Risk Level
     },
-    willDrawCell: function(data) {
+    willDrawCell: function (data) {
       // Additional cell customization if needed
       if (data.section === 'body' && typeof data.cell.text === 'string') {
         // Ensure very long text is truncated if needed
@@ -269,7 +245,7 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
         }
       }
     },
-    didDrawPage: function(data) {
+    didDrawPage: function (data) {
       // Add header and footer to each page
       doc.setFontSize(9);
       doc.text(`Climate Risk Assessment - ${cityName}`, horizontalMargin, 10);
@@ -349,7 +325,7 @@ const renderDetailsGrid = (details, x, y, maxWidth, doc, defaultFont) => {
     }
 
     // After drawing the first row, set the starting Y for the second row
-    if (index === 1) { 
+    if (index === 1) {
       row2Y = maxRow1Y;
       maxRow2Y = row2Y; // Initialize maxRow2Y
     }
@@ -505,7 +481,7 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
       },
       styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
       headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
-      didDrawPage: function(data) {
+      didDrawPage: function (data) {
         doc.setFontSize(10);
         doc.text(t('pdf.headerMitigation', { cityName }), margin, 10);
       }
@@ -516,9 +492,9 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
   // --- ADAPTATION --- //
   if (adaptationData && adaptationData.length > 0) {
     if (mitigationData && mitigationData.length > 0) {
-        forceNewPage(); // Ensure adaptation starts on a new page if mitigation existed
+      forceNewPage(); // Ensure adaptation starts on a new page if mitigation existed
     }
-    
+
     doc.setFontSize(16);
     doc.text(t('pdf.topAdaptationActions'), margin, yPos);
     yPos += 10;
@@ -561,13 +537,13 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
         `${timeKey}: ${timeValue}`
       ];
 
-    yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
-    yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
-
-    // Add space after each action
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
       yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
 
-    // Add space after each action
+      // Add space after each action
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
+
+      // Add space after each action
       yPos += 12;
     });
 
@@ -596,7 +572,7 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
       },
       styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
       headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
-      didDrawPage: function(data) {
+      didDrawPage: function (data) {
         doc.setFontSize(10);
         doc.text(t('pdf.headerAdaptation', { cityName }), margin, 10);
       }
@@ -615,8 +591,8 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     // ... (Rest of generated plans logic - assuming plan text itself doesn't need translation here)
     // Consider translating the timestamp format if needed
     generatedPlans.forEach((planData, index) => {
-         const planTitle = t('pdf.planTitle', { index: index + 1, actionName: planData.actionName });
-         doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos); // Maybe translate format?
+      const planTitle = t('pdf.planTitle', { index: index + 1, actionName: planData.actionName });
+      doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos); // Maybe translate format?
     });
 
   }
@@ -628,14 +604,13 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     doc.setFontSize(9);
     doc.text(t('pdf.page', { i, pageCount }), pageWidth / 2, pageHeight - 10, { align: 'center' });
   }
-  
+
   // Use translated filename, replacing spaces in city name for safety
-  const safeCityName = cityName.replace(/\s+/g, '_'); 
+  const safeCityName = cityName.replace(/\s+/g, '_');
   doc.save(t('pdf.filename', { cityName: safeCityName }));
 };
 
 export const exportUtils = {
-  exportToCSV,
   exportToPDF
 };
 
@@ -643,3 +618,90 @@ export default exportUtils;
 
 // Placeholder for markdown conversion function.  Replace with your actual implementation.
 const convertMarkdownToPlainText = (markdown) => markdown.replace(/`/g, '');
+
+// --- CSV Data Preparation for react-csv/CSVLink ---
+
+// Helper to get translated value for a specific cell based on column config
+export const getTranslatedCsvValue = (rowItem, column, t) => {
+    if (!rowItem || !column) {
+        console.warn('Missing rowItem or column:', { rowItem, column });
+        return '';
+    }
+
+    // Handle nested action object
+    const rawValue = column.accessorKey.startsWith('action.') 
+        ? rowItem.action?.[column.accessorKey.replace('action.', '')]
+        : rowItem[column.accessorKey];
+
+    if (rawValue === undefined || rawValue === null) {
+        return '';
+    }
+
+    // Handle array values (e.g., hazards, sectors)
+    if (Array.isArray(rawValue)) {
+        return rawValue.map(item => {
+            // Convert hyphens to underscores for hazard keys
+            const key = item.includes('-') ? item.replace(/-/g, '_') : item;
+            // Use joinToTitleCase for proper translation
+            return joinToTitleCase([key], t);
+        }).join(', ');
+    }
+
+    // Handle object values (e.g., GHGReductionPotential)
+    if (typeof rawValue === 'object' && rawValue !== null) {
+        const entries = Object.entries(rawValue)
+            .filter(([_, value]) => value !== null && value !== undefined && value !== '')
+            .map(([key, value]) => `${t(key)}: ${value}%`);
+        return entries.join(', ');
+    }
+
+    // Handle timeline values
+    if (column.accessorKey === 'action.TimelineForImplementation') {
+        const timelineKey = getTimelineTranslationKey(rawValue);
+        return t(timelineKey);
+    }
+
+    // Handle cost values
+    if (column.accessorKey === 'action.CostInvestmentNeeded') {
+        return t(rawValue);
+    }
+
+    // Handle adaptation effectiveness
+    if (column.accessorKey === 'action.AdaptationEffectiveness') {
+        return t(rawValue);
+    }
+
+    // Handle single values
+    return t(rawValue.toString());
+};
+
+// Prepares headers and data array suitable for react-csv/CSVLink
+export const prepareCsvData = (data, columns, t) => {
+    if (!data || !columns || !Array.isArray(data) || !Array.isArray(columns)) {
+        console.error('Invalid input data:', { data, columns });
+        return { headers: [], data: [] };
+    }
+
+    // Prepare headers with translated labels and clean keys
+    const headers = columns.map(col => {
+        // Remove 'action.' prefix from the key if it exists
+        const cleanKey = col.accessorKey.replace('action.', '');
+        return {
+            label: t(col.header),
+            key: cleanKey
+        };
+    });
+
+    // Prepare data rows with translated values and clean keys
+    const rows = data.map((item, index) => {
+        const row = {};
+        columns.forEach(col => {
+            // Remove 'action.' prefix from the key if it exists
+            const cleanKey = col.accessorKey.replace('action.', '');
+            row[cleanKey] = getTranslatedCsvValue(item, col, t);
+        });
+        return row;
+    });
+
+    return { headers, data: rows };
+};

@@ -96,5 +96,8 @@
     "planTitle": "Plan {{index}}: {{actionName}}",
     "page": "Page {{i}} of {{pageCount}}",
     "filename": "{{cityName}}_climate_actions.pdf"
+  },
+  "csv": {
+    "filename": "{{type}}_climate_actions.csv"
   }
 }

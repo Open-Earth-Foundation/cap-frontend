@@ -38,7 +38,7 @@ export const toSentenceCase = (text) => {
 
 export const isAdaptation = type => type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase();
 
-const getNestedValue = (obj, path) => {
+export const getNestedValue = (obj, path) => {
     if (!path) return null;
     const value = path.split('.').reduce((acc, part) => acc && acc[part], obj);
     if (Array.isArray(value)) {
@@ -51,16 +51,6 @@ const getNestedValue = (obj, path) => {
             .join('; ');
     }
     return value;
-};
-
-export const prepareCsvData = (tableData, columns) => {
-    return tableData.map(row =>
-        columns.reduce((acc, column) => {
-            const key = column.accessorKey;
-            acc[column.header] = getNestedValue(row, key);
-            return acc;
-        }, {})
-    );
 };
 
 export const getTimelineTranslationKey = (value) => {
