@@ -17,6 +17,8 @@ import {ADAPTA_BRASIL_API} from "./constants.js";
 import {generateActionPlan} from "../utils/planCreator.js";
 import PlanModal from "./PlanModal.jsx";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
+import { MRT_Localization_ES } from 'material-react-table/locales/es';
+import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 
 const ClimateActions = ({
                             selectedCity,
@@ -38,7 +40,7 @@ const ClimateActions = ({
     // Add row selection state for each table type
     const [mitigationRowSelection, setMitigationRowSelection] = useState({});
     const [adaptationRowSelection, setAdaptationRowSelection] = useState({});
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
 
     const generatePlans = async (type) => {
         setIsGenerating(true);
@@ -83,6 +85,17 @@ const ClimateActions = ({
         setSelectedActions(selectedRows);
     };
 
+    const getLocalization = (language) => {
+        switch (language) {
+            case 'es':
+                return MRT_Localization_ES;
+            case 'pt':
+                return MRT_Localization_PT;
+            default:
+                return undefined;
+        }
+    }
+
     const createTable = (
         columns,
         enableRowOrdering,
@@ -93,8 +106,9 @@ const ClimateActions = ({
         // Determine which row selection state to use based on type
         const rowSelection = isAdaptation(type) ? adaptationRowSelection : mitigationRowSelection;
         const setRowSelection = isAdaptation(type) ? setAdaptationRowSelection : setMitigationRowSelection;
-
+        console.log(i18n.language);
         return useMaterialReactTable({
+            localization: getLocalization(i18n.language),
             autoResetPageIndex: false,
             columns: [...columns],
             data: rankedData,
