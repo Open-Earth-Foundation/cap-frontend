@@ -1,32 +1,32 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import "./ClimateActions.css";
-import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-import {adaptationColumns, mitigationColumns} from "./columns";
-import {MRT_TableContainer, useMaterialReactTable,} from "material-react-table";
-import {MdArrowBack, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave,} from "react-icons/md";
-import {FiArrowDownRight, FiDownload, FiFileText} from "react-icons/fi";
-import {CSVLink} from "react-csv";
-import {writeFile} from "../utils/readWrite.js";
-import {ADAPTATION, isAdaptation, MITIGATION,} from "../utils/helpers.js";
+import { adaptationColumns, mitigationColumns } from "./columns";
+import { MRT_TableContainer, useMaterialReactTable, } from "material-react-table";
+import { MdArrowBack, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave, } from "react-icons/md";
+import { FiArrowDownRight, FiDownload, FiFileText } from "react-icons/fi";
+import { CSVLink } from "react-csv";
+import { writeFile } from "../utils/readWrite.js";
+import { ADAPTATION, isAdaptation, MITIGATION, } from "../utils/helpers.js";
 import { prepareCsvData } from "../utils/exportUtils.js";
-import {GiSandsOfTime} from "react-icons/gi";
-import {exportToPDF} from "../utils/exportUtils.js";
-import {useTranslation} from "react-i18next";
-import {ADAPTA_BRASIL_API} from "./constants.js";
-import {generateActionPlan} from "../utils/planCreator.js";
+import { GiSandsOfTime } from "react-icons/gi";
+import { exportToPDF } from "../utils/exportUtils.js";
+import { useTranslation } from "react-i18next";
+import { ADAPTA_BRASIL_API } from "./constants.js";
+import { generateActionPlan } from "../utils/planCreator.js";
 import PlanModal from "./PlanModal.jsx";
 import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { MRT_Localization_PT } from 'material-react-table/locales/pt';
-
+import TopClimateActions from "./TopClimateActions.jsx";
 const ClimateActions = ({
-                            selectedCity,
-                            mitigationData,
-                            setMitigationData,
-                            adaptationData,
-                            setAdaptationData,
-                        }) => {
+    selectedCity,
+    mitigationData,
+    setMitigationData,
+    adaptationData,
+    setAdaptationData,
+}) => {
     const [enableRowOrdering, setEnableRowOrdering] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -40,7 +40,7 @@ const ClimateActions = ({
     // Add row selection state for each table type
     const [mitigationRowSelection, setMitigationRowSelection] = useState({});
     const [adaptationRowSelection, setAdaptationRowSelection] = useState({});
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const generatePlans = async (type) => {
         setIsGenerating(true);
@@ -50,7 +50,7 @@ const ClimateActions = ({
             .filter(([_actionNumber, selected]) => !!selected)
             .map(([actionNumber, _selected]) => actions[actionNumber])
         const plans = await Promise.all(selectedActions.map((action) => {
-            return generateActionPlan({action: action.action, city: selectedCity});
+            return generateActionPlan({ action: action.action, city: selectedCity });
         }));
         setGeneratedPlans(plans);
         setIsGenerating(false);
@@ -58,7 +58,7 @@ const ClimateActions = ({
     }
 
     const addRank = (actions) =>
-        actions.map((action, index) => ({...action, id: index + 1}));
+        actions.map((action, index) => ({ ...action, id: index + 1 }));
     const saveNewRanking = (type) => (newRanking) => {
         const updatedRanking = newRanking.map((action, index) => ({
             ...action,
@@ -128,9 +128,9 @@ const ClimateActions = ({
                     backgroundColor: "#E8EAFB",
                 },
             },
-            muiRowDragHandleProps: ({table}) => ({
+            muiRowDragHandleProps: ({ table }) => ({
                 onDragEnd: () => {
-                    const {draggingRow, hoveredRow} = table.getState();
+                    const { draggingRow, hoveredRow } = table.getState();
                     if (hoveredRow && draggingRow) {
                         rankedData.splice(
                             hoveredRow.index,
@@ -215,12 +215,12 @@ const ClimateActions = ({
     const getCsvColumns = (type) => {
         const columns = isAdaptation(type) ? adaptationColumns(t) : mitigationColumns(t);
         console.log('Original columns:', columns);
-        
+
         // Create a copy of columns and remove unnecessary ones
         const filteredColumns = [...columns];
         filteredColumns.splice(2, 1); // Remove the third item
         filteredColumns.pop(); // Remove the last item
-        
+
         console.log('Filtered columns:', filteredColumns);
         return filteredColumns;
     };
@@ -228,7 +228,7 @@ const ClimateActions = ({
     const getCsvData = (type) => {
         const columns = getCsvColumns(type);
         const data = isAdaptation(type) ? adaptationData : mitigationData;
-        
+
         const { headers, data: csvData } = prepareCsvData(data, columns, t);
         console.log(`${type} CSV Data:`, { headers, csvData });
         return { headers, data: csvData };
@@ -368,7 +368,7 @@ const ClimateActions = ({
                         setEnableRowOrdering(false);
                         setEnableRowSelection(false);
                     }}>
-                        <FiArrowDownRight/>
+                        <FiArrowDownRight />
                         <span className="tab-text">{t("mitigation")}</span>
                     </Tab>
                     <Tab onClick={() => {
@@ -376,7 +376,7 @@ const ClimateActions = ({
                         setEnableRowSelection(false);
                     }}>
                         <div>
-                            <MdOutlineFlood/>
+                            <MdOutlineFlood />
                         </div>
                         <span className="tab-text">{t("adaptation")}</span>
                     </Tab>
@@ -392,15 +392,15 @@ const ClimateActions = ({
                         )}
 
                         <div className="rounded-lg overflow-hidden">
-                            {/*<TopClimateActions*/}
-                            {/*    actions={isAdaptation(type) ? adaptationData : mitigationData}*/}
-                            {/*    type={type}*/}
-                            {/*    setSelectedAction={setSelectedAction}*/}
-                            {/*    selectedCity={selectedCity}*/}
-                            {/*    setGeneratedPlan={setGeneratedPlans}*/}
-                            {/*    generatedPlans={generatedPlans}*/}
-                            {/*    setGeneratedPlans={setGeneratedPlans}*/}
-                            {/*/>*/}
+                            <TopClimateActions
+                                actions={isAdaptation(type) ? adaptationData : mitigationData}
+                                type={type}
+                                setSelectedAction={setSelectedAction}
+                                selectedCity={selectedCity}
+                                setGeneratedPlan={setGeneratedPlans}
+                                generatedPlans={generatedPlans}
+                                setGeneratedPlans={setGeneratedPlans}
+                            />
 
                             <div className="mt-12 mb-8">
                                 <h2 className="text-2xl font-normal text-gray-900 font-poppins">
@@ -438,7 +438,7 @@ const ClimateActions = ({
                                             onClick={() => setEnableRowOrdering(false)}
                                         >
                                             <div>
-                                                <MdOutlineLowPriority/>
+                                                <MdOutlineLowPriority />
                                             </div>
                                             {t("cancelSorting")}
                                         </button>
@@ -448,9 +448,9 @@ const ClimateActions = ({
                                             disabled={isSaving}
                                         >
                                             {isSaving ? (
-                                                <GiSandsOfTime className="text-lg"/>
+                                                <GiSandsOfTime className="text-lg" />
                                             ) : (
-                                                <MdOutlineSave className="text-lg"/>
+                                                <MdOutlineSave className="text-lg" />
                                             )}
                                             {t("saveRankings")}
                                         </button>
@@ -462,10 +462,10 @@ const ClimateActions = ({
                                         onClick={() => setStage(0)}
                                         className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"
                                     >
-                                        <MdArrowBack/>
+                                        <MdArrowBack />
                                         {t("goBack").toUpperCase()}
                                     </button>
-                                    {/* Adaptation CSVLink */} 
+                                    {/* Adaptation CSVLink */}
                                     {renderCsvLink(type)}
                                     <button
                                         onClick={() =>
@@ -479,7 +479,7 @@ const ClimateActions = ({
                                         }
                                         className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"
                                     >
-                                        <FiFileText/>
+                                        <FiFileText />
                                         {t("exportPdf")}
                                     </button>
                                 </>)}
@@ -499,7 +499,7 @@ const ClimateActions = ({
                                     onClick={() => {
                                         setStage(1)
                                         setEnableRowSelection(true)
-                                        window.scrollTo({top: 0, behavior: 'smooth'}); // Scroll to the top of the screen
+                                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top of the screen
                                     }}
                                 >
                                     {t("selectActions")}
@@ -510,9 +510,8 @@ const ClimateActions = ({
                             {enableRowSelection && !enableRowOrdering && (
                                 <button
                                     id="generatePlans"
-                                    className={`flex items-center justify-center gap-4 px-4 py-2 rounded border border-solid button font-semibold modify-rankings h-fit my-4 mx-auto ${
-                                        isGenerating || !hasSelectedActions(type) ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed' : 'text-[#4B4C63] border-[#E8EAFB] hover:bg-gray-50'
-                                    }`}
+                                    className={`flex items-center justify-center gap-4 px-4 py-2 rounded border border-solid button font-semibold modify-rankings h-fit my-4 mx-auto ${isGenerating || !hasSelectedActions(type) ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed' : 'text-[#4B4C63] border-[#E8EAFB] hover:bg-gray-50'
+                                        }`}
                                     onClick={() => generatePlans(type)}
                                     disabled={isGenerating || !hasSelectedActions(type)}
                                 >
