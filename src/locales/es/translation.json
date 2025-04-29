@@ -109,5 +109,13 @@
   "inadequateSanitation": "% de Población con Acceso a Saneamiento Inadecuado",
   "peoplePerKm2": "personas/km²",
   "area": "Área",
-  "km2": "km²"
+  "km2": "km²",
+  "biomes": {
+    "tropical_rainforest": "Selva Tropical",
+    "desert": "Desierto",
+    "grassland_savanna": "Pradera/Sabana"
+  },
+  "totalEmissions": "Emisiones totales en 2023",
+  "tCO2e": "tCO₂e",
+  "climateRisks": "Riesgos climáticos"
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResponsivePie } from '@nivo/pie';
-import { ResponsiveBar } from '@nivo/bar';
 
 const EmissionsChart = ({ city }) => {
   const { t } = useTranslation();
@@ -11,35 +10,54 @@ const EmissionsChart = ({ city }) => {
       id: t('stationary_energy'),
       label: t('stationary_energy'),
       value: city.stationaryEnergyEmissions / 1000,
-      color: '#0088FE'
+      color: '#FFAB51'
     },
     {
       id: t('transportation'),
       label: t('transportation'),
       value: city.transportationEmissions / 1000,
-      color: '#00C49F'
+      color: '#5162FF'
     },
     {
       id: t('waste'),
       label: t('waste'),
       value: city.wasteEmissions / 1000,
-      color: '#FFBB28'
+      color: '#51ABFF'
     },
     {
       id: t('ippu'),
       label: t('ippu'),
       value: city.ippuEmissions / 1000,
-      color: '#FF8042'
+      color: '#CFAE53'
     },
     {
       id: t('afolu'),
       label: t('afolu'),
       value: city.agricultureEmissions / 1000,
-      color: '#8884d8'
+      color: '#D45252'
     },
   ];
 
-  console.log('sectorData', JSON.stringify(sectorData));// TODO NINA
+  const scopeData = [
+    {
+      id: t('scope1'),
+      label: t('scope1'),
+      value: city.scope1Emissions / 1000,
+      color: '#FFAB51'
+    },
+    {
+      id: t('scope2'),
+      label: t('scope2'),
+      value: city.scope2Emissions / 1000,
+      color: '#5162FF'
+    },
+    {
+      id: t('scope3'),
+      label: t('scope3'),
+      value: city.scope3Emissions / 1000,
+      color: '#51ABFF'
+    },
+  ]
 
   const formatValue = (value) => `${value.toFixed(2)} ${t('tCO2e')}`;
 
@@ -48,7 +66,7 @@ const EmissionsChart = ({ city }) => {
       <div>
         <div className="h-[220px]">
           <ResponsivePie
-            data={sectorData}
+            data={sectorData.filter(item => item.value !== null && !isNaN(item.value))}
             margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
             innerRadius={0.5}
             padAngle={0.7}
@@ -56,12 +74,7 @@ const EmissionsChart = ({ city }) => {
             activeOuterRadiusOffset={8}
             borderWidth={1}
             borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
-            arcLinkLabelsSkipAngle={10}
-            arcLinkLabelsTextColor="#333333"
-            arcLinkLabelsThickness={2}
-            arcLinkLabelsColor={{ from: 'color' }}
-            arcLabelsSkipAngle={10}
-            arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+            enableArcLabels={false}
             colors={{ datum: 'data.color' }}
             tooltip={({ datum }) => (
               <div className="bg-white p-2 shadow-lg rounded">
@@ -81,70 +94,29 @@ const EmissionsChart = ({ city }) => {
 
       <div className="emissions-chart">
         <h2 className="text-2xl font-bold mb-4">{t('emissionsBySector')}</h2>
-        <div className="h-[400px]">
-          <ResponsiveBar
-            data={sectorData}
-            keys={['value']}
-            indexBy="label"
-            margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-            padding={0.3}
-            valueScale={{ type: 'linear' }}
+        <div className="h-[220px]">
+          <ResponsivePie
+            data={scopeData.filter(item => item.value !== null && !isNaN(item.value))}
+            margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+            innerRadius={0.5}
+            padAngle={0.7}
+            cornerRadius={3}
+            activeOuterRadiusOffset={8}
+            borderWidth={1}
+            borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+            enableArcLabels={false}
             colors={{ datum: 'data.color' }}
-            borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: -45,
-              legend: t('sector'),
-              legendPosition: 'middle',
-              legendOffset: 45
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: t('tCO2e'),
-              legendPosition: 'middle',
-              legendOffset: -40
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-            tooltip={({ value, color, indexValue }) => (
+            tooltip={({ datum }) => (
               <div className="bg-white p-2 shadow-lg rounded">
-                <strong>{indexValue}</strong>
+                <strong>{datum.label}</strong>
                 <br />
-                {formatValue(value)}
+                {formatValue(datum.value)}
               </div>
             )}
-            valueFormat={value => formatValue(value)}
-            legends={[
-              {
-                dataFrom: 'keys',
-                anchor: 'bottom-right',
-                direction: 'column',
-                justify: false,
-                translateX: 120,
-                translateY: 0,
-                itemsSpacing: 2,
-                itemWidth: 100,
-                itemHeight: 20,
-                itemDirection: 'left-to-right',
-                itemOpacity: 0.85,
-                symbolSize: 20,
-                effects: [
-                  {
-                    on: 'hover',
-                    style: {
-                      itemOpacity: 1
-                    }
-                  }
-                ]
-              }
-            ]}
+            arcLinkLabel={d => `${d.label} (${formatValue(d.value)})`}
+            arcLabel={d => formatValue(d.value)}
           />
+
         </div>
       </div>
     </div>
