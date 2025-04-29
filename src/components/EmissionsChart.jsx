@@ -97,7 +97,7 @@ const EmissionsChart = ({ city }) => {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-medium mb-2">{t('emissionsBySector')}</p>
+
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>

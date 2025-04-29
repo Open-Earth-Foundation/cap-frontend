@@ -3,6 +3,7 @@ import EmissionsChart from "./EmissionsChart.jsx";
 import { useState, useEffect } from "react";
 import { fetchCityContextData } from "../utils/readWrite";
 import { useTranslation } from "react-i18next";
+import { Card } from "@mui/material";
 
 const CityData = ({ selectedLocode }) => {
     const { t } = useTranslation();
@@ -18,35 +19,37 @@ const CityData = ({ selectedLocode }) => {
         const fetchCityData = async () => {
             const allCitiesData = await fetchCityContextData(selectedLocode);
             const cityData = allCitiesData.find(city => city.locode === selectedLocode);
-            console.log('cityData', JSON.stringify(cityData, null, 2));// TODO NINA
             setCityData(cityData);
         };
         fetchCityData();
     }, [selectedLocode]);
     return (
-        <div className="space-y-4">
-            <div className="mt-4 h-[300px] border border-border rounded-lg overflow-hidden">
-                <MapView city={cityData} />
+        <>
+            <h3 className="text-xl font-semibold mb-4">{cityData?.name}</h3>
+            <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-2">
+                    <MapView city={cityData} />
+                </div>
+                <Card>
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-lg font-semibold mt-4">{formatNumber(cityData?.totalEmissions / 1000)} {t('tCO2e')}</p>
+                            <p className="text-sm text-muted-foreground">{t('totalEmissions')}</p>
+                            <p className="text-lg font-semibold mt-4">{formatNumber(cityData?.populationSize)}</p>
+                            <p className="text-sm text-muted-foreground">{t('population')}</p>
+                            <p className="text-lg font-semibold mt-4">{formatNumber(cityData?.area)} {t('km2')}</p>
+                            <p className="text-sm text-muted-foreground">{t('area')}</p>
+                            <p className="text-lg font-semibold mt-4">{formatBiome(cityData?.biome)}</p>
+                            <p className="text-sm text-muted-foreground">{t('biome')}</p>
+                        </div>
+                    </div>
+                </Card>
             </div>
-
             <div className="pt-6">
-                <h3 className="text-xl font-semibold mb-4">{cityData?.name}</h3>
 
                 <div className="space-y-4">
                     <div>
-                        <p className="text-sm text-muted-foreground">{t('demographics')}</p>
-                        <p>{t('population')}: {formatNumber(cityData?.populationSize)}</p>
-                        <p>{t('density')}: {formatNumber(cityData?.populationDensity)} {t('peoplePerKm2')}</p>
-                        <p>{t('area')}: {formatNumber(cityData?.area)} {t('km2')}</p>
-                        <p>{t('biome')}: {formatBiome(cityData?.biome)}</p>
-                        <p>{t('lowIncomePopulation')}: {cityData?.socioEconomicFactors?.lowIncome?.replace('_', ' ')}</p>
-                        <p>{t('inadequateWaterAccess')}: {cityData?.accessToPublicServices?.inadequateWaterAccess?.replace('_', ' ')}</p>
-                        <p>{t('inadequateSanitation')}: {cityData?.accessToPublicServices?.inadequateSanitation?.replace('_', ' ')}</p>
-                    </div>
-
-                    <div>
-                        <p className="text-sm text-muted-foreground">{t('totalEmissions')}</p>
-                        <p className="text-lg font-semibold mb-4">{formatNumber(cityData?.totalEmissions / 1000)} {t('tCO2e')}</p>
+                        <p className="text-sm font-medium mb-2">{t('emissionsBySector')}</p>
                         <EmissionsChart city={cityData} />
                     </div>
 
@@ -82,7 +85,7 @@ const CityData = ({ selectedLocode }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
