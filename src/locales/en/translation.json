@@ -107,10 +107,15 @@
   "area": "Area",
   "km2": "km²",
   "biome": "Biome",
+  "biomes": {
+    "tropical_rainforest": "Tropical Rainforest",
+    "desert": "Desert",
+    "grassland_savanna": "Grassland/Savanna"
+  },
   "lowIncomePopulation": "% of population with Low Income",
   "inadequateWaterAccess": "% of population with Inadequate Water Access",
   "inadequateSanitation": "% of population with Inadequate Sanitation",
-  "totalEmissions": "Total Emissions",
+  "totalEmissions": "Total Emissions in 2023",
   "tCO2e": "tCO₂e",
   "climateRisks": "Climate Risks"
 }

@@ -109,7 +109,6 @@ const ClimateActions = ({
         // Determine which row selection state to use based on type
         const rowSelection = isAdaptation(type) ? adaptationRowSelection : mitigationRowSelection;
         const setRowSelection = isAdaptation(type) ? setAdaptationRowSelection : setMitigationRowSelection;
-        console.log(i18n.language);
         return useMaterialReactTable({
             localization: getLocalization(i18n.language),
             autoResetPageIndex: false,
@@ -356,9 +355,9 @@ const ClimateActions = ({
         return Object.keys(getSelectedActions(type)).length > 0;
     };
 
-    return (
+    return (<>
+        <CityData selectedLocode={selectedLocode} />
         <div className="max-w-screen-xl mx-auto p-12">
-            <CityData selectedLocode={selectedLocode} />
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
                 {t("topActionsTitle")}
             </h1>
@@ -554,6 +553,7 @@ const ClimateActions = ({
                 ))}
             </Tabs>
         </div>
+    </>
     );
 };
 

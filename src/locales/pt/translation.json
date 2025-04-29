@@ -112,5 +112,10 @@
   "inadequateSanitation": "% da população com saneamento inadequado",
   "totalEmissions": "Emissões totais",
   "tCO2e": "tCO₂e",
-  "climateRisks": "Riscos climáticos"
+  "climateRisks": "Riscos climáticos",
+  "biomes": {
+    "tropical_rainforest": "Floresta Tropical",
+    "desert": "Deserto",
+    "grassland_savanna": "Pradaria/Savana"
+  }
 }
