@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { HeadlineSmall } from "./Texts/Headline";
 import { LessView } from "./LessView";
 import { MoreView } from "./MoreView";
-
+import { TitleLarge } from "./Texts/Title";
 const CityData = ({ selectedLocode }) => {
     const { t } = useTranslation();
     const [cityData, setCityData] = useState({});

@@ -65,7 +65,7 @@
   "floods": "Inundações",
   "heatwaves": "Ondas de calor",
   "landslides": "Deslizamentos de terra",
-  "sea_level_rise": "Aumento do nível do mar",
+  "seaLevelRise": "Aumento do nível do mar",
   "storms": "Tempestades",
   "wildfires": "Incêndios florestais",
   "goBack": "Voltar",
@@ -107,15 +107,29 @@
   "area": "Área",
   "km2": "km²",
   "biome": "Bioma",
+  "biomes": {
+    "tropical_rainforest": "Floresta Tropical",
+    "desert": "Deserto",
+    "grassland_savanna": "Pradaria/Savana"
+  },
   "lowIncomePopulation": "% da população com baixa renda",
   "inadequateWaterAccess": "% da população com acesso inadequado à água",
   "inadequateSanitation": "% da população com saneamento inadequado",
   "totalEmissions": "Emissões totais",
   "tCO2e": "tCO₂e",
-  "climateRisks": "Riscos climáticos",
-  "biomes": {
-    "tropical_rainforest": "Floresta Tropical",
-    "desert": "Deserto",
-    "grassland_savanna": "Pradaria/Savana"
+  "climateRisks": "Riscos climáticos na sua cidade",
+  "emissionsBreakdown": "Detalhamento das Emissões",
+  "emissionsBySector": "Emissões por Setor",
+  "emissionsByScope": "Emissões por Escopo",
+  "scope1": "Escopo 1",
+  "scope2": "Escopo 2",
+  "scope3": "Escopo 3",
+  "keyImpacts": {
+    "publicHealth": "Saúde Pública",
+    "foodSecurity": "Segurança Alimentar",
+    "energySecurity": "Segurança Energética",
+    "waterResources": "Recursos Hídricos",
+    "infrastructure": "Infraestrutura",
+    "biodiversity": "Biodiversidade"
   }
 }

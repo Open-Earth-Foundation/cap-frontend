@@ -77,7 +77,7 @@
   "floods": "Floods",
   "heatwaves": "Heatwaves",
   "landslides": "Landslides",
-  "sea_level_rise": "Sea Level Rise",
+  "seaLevelRise": "Sea Level Rise",
   "storms": "Storms",
   "wildfires": "Wildfires",
   "pdf": {
@@ -117,5 +117,19 @@
   "inadequateSanitation": "% of population with Inadequate Sanitation",
   "totalEmissions": "Total Emissions in 2023",
   "tCO2e": "tCO₂e",
-  "climateRisks": "Climate Risks"
+  "climateRisks": "Climate risks in your city",
+  "emissionsBreakdown": "Emissions Breakdown",
+  "emissionsBySector": "Emissions by Sector",
+  "emissionsByScope": "Emissions by Scope",
+  "scope1": "Scope 1",
+  "scope2": "Scope 2",
+  "scope3": "Scope 3",
+  "keyImpacts": {
+    "publicHealth": "Public Health",
+    "foodSecurity": "Food Security",
+    "energySecurity": "Energy Security",
+    "waterResources": "Water Resources",
+    "infrastructure": "Infrastructure",
+    "biodiversity": "Biodiversity"
+  }
 }

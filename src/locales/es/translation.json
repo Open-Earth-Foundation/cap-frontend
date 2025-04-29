@@ -77,7 +77,7 @@
   "floods": "Inundaciones",
   "heatwaves": "Olas de calor",
   "landslides": "Deslizamientos de tierra",
-  "sea_level_rise": "Aumento del nivel del mar",
+  "seaLevelRise": "Aumento del nivel del mar",
   "storms": "Tormentas",
   "wildfires": "Incendios forestales",
   "pdf": {
@@ -104,18 +104,32 @@
   "population": "Población",
   "density": "Densidad",
   "biome": "Bioma",
+  "biomes": {
+    "tropical_rainforest": "Selva Tropical",
+    "desert": "Desierto",
+    "grassland_savanna": "Pradera/Sabana"
+  },
   "lowIncomePopulation": "% de Población con Bajo Ingreso",
   "inadequateWaterAccess": "% de Población con Acceso a Agua Inadecuado",
   "inadequateSanitation": "% de Población con Acceso a Saneamiento Inadecuado",
   "peoplePerKm2": "personas/km²",
   "area": "Área",
   "km2": "km²",
-  "biomes": {
-    "tropical_rainforest": "Selva Tropical",
-    "desert": "Desierto",
-    "grassland_savanna": "Pradera/Sabana"
-  },
   "totalEmissions": "Emisiones totales en 2023",
   "tCO2e": "tCO₂e",
-  "climateRisks": "Riesgos climáticos"
+  "climateRisks": "Riesgos climáticos en tu ciudad",
+  "emissionsBreakdown": "Desglose de Emisiones",
+  "emissionsBySector": "Emisiones por Sector",
+  "emissionsByScope": "Emisiones por Alcance",
+  "scope1": "Alcance 1",
+  "scope2": "Alcance 2",
+  "scope3": "Alcance 3",
+  "keyImpacts": {
+    "publicHealth": "Salud Pública",
+    "foodSecurity": "Seguridad Alimentaria",
+    "energySecurity": "Seguridad Energética",
+    "waterResources": "Recursos Hídricos",
+    "infrastructure": "Infraestructura",
+    "biodiversity": "Biodiversidad"
+  }
 }
