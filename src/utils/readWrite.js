@@ -7,11 +7,11 @@ import { CITIES } from "../components/constants.js";
 import i18next from "i18next";
 
 const s3Client = new S3Client({
-    region: import.meta.env.VITE_AWS_REGION,
-    credentials: {
-        accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-        secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-    },
+  region: import.meta.env.VITE_AWS_REGION,
+  credentials: {
+    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+  },
 });
 const bucketName = import.meta.env.VITE_AWS_S3_BUCKET_ID;
 
@@ -38,6 +38,21 @@ function getFileName(cityName, type) {
   const language = i18next.language || "en"; // Default to 'en' if no language is set
   return `data/${language}/${type}/${fileName}.json`;
 }
+
+export const fetchCityContextData = async () => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "data/city_data/city_data.json",
+    });
+    const response = await s3Client.send(command);
+    const data = await streamToString(response.Body);
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("Error reading file from S3:", err);
+    throw err;
+  }
+};
 
 export const readFile = async (cityName, type) => {
   try {

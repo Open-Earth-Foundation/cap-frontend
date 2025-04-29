@@ -1,28 +1,28 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import i18n from "i18next";
-import {HashRouter, Navigate, Route, Routes, useParams,} from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes, useParams, } from "react-router-dom";
 import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
 import "./index.css";
-import {readFile} from "./utils/readWrite.js";
-import {ADAPTATION, MITIGATION} from "./utils/helpers.js";
-import {useTranslation} from "react-i18next";
-import {CITIES} from "./components/constants.js";
+import { readFile } from "./utils/readWrite.js";
+import { ADAPTATION, MITIGATION } from "./utils/helpers.js";
+import { useTranslation } from "react-i18next";
+import { CITIES } from "./components/constants.js";
 
 const CityView = () => {
-    const {cityName} = useParams();
+    const { cityName } = useParams();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [adaptationData, setAdaptationData] = useState([]);
     const [mitigationData, setMitigationData] = useState([]);
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const validCity = CITIES.find(
         (city) => city.value.toLowerCase() === cityName?.toLowerCase(),
     );
 
     if (!validCity) {
-        return <Navigate to="/"/>;
+        return <Navigate to="/" />;
     }
 
     const fetchData = async (city, type) => {
@@ -60,6 +60,7 @@ const CityView = () => {
             <div className="max-w-screen-xl mx-auto p-12">
 
                 <ClimateActions
+                    selectedLocode={validCity.locode}
                     selectedCity={validCity.value}
                     mitigationData={mitigationData}
                     setMitigationData={setMitigationData}
@@ -74,7 +75,7 @@ const CityView = () => {
 };
 
 const App = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
@@ -104,12 +105,12 @@ const App = () => {
 
                 <main className="flex-grow">
                     <Routes>
-                        <Route path="/city/:cityName" element={<CityView/>}/>
+                        <Route path="/city/:cityName" element={<CityView />} />
                         <Route
                             path="/"
                             element={
                                 <>
-                                    <Hero/>
+                                    <Hero />
                                     <div className="container mx-auto px-4 py-10 mb-20">
                                         <div className="max-w-md mx-auto text-center">
                                             <img
