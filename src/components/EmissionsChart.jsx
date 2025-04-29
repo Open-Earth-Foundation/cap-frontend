@@ -1,133 +1,150 @@
-import React, { useEffect, useRef } from 'react';
-import { Chart, registerables } from 'chart.js';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-
-Chart.register(...registerables);
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+import { ResponsivePie } from '@nivo/pie';
+import { ResponsiveBar } from '@nivo/bar';
 
 const EmissionsChart = ({ city }) => {
-  const chartRef = useRef(null);
   const { t } = useTranslation();
 
   const sectorData = [
-    { name: 'Stationary Energy', value: city.stationaryEnergyEmissions / 1000 },
-    { name: 'Transportation', value: city.transportationEmissions / 1000 },
-    { name: 'Waste', value: city.wasteEmissions / 1000 },
-    { name: 'IPPU', value: city.ippuEmissions / 1000 },
-    { name: 'Agriculture', value: city.agricultureEmissions / 1000 },
+    {
+      id: t('stationary_energy'),
+      label: t('stationary_energy'),
+      value: city.stationaryEnergyEmissions / 1000,
+      color: '#0088FE'
+    },
+    {
+      id: t('transportation'),
+      label: t('transportation'),
+      value: city.transportationEmissions / 1000,
+      color: '#00C49F'
+    },
+    {
+      id: t('waste'),
+      label: t('waste'),
+      value: city.wasteEmissions / 1000,
+      color: '#FFBB28'
+    },
+    {
+      id: t('ippu'),
+      label: t('ippu'),
+      value: city.ippuEmissions / 1000,
+      color: '#FF8042'
+    },
+    {
+      id: t('afolu'),
+      label: t('afolu'),
+      value: city.agricultureEmissions / 1000,
+      color: '#8884d8'
+    },
   ];
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  console.log('sectorData', JSON.stringify(sectorData));// TODO NINA
 
-    const shortName = name.split(' ')[0];
-    return `${shortName} ${(percent * 100).toFixed(0)}%`;
-  };
-
-  useEffect(() => {
-    if (!sectorData || !chartRef.current) return;
-
-    const ctx = chartRef.current.getContext('2d');
-
-    // Destroy existing chart if it exists
-    if (chartRef.current.chart) {
-      chartRef.current.chart.destroy();
-    }
-
-    const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: sectorData.map(item => t(item.name)),
-        datasets: [{
-          label: t('emissions'),
-          data: sectorData.map(item => item.value),
-          backgroundColor: '#4B4C63',
-          borderColor: '#4B4C63',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: t('emissionsUnit')
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: t('sector')
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                return `${t('emissions')}: ${context.raw} ${t('emissionsUnit')}`;
-              }
-            }
-          }
-        }
-      }
-    });
-
-    // Store chart instance
-    chartRef.current.chart = chart;
-
-    return () => {
-      if (chart) {
-        chart.destroy();
-      }
-    };
-  }, [sectorData, t]);
+  const formatValue = (value) => `${value.toFixed(2)} ${t('tCO2e')}`;
 
   return (
     <div className="space-y-4">
       <div>
-
         <div className="h-[220px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={sectorData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={renderCustomizedLabel}
-                outerRadius={80}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {sectorData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          <ResponsivePie
+            data={sectorData}
+            margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+            innerRadius={0.5}
+            padAngle={0.7}
+            cornerRadius={3}
+            activeOuterRadiusOffset={8}
+            borderWidth={1}
+            borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+            arcLinkLabelsSkipAngle={10}
+            arcLinkLabelsTextColor="#333333"
+            arcLinkLabelsThickness={2}
+            arcLinkLabelsColor={{ from: 'color' }}
+            arcLabelsSkipAngle={10}
+            arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+            colors={{ datum: 'data.color' }}
+            tooltip={({ datum }) => (
+              <div className="bg-white p-2 shadow-lg rounded">
+                <strong>{datum.label}</strong>
+                <br />
+                {formatValue(datum.value)}
+              </div>
+            )}
+            arcLinkLabel={d => `${d.label} (${formatValue(d.value)})`}
+            arcLabel={d => formatValue(d.value)}
+          />
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {t('totalEmissions')}: {(city.totalEmissions / 1000).toFixed(2)} {t('emissionsUnit')}
+          {t('totalEmissions')}: {formatValue(city.totalEmissions / 1000)}
         </p>
       </div>
 
       <div className="emissions-chart">
         <h2 className="text-2xl font-bold mb-4">{t('emissionsBySector')}</h2>
-        <div className="chart-container" style={{ height: '400px' }}>
-          <canvas ref={chartRef} />
+        <div className="h-[400px]">
+          <ResponsiveBar
+            data={sectorData}
+            keys={['value']}
+            indexBy="label"
+            margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+            padding={0.3}
+            valueScale={{ type: 'linear' }}
+            colors={{ datum: 'data.color' }}
+            borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+            axisTop={null}
+            axisRight={null}
+            axisBottom={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: -45,
+              legend: t('sector'),
+              legendPosition: 'middle',
+              legendOffset: 45
+            }}
+            axisLeft={{
+              tickSize: 5,
+              tickPadding: 5,
+              tickRotation: 0,
+              legend: t('tCO2e'),
+              legendPosition: 'middle',
+              legendOffset: -40
+            }}
+            labelSkipWidth={12}
+            labelSkipHeight={12}
+            labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+            tooltip={({ value, color, indexValue }) => (
+              <div className="bg-white p-2 shadow-lg rounded">
+                <strong>{indexValue}</strong>
+                <br />
+                {formatValue(value)}
+              </div>
+            )}
+            valueFormat={value => formatValue(value)}
+            legends={[
+              {
+                dataFrom: 'keys',
+                anchor: 'bottom-right',
+                direction: 'column',
+                justify: false,
+                translateX: 120,
+                translateY: 0,
+                itemsSpacing: 2,
+                itemWidth: 100,
+                itemHeight: 20,
+                itemDirection: 'left-to-right',
+                itemOpacity: 0.85,
+                symbolSize: 20,
+                effects: [
+                  {
+                    on: 'hover',
+                    style: {
+                      itemOpacity: 1
+                    }
+                  }
+                ]
+              }
+            ]}
+          />
         </div>
       </div>
     </div>
