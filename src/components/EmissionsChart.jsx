@@ -1,8 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResponsivePie } from '@nivo/pie';
+import { TitleMedium } from './Texts/Title';
 
-const EmissionsChart = ({ city }) => {
+const EmissionsCharts = ({ city }) => {
   const { t } = useTranslation();
 
   const sectorData = [
@@ -62,9 +63,10 @@ const EmissionsChart = ({ city }) => {
   const formatValue = (value) => `${value.toFixed(2)} ${t('tCO2e')}`;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <div className="h-[220px]">
+    <div className="space-y-8">
+      <div className="space-y-8">
+        <TitleMedium>{t('emissionsBySector')}</TitleMedium>
+        <div className="h-[260px]">
           <ResponsivePie
             data={sectorData.filter(item => item.value !== null && !isNaN(item.value))}
             margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
@@ -87,14 +89,12 @@ const EmissionsChart = ({ city }) => {
             arcLabel={d => formatValue(d.value)}
           />
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          {t('totalEmissions')}: {formatValue(city.totalEmissions / 1000)}
-        </p>
+
       </div>
 
-      <div className="emissions-chart">
-        <h2 className="text-2xl font-bold mb-4">{t('emissionsBySector')}</h2>
-        <div className="h-[220px]">
+      <div className="space-y-8">
+        <TitleMedium>{t('emissionsByScope')}</TitleMedium>
+        <div className="h-[260px]">
           <ResponsivePie
             data={scopeData.filter(item => item.value !== null && !isNaN(item.value))}
             margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
@@ -123,4 +123,4 @@ const EmissionsChart = ({ city }) => {
   );
 };
 
-export default EmissionsChart;
+export default EmissionsCharts;
