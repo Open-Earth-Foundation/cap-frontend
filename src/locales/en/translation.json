@@ -131,5 +131,7 @@
     "waterResources": "Water Resources",
     "infrastructure": "Infrastructure",
     "biodiversity": "Biodiversity"
-  }
+  },
+  "viewMore": "View More",
+  "viewLess": "View Less"
 }

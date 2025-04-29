@@ -131,5 +131,7 @@
     "waterResources": "Recursos Hídricos",
     "infrastructure": "Infraestrutura",
     "biodiversity": "Biodiversidade"
-  }
+  },
+  "viewMore": "Ver Mais",
+  "viewLess": "Ver Menos"
 }
