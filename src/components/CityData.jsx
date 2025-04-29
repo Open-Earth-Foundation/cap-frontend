@@ -25,9 +25,9 @@ const CityData = ({ selectedLocode }) => {
     }, [selectedLocode]);
     return (
         <div className="space-y-4">
-            {/* <div className="mt-4 h-[150px] border border-border rounded-lg overflow-hidden">
+            <div className="mt-4 h-[300px] border border-border rounded-lg overflow-hidden">
                 <MapView city={cityData} />
-            </div> */}
+            </div>
 
             <div className="pt-6">
                 <h3 className="text-xl font-semibold mb-4">{cityData?.name}</h3>
