@@ -52,10 +52,7 @@ const CityView = () => {
 
     return (
         <div className={"py-4"}>
-            {/*<Hero initialCity={validCity.value} />*/}
-            {/*<div className="container mx-auto px-4 flex justify-center items-center gap-32 max-w-[1200px]">*/}
-            {/*  <CityMap selectedCity={validCity.value} />*/}
-            {/*</div>*/}
+            <Hero initialCity={validCity.value} />
 
             <div className="max-w-screen-xl mx-auto p-12">
 
