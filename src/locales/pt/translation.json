@@ -99,5 +99,18 @@
   },
   "csv": {
     "filename": "{{type}}_acoes_climaticas.csv"
-  }
+  },
+  "demographics": "Demografia",
+  "population": "População",
+  "density": "Densidade",
+  "peoplePerKm2": "pessoas/km²",
+  "area": "Área",
+  "km2": "km²",
+  "biome": "Bioma",
+  "lowIncomePopulation": "% da população com baixa renda",
+  "inadequateWaterAccess": "% da população com acesso inadequado à água",
+  "inadequateSanitation": "% da população com saneamento inadequado",
+  "totalEmissions": "Emissões totais",
+  "tCO2e": "tCO₂e",
+  "climateRisks": "Riscos climáticos"
 }

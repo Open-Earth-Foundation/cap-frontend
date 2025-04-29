@@ -20,8 +20,11 @@ import ActionDetailsModal from "./ActionDetailsModal.jsx";
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 import TopClimateActions from "./TopClimateActions.jsx";
+import CityData from "./CityData.jsx";
+
 const ClimateActions = ({
     selectedCity,
+    selectedLocode,
     mitigationData,
     setMitigationData,
     adaptationData,
@@ -355,6 +358,7 @@ const ClimateActions = ({
 
     return (
         <div className="max-w-screen-xl mx-auto p-12">
+            <CityData selectedLocode={selectedLocode} />
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
                 {t("topActionsTitle")}
             </h1>

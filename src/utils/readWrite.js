@@ -50,6 +50,21 @@ function getFileName(cityName, type) {
   return `data/${language}/${type}/${fileName}.json`;
 }
 
+export const fetchCityContextData = async () => {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: "data/city_data/city_data.json",
+    });
+    const response = await s3Client.send(command);
+    const data = await streamToString(response.Body);
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("Error reading file from S3:", err);
+    throw err;
+  }
+};
+
 export const readFile = async (cityName, type) => {
   try {
     const command = new GetObjectCommand({
