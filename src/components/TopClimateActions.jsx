@@ -3,6 +3,8 @@ import { FiLoader } from "react-icons/fi";
 import { getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase } from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
 import { useTranslation } from "react-i18next";
+import { ButtonMedium } from "./Texts/Button";
+import { Button } from "@mui/material";
 
 const TopClimateActions = ({
     actions,
@@ -12,6 +14,7 @@ const TopClimateActions = ({
     setGeneratedPlan,
     generatedPlans,
     setGeneratedPlans,
+    generatePlans,
 }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedPrompt, setGeneratedPrompt] = useState("");
@@ -82,12 +85,44 @@ const TopClimateActions = ({
                 ));
         }
     };
-
+    const onGenerateActionPlansClick = async () => {
+        setIsGenerating(true);
+        await generatePlans(type);
+        setIsGenerating(false);
+    };
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-normal text-gray-900 font-poppins">
-                {t(`top${type}ClimateActions`)}
-            </h1>
+            <div className="flex justify-between items-center mt-8">
+                <h1 className="text-2xl font-normal text-gray-900 font-poppins">
+                    {t(`top${type}ClimateActions`)}
+                </h1>
+                <Button
+                    onClick={onGenerateActionPlansClick}
+                    variant="outlined"
+                    sx={{
+                        borderColor: '#2351DC',
+                        '&:hover': {
+                            borderColor: '#2351DC',
+                        },
+                        textTransform: 'uppercase',
+                        borderRadius: '4px',
+                        padding: '16px',
+                    }}
+                    disabled={isGenerating}
+                >
+                    {isGenerating ? (
+                        <div className="flex items-center">
+                            <FiLoader className="animate-spin mr-2" />
+                            <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
+                        </div>
+                    ) : (
+                        <ButtonMedium color="#2351DC">
+                            {t("generatePlan")}
+                        </ButtonMedium>
+                    )}
+                </Button>
+            </div>
+
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {topActions.map(({ action }, index) => (
@@ -95,15 +130,16 @@ const TopClimateActions = ({
                     <div
                         key={index}
                         className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${index === 0
-                                ? "border-t-4 border-t-primary first-card ring-1 ring-blue-100"
-                                : "shadow-sm"
+                            ? "border-t-4 border-t-primary first-card ring-1 ring-blue-100"
+                            : "shadow-sm"
                             }`}
                     >
                         {/*Index*/}
-                        <div>
+                        <div className="flex justify-between items-center">
                             <span className="text-4xl font-bold text-gray-900 font-poppins">
-                                {index + 1}°
+                                #{index + 1}
                             </span>
+                            <ButtonMedium color="#2351DC">{t("expertsChoice")}</ButtonMedium>
                         </div>
 
                         {/* Description */}
@@ -163,24 +199,7 @@ const TopClimateActions = ({
                             >
                                 {t("seeMoreDetails")}
                             </button>
-                            <button
-                                onClick={() => generateActionPlan(action, type, index)}
-                                disabled={isGenerating !== false}
-                                className={`px-4 py-2 text-white font-semibold rounded-md transition-colors
-                                    ${isGenerating !== false
-                                        ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-primary hover:bg-primary-dark"}
-                                `}
-                            >
-                                {isGenerating === index ? (
-                                    <div className="flex items-center">
-                                        <FiLoader className="animate-spin mr-2" />
-                                        {t("generating")}
-                                    </div>
-                                ) : (
-                                    t("generatePlan")
-                                )}
-                            </button>
+
                         </div>
 
                         {/* Modals */}
@@ -194,21 +213,23 @@ const TopClimateActions = ({
                     </div>
                 ))}
             </div>
-            {generatedPlans.length > 0 && (
-                <button
-                    onClick={() => setIsPlansListModalOpen(true)}
-                    className="mt-6 flex items-center gap-2 px-4 py-2 bg-white text-primary border border-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
-                >
-                    {t("seeGeneratedPlans")} ({generatedPlans.length})
-                </button>
-            )}
+            {
+                generatedPlans.length > 0 && (
+                    <button
+                        onClick={() => setIsPlansListModalOpen(true)}
+                        className="mt-6 flex items-center gap-2 px-4 py-2 bg-white text-primary border border-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
+                    >
+                        {t("seeGeneratedPlans")} ({generatedPlans.length})
+                    </button>
+                )
+            }
             <PlanModal
                 isOpen={isPlansListModalOpen}
                 onClose={() => setIsPlansListModalOpen(false)}
                 plans={generatedPlans}
                 isListView={true}
             />
-        </div>
+        </div >
     );
 };
 

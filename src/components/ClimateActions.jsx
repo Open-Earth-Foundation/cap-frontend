@@ -47,7 +47,8 @@ const ClimateActions = ({
 
     const generatePlans = async (type) => {
         setIsGenerating(true);
-        const selectedNumbers = getSelectedActions(type)
+        // const selectedNumbers = getSelectedActions(type)
+        const selectedNumbers = getTopActions(type)
         const actions = isAdaptation(type) ? adaptationData : mitigationData
         const selectedActions = Object.entries(selectedNumbers)
             .filter(([_actionNumber, selected]) => !!selected)
@@ -56,8 +57,8 @@ const ClimateActions = ({
             return generateActionPlan({ action: action.action, city: selectedCity });
         }));
         setGeneratedPlans(plans);
-        setIsGenerating(false);
-        setEnableRowSelection(false)
+        // setIsGenerating(false);
+        // setEnableRowSelection(false)
     }
 
     const addRank = (actions) =>
@@ -350,6 +351,14 @@ const ClimateActions = ({
         return isAdaptation(type) ? adaptationRowSelection : mitigationRowSelection;
     }
 
+    function getTopActions() {
+        return {
+            "0": true,
+            "1": true,
+            "2": true
+        }
+    }
+
     // Check if there are any selected actions
     const hasSelectedActions = (type) => {
         return Object.keys(getSelectedActions(type)).length > 0;
@@ -403,6 +412,7 @@ const ClimateActions = ({
                                 setGeneratedPlan={setGeneratedPlans}
                                 generatedPlans={generatedPlans}
                                 setGeneratedPlans={setGeneratedPlans}
+                                generatePlans={generatePlans}
                             />
 
                             <div className="mt-12 mb-8">
