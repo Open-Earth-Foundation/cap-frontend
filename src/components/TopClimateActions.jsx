@@ -1,18 +1,18 @@
-import React, {useState} from "react";
-import {FiLoader} from "react-icons/fi";
-import {getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import React, { useState } from "react";
+import { FiLoader } from "react-icons/fi";
+import { getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase } from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const TopClimateActions = ({
-                               actions,
-                               type,
-                               setSelectedAction,
-                               selectedCity,
-                               setGeneratedPlan,
-                               generatedPlans,
-                               setGeneratedPlans,
-                           }) => {
+    actions,
+    type,
+    setSelectedAction,
+    selectedCity,
+    setGeneratedPlan,
+    generatedPlans,
+    setGeneratedPlans,
+}) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedPrompt, setGeneratedPrompt] = useState("");
     const [localGeneratedPlan, setLocalGeneratedPlan] = useState("");
@@ -20,7 +20,7 @@ const TopClimateActions = ({
 
     const [isPlansListModalOpen, setIsPlansListModalOpen] = useState(false);
 
-    const {t, i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
 
     // Get top 3 actions of the specified type
     const topActions = actions
@@ -76,9 +76,8 @@ const TopClimateActions = ({
                 .map((_, i) => (
                     <div
                         key={i}
-                        className={`h-1 w-1/3 rounded ${
-                            i < filledBars ? color : "bg-gray-200"
-                        }`}
+                        className={`h-1 w-1/3 rounded ${i < filledBars ? color : "bg-gray-200"
+                            }`}
                     />
                 ));
         }
@@ -91,21 +90,20 @@ const TopClimateActions = ({
             </h1>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {topActions.map(({action}, index) => (
+                {topActions.map(({ action }, index) => (
                     /* Mitigation Card */
                     <div
                         key={index}
-                        className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${
-                            index === 0
+                        className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${index === 0
                                 ? "border-t-4 border-t-primary first-card ring-1 ring-blue-100"
                                 : "shadow-sm"
-                        }`}
+                            }`}
                     >
                         {/*Index*/}
                         <div>
-              <span className="text-4xl font-bold text-gray-900 font-poppins">
-                {index + 1}°
-              </span>
+                            <span className="text-4xl font-bold text-gray-900 font-poppins">
+                                {index + 1}°
+                            </span>
                         </div>
 
                         {/* Description */}
@@ -122,11 +120,11 @@ const TopClimateActions = ({
                         <div className="space-y-1">
                             <div className="flex gap-2 ">{getProgressBars(action)}</div>
                             <div className="flex justify-between items-center pt-2">
-                <span className="text-gray-600">
-                  {isAdaptation(type)
-                      ? t("adaptationPotential")
-                      : t("reductionPotential")}
-                </span>
+                                <span className="text-gray-600">
+                                    {isAdaptation(type)
+                                        ? t("adaptationPotential")
+                                        : t("reductionPotential")}
+                                </span>
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
                                     {isAdaptation(type)
                                         ? toTitleCase(action?.AdaptationEffectiveness)
@@ -140,20 +138,20 @@ const TopClimateActions = ({
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("sector")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action?.Hazard, t)}
-                </span>
-                            </div>  
+                                    {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action?.Hazard, t)}
+                                </span>
+                            </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("estimatedCost")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {toTitleCase(t(action?.CostInvestmentNeeded))}
-                </span>
+                                    {toTitleCase(t(action?.CostInvestmentNeeded))}
+                                </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("implementationTime")}</span>
                                 <span className="text-gray-600 font-semibold">
-                  {t(getTimelineTranslationKey(action?.TimelineForImplementation))}
-                </span>
+                                    {t(getTimelineTranslationKey(action?.TimelineForImplementation))}
+                                </span>
                             </div>
                         </div>
 
@@ -173,11 +171,11 @@ const TopClimateActions = ({
                                         ? "bg-gray-400 cursor-not-allowed"
                                         : "bg-primary hover:bg-primary-dark"}
                                 `}
-                                >
+                            >
                                 {isGenerating === index ? (
                                     <div className="flex items-center">
-                                    <FiLoader className="animate-spin mr-2" />
-                                    {t("generating")}
+                                        <FiLoader className="animate-spin mr-2" />
+                                        {t("generating")}
                                     </div>
                                 ) : (
                                     t("generatePlan")
