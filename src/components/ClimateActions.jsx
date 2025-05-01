@@ -281,7 +281,7 @@ const ClimateActions = ({
                                     {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
                                 </div>
                             </div>
-                            <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} />
+                            <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} enableRowOrdering={enableRowOrdering} />
                             {/* See Generated Plans button */}
                             {generatedPlans && generatedPlans.length > 0 && (
                                 <Button
