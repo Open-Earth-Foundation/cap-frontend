@@ -4,14 +4,10 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { adaptationColumns, mitigationColumns } from "./columns";
 import { MRT_TableContainer, useMaterialReactTable, } from "material-react-table";
-import { MdArrowBack, MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave, } from "react-icons/md";
-import { FiArrowDownRight, FiDownload, FiFileText } from "react-icons/fi";
-import { CSVLink } from "react-csv";
+import { MdOutlineFlood, MdOutlineLowPriority, MdOutlineSave, } from "react-icons/md";
+import { FiArrowDownRight } from "react-icons/fi";
 import { writeFile } from "../utils/readWrite.js";
 import { ADAPTATION, isAdaptation, MITIGATION, } from "../utils/helpers.js";
-import { prepareCsvData } from "../utils/exportUtils.js";
-import { GiSandsOfTime } from "react-icons/gi";
-import { exportToPDF } from "../utils/exportUtils.js";
 import { useTranslation } from "react-i18next";
 import { ADAPTA_BRASIL_API } from "./constants.js";
 import { generateActionPlan } from "../utils/planCreator.js";
@@ -22,6 +18,7 @@ import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 import TopClimateActions from "./TopClimateActions.jsx";
 import CityData from "./CityData.jsx";
 import { Button } from "@mui/material";
+import { DownloadButton } from "./DownloadButton.jsx";
 
 const ClimateActions = ({
     selectedCity,
@@ -190,40 +187,8 @@ const ClimateActions = ({
         setIsSaving(false);
     };
 
-    const getCsvColumns = (type) => {
-        const columns = isAdaptation(type) ? adaptationColumns(t) : mitigationColumns(t);
 
-        // Create a copy of columns and remove unnecessary ones
-        const filteredColumns = [...columns];
-        filteredColumns.splice(2, 1); // Remove the third item
-        filteredColumns.pop(); // Remove the last item
 
-        return filteredColumns;
-    };
-
-    const getCsvData = (type) => {
-        const columns = getCsvColumns(type);
-        const data = isAdaptation(type) ? adaptationData : mitigationData;
-
-        const { headers, data: csvData } = prepareCsvData(data, columns, t);
-        return { headers, data: csvData };
-    };
-
-    const renderCsvLink = (type) => {
-        const { headers, data } = getCsvData(type);
-        const filename = `${selectedCity}_${t(type)}_${t('actions')}.csv`;
-        return (
-            <CSVLink
-                headers={headers}
-                data={data}
-                filename={filename}
-                className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table button"
-            >
-                <FiDownload className="mr-2" />
-                {t('downloadCsv')}
-            </CSVLink>
-        );
-    };
 
     useEffect(() => {
         const fetchActions = async () => {
@@ -388,25 +353,8 @@ const ClimateActions = ({
                                     >
                                         {t("cancel").toUpperCase()}
                                     </Button></>)}
-                                {/* Adaptation CSVLink */}
-                                {!enableRowOrdering && <>
-                                    {renderCsvLink(type)}
-                                    <Button
-                                        onClick={() =>
-                                            exportToPDF(
-                                                selectedCity,
-                                                mitigationData,
-                                                adaptationData,
-                                                generatedPlans,
-                                                t
-                                            )
-                                        }
-                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"
-                                    >
-                                        <FiFileText />
-                                        {t("exportPdf")}
-                                    </Button>
-                                </>}
+
+                                {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
                             </div>
 
                             {/* Table */}
@@ -444,3 +392,5 @@ const ClimateActions = ({
 };
 
 export default ClimateActions;
+
+
