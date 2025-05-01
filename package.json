@@ -23,6 +23,7 @@
     "@nivo/pie": "^0.92.0",
     "@react-icons/all-files": "^4.1.0",
     "@react-pdf/renderer": "^4.0.0",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.7.9",
     "chart.js": "^4.4.1",
     "cors": "^2.8.5",
