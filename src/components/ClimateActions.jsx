@@ -52,9 +52,10 @@ const ClimateActions = ({
         const selectedActions = Object.entries(selectedNumbers)
             .filter(([_actionNumber, selected]) => !!selected)
             .map(([actionNumber, _selected]) => actions[actionNumber])
-        const plans = await Promise.all(selectedActions.map((action) => {
-            return generateActionPlan({ action: action.action, city: selectedCity });
-        }));
+        // const plans = await Promise.all(selectedActions.map((action) => {
+        //     return generateActionPlan({ action: action.action, city: selectedCity });
+        // }));
+        const plans = ["SOME TEXT HERE"]
         setGeneratedPlans(plans);
         // setIsGenerating(false);
         // setEnableRowSelection(false)
@@ -215,6 +216,17 @@ const ClimateActions = ({
                                 </p>
                             </div>
                             <div className="flex justify-end">
+                                {/* See Generated Plans button */}
+                                {(
+                                    <Button
+                                        id="SeeGeneratedPlans"
+                                        variant="outlined"
+                                        className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings h-fit my-4 mx-auto"
+                                        onClick={() => setIsPlanModalOpen(true)}
+                                    >
+                                        {t("seeGeneratedPlans")}
+                                    </Button>
+                                )}
                                 {/* Modify button section */}
                                 <div className="flex justify-end">
 
@@ -282,17 +294,7 @@ const ClimateActions = ({
                                 </div>
                             </div>
                             <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} enableRowOrdering={enableRowOrdering} />
-                            {/* See Generated Plans button */}
-                            {generatedPlans && generatedPlans.length > 0 && (
-                                <Button
-                                    id="SeeGeneratedPlans"
-                                    variant="outlined"
-                                    className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings h-fit my-4 mx-auto"
-                                    onClick={() => setIsPlanModalOpen(true)}
-                                >
-                                    {t("seeGeneratedPlans")}
-                                </Button>
-                            )}
+
 
 
                             {/* Plan Modal */}

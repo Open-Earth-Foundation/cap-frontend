@@ -5,6 +5,7 @@ import PlanModal from "./PlanModal";
 import { useTranslation } from "react-i18next";
 import { ButtonMedium } from "./Texts/Button";
 import { Button } from "@mui/material";
+import { BodyLarge } from "./Texts/Body.jsx";
 
 const TopClimateActions = ({
     actions,
@@ -96,18 +97,11 @@ const TopClimateActions = ({
                 <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                     {t(`top${type}ClimateActions`)}
                 </h1>
+
+                {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
                 <Button
                     onClick={onGenerateActionPlansClick}
                     variant="outlined"
-                    sx={{
-                        borderColor: '#2351DC',
-                        '&:hover': {
-                            borderColor: '#2351DC',
-                        },
-                        textTransform: 'uppercase',
-                        borderRadius: '4px',
-                        padding: '16px',
-                    }}
                     disabled={isGenerating}
                 >
                     {isGenerating ? (
@@ -121,8 +115,27 @@ const TopClimateActions = ({
                         </ButtonMedium>
                     )}
                 </Button>
-            </div>
 
+                {/* See Generated Plans button */}
+                {generatedPlans && generatedPlans.length > 0 && (
+                    <Button
+                        id="SeeGeneratedPlans"
+                        variant="contained"
+                        sx={{
+                            backgroundColor: "#2351DC",
+                            '&:hover': {
+                                backgroundColor: "#2351DC",
+                            },
+                        }}
+                        onClick={() => setIsPlanModalOpen(true)}
+                    >
+                        <ButtonMedium>
+                            {t("seeGeneratedPlans")}
+                        </ButtonMedium>
+                    </Button>
+                )}
+
+            </div>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {topActions.map(({ action }, index) => (
@@ -213,16 +226,7 @@ const TopClimateActions = ({
                     </div>
                 ))}
             </div>
-            {
-                generatedPlans.length > 0 && (
-                    <button
-                        onClick={() => setIsPlansListModalOpen(true)}
-                        className="mt-6 flex items-center gap-2 px-4 py-2 bg-white text-primary border border-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-colors"
-                    >
-                        {t("seeGeneratedPlans")} ({generatedPlans.length})
-                    </button>
-                )
-            }
+
             <PlanModal
                 isOpen={isPlansListModalOpen}
                 onClose={() => setIsPlansListModalOpen(false)}
