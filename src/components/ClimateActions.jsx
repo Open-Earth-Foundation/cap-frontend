@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { ADAPTA_BRASIL_API } from "./constants.js";
 import { generateActionPlan } from "../utils/planCreator.js";
 import PlanModal from "./PlanModal.jsx";
-import ActionDetailsModal from "./ActionDetailsModal.jsx";
+import { ActionDrawer } from "./ActionDrawer.jsx";
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 import TopClimateActions from "./TopClimateActions.jsx";
@@ -20,6 +20,8 @@ import CityData from "./CityData.jsx";
 import { Button, IconButton } from "@mui/material";
 import { DownloadButton } from "./DownloadButton.jsx";
 import { ButtonMedium } from "./Texts/Button.jsx";
+import { ActionsTable } from "./ActionsTable.jsx";
+
 const ClimateActions = ({
     selectedCity,
     selectedLocode,
@@ -84,94 +86,9 @@ const ClimateActions = ({
         }
     }
 
-    const createTable = (
-        columns,
-        enableRowOrdering,
-        rankedData,
-        setRankedData,
-        type,
-    ) => {
-        return useMaterialReactTable({
-            localization: getLocalization(i18n.language),
-            autoResetPageIndex: false,
-            columns: [...columns],
-            data: rankedData,
-            enableRowOrdering,
-            enableRowDragging: enableRowOrdering,
-            enablePagination: false,
-            muiTableHeadCellProps: {
-                sx: {
-                    backgroundColor: "#E8EAFB",
-                },
-            },
-            muiRowDragHandleProps: ({ table }) => ({
-                onDragEnd: () => {
-                    const { draggingRow, hoveredRow } = table.getState();
-                    if (hoveredRow && draggingRow) {
-                        rankedData.splice(
-                            hoveredRow.index,
-                            0,
-                            rankedData.splice(draggingRow.index, 1)[0],
-                        );
-                        setRankedData([...rankedData]);
-                        saveNewRanking(type)(rankedData);
-                    }
-                },
-            }),
-            displayColumnDefOptions: {
-                'mrt-row-select': {
-                    size: 40,
-                    enableHiding: false,
-                    enableColumnActions: false,
-                    enableResizing: false,
-                    muiTableHeadCellProps: {
-                        align: 'center',
-                    },
-                },
-                'mrt-row-drag': {
-                    size: 40,
-                    enableHiding: false,
-                    enableColumnActions: false,
-                    enableResizing: false,
-                },
-            },
-            initialState: {
-                columnOrder: [
-                    ...(enableRowOrdering ? ['mrt-row-drag'] : []),
-                    'rank',
-                    'action',
-                    'sector',
-                    'reductionPotential',
-                    'costInvestmentNeeded',
-                    'timelineForImplementation',
-                ],
-            },
-        });
-    };
-
     const setSelectedActionByIndex = type => i => {
         setSelectedAction(type === MITIGATION ? mitigationData[i] : adaptationData[i]);
     }
-    const mitigationTable = createTable(
-        mitigationColumns(t, setSelectedActionByIndex(MITIGATION)),
-        enableRowOrdering,
-        mitigationData,
-        (newRanking) => {
-            setMitigationData(newRanking);
-            saveNewRanking(MITIGATION);
-        },
-        MITIGATION,
-    );
-    const adaptationTable = createTable(
-        adaptationColumns(t, setSelectedActionByIndex(ADAPTATION)),
-        enableRowOrdering,
-        adaptationData,
-        (newRanking) => {
-            setAdaptationData(newRanking);
-            saveNewRanking(ADAPTATION);
-        },
-        ADAPTATION,
-    );
 
     const onSaveRankings = async (type) => {
         setIsSaving(true);
@@ -269,10 +186,11 @@ const ClimateActions = ({
                 {[MITIGATION, ADAPTATION].map((type) => (
                     <TabPanel key={type}>
                         {selectedAction && (
-                            <ActionDetailsModal
-                                type={type}
-                                cityAction={selectedAction}
+                            <ActionDrawer
+                                action={selectedAction}
+                                isOpen={!!selectedAction}
                                 onClose={() => setSelectedAction(null)}
+                                t={t}
                             />
                         )}
 
@@ -363,11 +281,7 @@ const ClimateActions = ({
                                     {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
                                 </div>
                             </div>
-                            {/* Table */}
-                            < MRT_TableContainer
-                                table={isAdaptation(type) ? adaptationTable : mitigationTable}
-                            />
-
+                            <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} />
                             {/* See Generated Plans button */}
                             {generatedPlans && generatedPlans.length > 0 && (
                                 <Button

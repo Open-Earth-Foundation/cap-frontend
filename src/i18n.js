@@ -9,7 +9,7 @@ i18n
   .use(resourcesToBackend((language, namespace, callback) => {
     import(`./locales/${language}/${namespace}.json`)
       .then(resources => {
-        callback(null, resources);
+        callback(null, resources.default);
       })
       .catch(error => {
         console.log("error", JSON.stringify(error, null, 2));
@@ -19,6 +19,8 @@ i18n
   .init({
     supportedLngs: ['en', 'es', 'pt'],
     fallbackLng: 'en',
+    defaultNS: 'translation',
+    ns: ['translation'],
     detection: {
       order: ['queryString', 'cookie'],
       cache: ['cookie']
@@ -28,6 +30,9 @@ i18n
     },
     interpolation: {
       escapeValue: false, // React already does escaping
+    },
+    backend: {
+      loadPath: './locales/{{lng}}/{{ns}}.json',
     },
   });
 
