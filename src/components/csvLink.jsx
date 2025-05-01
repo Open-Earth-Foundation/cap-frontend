@@ -3,7 +3,7 @@ import { adaptationColumns, mitigationColumns } from "./columns";
 import { prepareCsvData } from "../utils/exportUtils";
 import { FiDownload } from "react-icons/fi";
 import { CSVLink } from "react-csv";
-
+import { ButtonMedium } from "./Texts/Button";
 export function CsvLink({ type, selectedCity, t, adaptationData, mitigationData }) {
 
 
@@ -33,10 +33,10 @@ export function CsvLink({ type, selectedCity, t, adaptationData, mitigationData 
             headers={headers}
             data={data}
             filename={filename}
-            className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] font-semibold download-csv download-table button"
+            className="flex justify-center gap-4 px-4 py-2"
         >
             <FiDownload className="mr-2" />
-            {t('downloadCsv')}
+            <ButtonMedium>{t('downloadCsv')}</ButtonMedium>
         </CSVLink>
     );
 }
