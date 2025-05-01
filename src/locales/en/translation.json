@@ -8,16 +8,16 @@
   "details": "Details",
   "selectActionsDescription": "Let's select the actions you would like to implement from the list. We will generate Implementation Plans for the selected actions. ",
   "selectActions": "Let's select actions to implement",
-  "topActionsTitle": "Top 20 actions for your city",
+  "topActionsTitle": "Top actions for your city",
   "topActionsDescription": "These are the top 40 actions we recommend based on your GHG inventory, Climate Risk Assessment, and City Context data. You will find 20 actions for Mitigation and 20 for Adaptation in their respective tabs. ",
-  "rankingList": "Ranking list of climate actions",
+  "rankingList": "Actions Ranking list of climate actions",
   "cancelSelection": "Cancel selection",
   "saveRanking": "SAVE CHANGES",
   "generatePlans": "Generate the implementation plans for selected actions",
   "mitigation": "Mitigation",
   "adaptation": "Adaptation",
-  "rankingListOfClimateActions": "Ranking list of climate actions",
-  "applyYourLocalExpertise": "Apply your local expertise to customize action priorities. Reorder based on your city's specific needs, feasibility, and potential impacts. Save your changes and download the complete table to share with stakeholders.",
+  "rankingListOfClimateActions": "Climate Actions Ranking",
+  "applyYourLocalExpertise": "Apply your local expertise to customize action priorities. Reorder based on your city's specific needs, feasibility, and potential impacts. You can also download the complete table to share with stakeholders.",
   "modifyRankings": "MODIFY RANKINGS",
   "cancelSorting": "CANCEL SORTING",
   "saveRankings": "SAVE CHANGES",
@@ -33,7 +33,7 @@
   "seeMoreDetails": "See more details",
   "generatePlan": "Generate Plan",
   "takeAction": "Take action. Drive impact. ",
-  "driveImpact": "Empower your city to prioritize climate actions that make a difference with data-driven insights.",
+  "driveImpact": "The goal of this tool is to recommend actions for your city based on your GHG Inventory, your Climate Risk Assessment and your City Context Data, and to propose an implementation plan for the actions.",
   "explanation": "Explanation",
   "explanationNotAvailable": "Explanation not available for this action",
   "available": "available",
@@ -184,5 +184,6 @@
     "<5 years": "Less than 5 years",
     "5-10 years": "5 to 10 years",
     ">10 years": "More than 10 years"
-  }
+  },
+  "climateActions": "Climate Actions"
 }

@@ -8,6 +8,7 @@ import { readFile } from "./utils/readWrite.js";
 import { ADAPTATION, MITIGATION } from "./utils/helpers.js";
 import { useTranslation } from "react-i18next";
 import { CITIES } from "./components/constants.js";
+import { ButtonMedium } from "./components/Texts/Button.jsx";
 
 const CityView = () => {
     const { cityName } = useParams();
@@ -53,8 +54,10 @@ const CityView = () => {
     return (
         <div className={"py-4"}>
             <Hero initialCity={validCity.value} />
-
             <div style={{ backgroundColor: "#fafafa" }} className="max-w-screen-xl mx-auto p-12">
+                <div className="flex mb-8">
+                    <ButtonMedium color="#2351DC">{t("climateActions")}</ButtonMedium>
+                </div>
 
                 <ClimateActions
                     selectedLocode={validCity.locode}
