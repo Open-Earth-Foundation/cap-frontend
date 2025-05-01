@@ -17,9 +17,9 @@ import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 import TopClimateActions from "./TopClimateActions.jsx";
 import CityData from "./CityData.jsx";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { DownloadButton } from "./DownloadButton.jsx";
-
+import { ButtonMedium } from "./Texts/Button.jsx";
 const ClimateActions = ({
     selectedCity,
     selectedLocode,
@@ -295,70 +295,75 @@ const ClimateActions = ({
                                     {enableRowSelection ? t("selectActionsDescription") : t("applyYourLocalExpertise")}
                                 </p>
                             </div>
+                            <div className="flex justify-end">
+                                {/* Modify button section */}
+                                <div className="flex justify-end">
 
-                            {/* Modify button section */}
-                            <div id="modify" className="modify-container">
-                                {!enableRowOrdering && (
-                                    <Button
-                                        className="flex items-center justify-center gap-4 mx-4 px-4 py-2"
-                                        variant="contained"
+                                    <IconButton
                                         sx={{
-                                            backgroundColor: "#2351DC",
-                                            '&:hover': {
-                                                backgroundColor: "#2351DC",
-                                            },
+                                            border: '1px solid #E8EAFB',
+                                            borderRadius: '4px',
+                                            padding: '8px 8px',
+                                            fontSize: '14px',
+                                            fontWeight: '600',
+                                            marginRight: '16px',
+                                            height: '40px',
+                                            backgroundColor: enableRowOrdering ? "#E8EAFB" : "white",
                                         }}
+                                        variant={enableRowOrdering ? "outlined" : "contained"}
+                                        disabled={enableRowOrdering}
                                         onClick={() => {
                                             setEnableRowSelection(false)
                                             setEnableRowOrdering(true)
                                         }}
                                     >
-                                        <MdOutlineLowPriority />
-                                        {t("clickToModify")}
-                                    </Button>
-                                )}
-                            </div>
+                                        <div className="flex items-center gap-2">
+                                            <MdOutlineLowPriority size={30} color={enableRowOrdering ? '#2351DC' : '#4B4C63'} />
+                                            <ButtonMedium color={enableRowOrdering ? '#2351DC' : '#4B4C63'}>{t("clickToModify")}</ButtonMedium>
+                                        </div>
+                                    </IconButton>
+                                </div>
 
-                            {/* Action buttons section */}
-                            <div className="flex justify-end gap-4 mb-8">
-                                {enableRowOrdering && (
-                                    <>
-                                        <Button
-                                            onClick={(data) => onSaveRankings(type, data)}
-                                            disabled={isSaving}
-                                            variant="contained"
-                                            sx={{
-                                                backgroundColor: "#2351DC",
-                                                '&:hover': {
+                                {/* Download and save buttons section */}
+                                <div className="flex justify-end gap-4 mb-8">
+                                    {enableRowOrdering && (
+                                        <>
+                                            <Button
+                                                onClick={(data) => onSaveRankings(type, data)}
+                                                disabled={isSaving}
+                                                variant="contained"
+                                                sx={{
                                                     backgroundColor: "#2351DC",
+                                                    '&:hover': {
+                                                        backgroundColor: "#2351DC",
+                                                    },
+                                                    borderRadius: "100px",
+                                                }}
+                                            >
+                                                {t("saveRankings")}
+                                            </Button>
+                                        </>
+                                    )}
+
+                                    {enableRowOrdering && (<>
+                                        <Button
+                                            onClick={() => setEnableRowOrdering(false)}
+                                            variant="text"
+                                            sx={{
+                                                color: "#2351DC",
+                                                '&:hover': {
+                                                    color: "#2351DC",
                                                 },
-                                                borderRadius: "100px",
                                             }}
                                         >
-                                            {t("saveRankings")}
-                                        </Button>
-                                    </>
-                                )}
+                                            {t("cancel").toUpperCase()}
+                                        </Button></>)}
 
-                                {enableRowOrdering && (<>
-                                    <Button
-                                        onClick={() => setEnableRowOrdering(false)}
-                                        variant="text"
-                                        sx={{
-                                            color: "#2351DC",
-                                            '&:hover': {
-                                                color: "#2351DC",
-                                            },
-                                        }}
-                                    >
-                                        {t("cancel").toUpperCase()}
-                                    </Button></>)}
-
-                                {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
+                                    {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
+                                </div>
                             </div>
-
                             {/* Table */}
-                            <MRT_TableContainer
+                            < MRT_TableContainer
                                 table={isAdaptation(type) ? adaptationTable : mitigationTable}
                             />
 
@@ -383,10 +388,10 @@ const ClimateActions = ({
                                 isListView={false}
                             />
                         </div>
-                    </TabPanel>
+                    </TabPanel >
                 ))}
-            </Tabs>
-        </div>
+            </Tabs >
+        </div >
     </>
     );
 };
