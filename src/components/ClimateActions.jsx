@@ -21,6 +21,7 @@ import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { MRT_Localization_PT } from 'material-react-table/locales/pt';
 import TopClimateActions from "./TopClimateActions.jsx";
 import CityData from "./CityData.jsx";
+import { Button } from "@mui/material";
 
 const ClimateActions = ({
     selectedCity,
@@ -36,7 +37,6 @@ const ClimateActions = ({
     const [selectedAction, setSelectedAction] = useState();
     const [selectedActions, setSelectedActions] = useState([]);
     const [enableRowSelection, setEnableRowSelection] = useState(false);
-    const [stage, setStage] = useState(0)
     const [generatedPlans, setGeneratedPlans] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
@@ -76,19 +76,6 @@ const ClimateActions = ({
         }
     };
 
-    // Function to handle selected rows
-    const handleSelectedRowsChange = (type, rowSelection) => {
-        // Get the data based on type
-        const data = isAdaptation(type) ? adaptationData : mitigationData;
-
-        // Get selected rows based on rowSelection object
-        const selectedRows = Object.keys(rowSelection)
-            .filter(key => rowSelection[key] === true)
-            .map(key => data[parseInt(key, 10)]);
-
-        setSelectedActions(selectedRows);
-    };
-
     const getLocalization = (language) => {
         switch (language) {
             case 'es':
@@ -107,9 +94,6 @@ const ClimateActions = ({
         setRankedData,
         type,
     ) => {
-        // Determine which row selection state to use based on type
-        const rowSelection = isAdaptation(type) ? adaptationRowSelection : mitigationRowSelection;
-        const setRowSelection = isAdaptation(type) ? setAdaptationRowSelection : setMitigationRowSelection;
         return useMaterialReactTable({
             localization: getLocalization(i18n.language),
             autoResetPageIndex: false,
@@ -117,14 +101,6 @@ const ClimateActions = ({
             data: rankedData,
             enableRowOrdering,
             enableRowDragging: enableRowOrdering,
-            enableRowSelection: enableRowSelection,
-            state: {
-                rowSelection
-            },
-            onRowSelectionChange: (updatedRowSelection) => {
-                setRowSelection(updatedRowSelection); // Update the row selection state
-                handleSelectedRowsChange(type, updatedRowSelection); // Process selected rows
-            },
             enablePagination: false,
             muiTableHeadCellProps: {
                 sx: {
@@ -166,7 +142,6 @@ const ClimateActions = ({
                 columnOrder: [
                     ...(enableRowOrdering ? ['mrt-row-drag'] : []),
                     'rank',
-                    ...(enableRowSelection ? ['mrt-row-select'] : []),
                     'action',
                     'sector',
                     'reductionPotential',
@@ -217,14 +192,12 @@ const ClimateActions = ({
 
     const getCsvColumns = (type) => {
         const columns = isAdaptation(type) ? adaptationColumns(t) : mitigationColumns(t);
-        console.log('Original columns:', columns);
 
         // Create a copy of columns and remove unnecessary ones
         const filteredColumns = [...columns];
         filteredColumns.splice(2, 1); // Remove the third item
         filteredColumns.pop(); // Remove the last item
 
-        console.log('Filtered columns:', filteredColumns);
         return filteredColumns;
     };
 
@@ -233,7 +206,6 @@ const ClimateActions = ({
         const data = isAdaptation(type) ? adaptationData : mitigationData;
 
         const { headers, data: csvData } = prepareCsvData(data, columns, t);
-        console.log(`${type} CSV Data:`, { headers, csvData });
         return { headers, data: csvData };
     };
 
@@ -253,15 +225,6 @@ const ClimateActions = ({
         );
     };
 
-    // Reset row selection when enableRowSelection changes
-    useEffect(() => {
-        if (!enableRowSelection) {
-            setMitigationRowSelection({});
-            setAdaptationRowSelection({});
-            setSelectedActions([]);
-        }
-    }, [enableRowSelection]);
-
     useEffect(() => {
         const fetchActions = async () => {
             try {
@@ -269,70 +232,14 @@ const ClimateActions = ({
                     `${ADAPTA_BRASIL_API}/climate-actions?city=${selectedCity}&type=adaptation`,
                 );
                 const adaptationData = await adaptationResponse.json();
-                console.log(
-                    "%c COMPLETE API RESPONSE FOR ADAPTATION",
-                    "background: #ff0000; color: white; font-size: 20px",
-                );
-                console.log(JSON.stringify(adaptationData, null, 2));
-                if (adaptationData.length > 0) {
-                    console.log(
-                        "%c FIRST ADAPTATION ACTION COMPLETE STRUCTURE",
-                        "background: #00ff00; color: black; font-size: 20px",
-                    );
-                    console.log(JSON.stringify(adaptationData[0], null, 2));
-                    console.log(
-                        "%c ADAPTATION ACTION KEYS (ALL FIELDS)",
-                        "background: #0000ff; color: white; font-size: 20px",
-                    );
-                    console.log(Object.keys(adaptationData[0]));
 
-                    console.log(
-                        "%c ADAPTATION ACTION FIELDS WITH DATA TYPES",
-                        "background: #9900ff; color: white; font-size: 20px",
-                    );
-                    const fieldTypes = {};
-                    Object.entries(adaptationData[0]).forEach(([key, value]) => {
-                        fieldTypes[key] = typeof value;
-                        if (Array.isArray(value)) fieldTypes[key] = "array";
-                        if (value === null) fieldTypes[key] = "null";
-                    });
-                    console.log(fieldTypes);
-                }
                 setAdaptationData(adaptationData);
 
                 const mitigationResponse = await fetch(
                     `${ADAPTA_BRASIL_API}/climate-actions?city=${selectedCity}&type=mitigation`,
                 );
                 const mitigationData = await mitigationResponse.json();
-                console.log(
-                    "%c COMPLETE API RESPONSE FOR MITIGATION",
-                    "background: #ff0000; color: white; font-size: 20px",
-                );
-                console.log(JSON.stringify(mitigationData, null, 2));
-                if (mitigationData.length > 0) {
-                    console.log(
-                        "%c FIRST MITIGATION ACTION COMPLETE STRUCTURE",
-                        "background: #00ff00; color: black; font-size: 20px",
-                    );
-                    console.log(JSON.stringify(mitigationData[0], null, 2));
-                    console.log(
-                        "%c MITIGATION ACTION KEYS (ALL FIELDS)",
-                        "background: #0000ff; color: white; font-size: 20px",
-                    );
-                    console.log(Object.keys(mitigationData[0]));
 
-                    console.log(
-                        "%c MITIGATION ACTION FIELDS WITH DATA TYPES",
-                        "background: #9900ff; color: white; font-size: 20px",
-                    );
-                    const fieldTypes = {};
-                    Object.entries(mitigationData[0]).forEach(([key, value]) => {
-                        fieldTypes[key] = typeof value;
-                        if (Array.isArray(value)) fieldTypes[key] = "array";
-                        if (value === null) fieldTypes[key] = "null";
-                    });
-                    console.log(fieldTypes);
-                }
                 setMitigationData(mitigationData);
                 setIsLoading(false);
             } catch (error) {
@@ -426,19 +333,24 @@ const ClimateActions = ({
 
                             {/* Modify button section */}
                             <div id="modify" className="modify-container">
-                                <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-                                    {stage === 0 ? t("wantToModify") : t("wantToDownload")}
-                                </p>
-                                {!enableRowOrdering && stage === 0 && (
-                                    <button
-                                        className="flex items-center justify-center gap-4 mx-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings h-fit"
+                                {!enableRowOrdering && (
+                                    <Button
+                                        className="flex items-center justify-center gap-4 mx-4 px-4 py-2"
+                                        variant="contained"
+                                        sx={{
+                                            backgroundColor: "#2351DC",
+                                            '&:hover': {
+                                                backgroundColor: "#2351DC",
+                                            },
+                                        }}
                                         onClick={() => {
                                             setEnableRowSelection(false)
                                             setEnableRowOrdering(true)
                                         }}
                                     >
+                                        <MdOutlineLowPriority />
                                         {t("clickToModify")}
-                                    </button>
+                                    </Button>
                                 )}
                             </div>
 
@@ -446,41 +358,40 @@ const ClimateActions = ({
                             <div className="flex justify-end gap-4 mb-8">
                                 {enableRowOrdering && (
                                     <>
-                                        <button
-                                            className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings"
-                                            onClick={() => setEnableRowOrdering(false)}
-                                        >
-                                            <div>
-                                                <MdOutlineLowPriority />
-                                            </div>
-                                            {t("cancelSorting")}
-                                        </button>
-                                        <button
-                                            className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold save-rankings"
+                                        <Button
                                             onClick={(data) => onSaveRankings(type, data)}
                                             disabled={isSaving}
+                                            variant="contained"
+                                            sx={{
+                                                backgroundColor: "#2351DC",
+                                                '&:hover': {
+                                                    backgroundColor: "#2351DC",
+                                                },
+                                                borderRadius: "100px",
+                                            }}
                                         >
-                                            {isSaving ? (
-                                                <GiSandsOfTime className="text-lg" />
-                                            ) : (
-                                                <MdOutlineSave className="text-lg" />
-                                            )}
                                             {t("saveRankings")}
-                                        </button>
+                                        </Button>
                                     </>
                                 )}
 
-                                {stage === 1 && (<>
-                                    <button
-                                        onClick={() => setStage(0)}
-                                        className="flex justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold download-csv download-table"
+                                {enableRowOrdering && (<>
+                                    <Button
+                                        onClick={() => setEnableRowOrdering(false)}
+                                        variant="text"
+                                        sx={{
+                                            color: "#2351DC",
+                                            '&:hover': {
+                                                color: "#2351DC",
+                                            },
+                                        }}
                                     >
-                                        <MdArrowBack />
-                                        {t("goBack").toUpperCase()}
-                                    </button>
-                                    {/* Adaptation CSVLink */}
+                                        {t("cancel").toUpperCase()}
+                                    </Button></>)}
+                                {/* Adaptation CSVLink */}
+                                {!enableRowOrdering && <>
                                     {renderCsvLink(type)}
-                                    <button
+                                    <Button
                                         onClick={() =>
                                             exportToPDF(
                                                 selectedCity,
@@ -494,8 +405,8 @@ const ClimateActions = ({
                                     >
                                         <FiFileText />
                                         {t("exportPdf")}
-                                    </button>
-                                </>)}
+                                    </Button>
+                                </>}
                             </div>
 
                             {/* Table */}
@@ -503,51 +414,16 @@ const ClimateActions = ({
                                 table={isAdaptation(type) ? adaptationTable : mitigationTable}
                             />
 
-                            {/* Select Actions button - only show when not in selection or ordering mode */}
-                            {!enableRowSelection && !enableRowOrdering && (
-                                <button
-                                    id="selectActions"
-                                    className={`flex items-center justify-center gap-4 px-4 py-2 rounded border border-solid font-semibold modify-rankings h-fit my-4 mx-auto   
-                                    ${generatedPlans.length === 0 ? 'button' : 'text-[#4B4C63] border-[#E8EAFB]'}`}
-                                    onClick={() => {
-                                        setStage(1)
-                                        setEnableRowSelection(true)
-                                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the top of the screen
-                                    }}
-                                >
-                                    {t("selectActions")}
-                                </button>
-                            )}
-
-                            {/* Generate Plans button - only show in selection mode and not ordering mode */}
-                            {enableRowSelection && !enableRowOrdering && (
-                                <button
-                                    id="generatePlans"
-                                    className={`flex items-center justify-center gap-4 px-4 py-2 rounded border border-solid button font-semibold modify-rankings h-fit my-4 mx-auto ${isGenerating || !hasSelectedActions(type) ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed' : 'text-[#4B4C63] border-[#E8EAFB] hover:bg-gray-50'
-                                        }`}
-                                    onClick={() => generatePlans(type)}
-                                    disabled={isGenerating || !hasSelectedActions(type)}
-                                >
-                                    {isGenerating ? (
-                                        <>
-                                            <span className="animate-pulse">⟳</span>
-                                            {t("generating")}...
-                                        </>
-                                    ) : (
-                                        t("generatePlans")
-                                    )}
-                                </button>
-                            )}
-
                             {/* See Generated Plans button */}
                             {generatedPlans && generatedPlans.length > 0 && (
-                                <button
+                                <Button
                                     id="SeeGeneratedPlans"
+                                    variant="outlined"
                                     className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings h-fit my-4 mx-auto"
                                     onClick={() => setIsPlanModalOpen(true)}
                                 >
                                     {t("seeGeneratedPlans")}
-                                </button>
+                                </Button>
                             )}
 
 
