@@ -3,12 +3,29 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { Box, Typography, Chip, Stack, IconButton } from "@mui/material";
 import { RiExpandDiagonalFill } from "react-icons/ri";
+import { MdDragIndicator } from "react-icons/md";
 import {
     useReactTable,
     getCoreRowModel,
     flexRender,
 } from "@tanstack/react-table";
 import { ActionDrawer } from "./ActionDrawer"; // TODO NINA
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export const ACTION_TYPES = {
     Mitigation: "mitigation",
@@ -33,10 +50,84 @@ export const BarVisualization = ({ value, total }) => {
     );
 };
 
-export function ActionsTable({ type, actions, t }) {
+const SortableRow = ({ row, children, enableRowOrdering }) => {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({
+        id: row.original.actionId,
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        cursor: enableRowOrdering ? 'grab' : 'default',
+        position: 'relative',
+        zIndex: isDragging ? 1 : 0,
+        backgroundColor: isDragging ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
+    };
+
+    return (
+        <Box
+            component="tr"
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...(enableRowOrdering ? listeners : {})}
+        >
+            {children}
+        </Box>
+    );
+};
+
+export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRowOrderChange }) {
     const lng = i18next.language;
     const [selectedAction, setSelectedAction] = useState(null);
     const [isTranslationsReady, setIsTranslationsReady] = useState(false);
+    const [items, setItems] = useState(actions || []);
+
+    useEffect(() => {
+        setItems(actions || []);
+    }, [actions]);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setItems((items) => {
+                const oldIndex = items.findIndex((item) => item.actionId === active.id);
+                const newIndex = items.findIndex((item) => item.actionId === over.id);
+
+                const newItems = arrayMove(items, oldIndex, newIndex);
+                // Update actionPriority for each item
+                const updatedItems = newItems.map((item, index) => ({
+                    ...item,
+                    actionPriority: index + 1
+                }));
+
+                if (onRowOrderChange) {
+                    onRowOrderChange(updatedItems);
+                }
+                return updatedItems;
+            });
+        }
+    };
 
     useEffect(() => {
         // Check if translations are ready
@@ -64,19 +155,30 @@ export function ActionsTable({ type, actions, t }) {
             accessorKey: "actionPriority",
             header: translate("ranking"),
             cell: ({ row }) => (
-                <Chip
-                    label={row.original.actionPriority}
-                    color="primary"
-                    size="small"
-                />
+                <Stack direction="row" spacing={1} alignItems="center">
+                    {enableRowOrdering && (
+                        <MdDragIndicator
+                            style={{
+                                cursor: 'grab',
+                                color: '#666',
+                                fontSize: '20px'
+                            }}
+                        />
+                    )}
+                    <Chip
+                        label={row.original.actionPriority}
+                        color="primary"
+                        size="small"
+                    />
+                </Stack>
             ),
         },
         {
-            accessorKey: "action.ActionName",
+            accessorKey: "actionName",
             header: translate("action-name"),
             cell: ({ row }) => (
                 <Stack spacing={1} alignItems="flex-start">
-                    <Typography fontWeight="bold">{row.original.action.ActionName}</Typography>
+                    <Typography fontWeight="bold">{row.original.actionName}</Typography>
                     <Typography variant="body2" color="text.secondary">
                         {row.original.action.Description}
                     </Typography>
@@ -156,7 +258,6 @@ export function ActionsTable({ type, actions, t }) {
                     size="small"
                     onClick={() => {
                         setSelectedAction(row.original.action)
-                        console.log("Open drawer for action:", row.original);
                     }}
                 >
                     <RiExpandDiagonalFill />
@@ -166,7 +267,7 @@ export function ActionsTable({ type, actions, t }) {
     ];
 
     const table = useReactTable({
-        data: Array.isArray(actions) ? actions : [],
+        data: items,
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
@@ -174,6 +275,48 @@ export function ActionsTable({ type, actions, t }) {
     if (!actions || actions.length === 0) {
         return <Box p={2}>{translate("no-actions-found")}</Box>;
     }
+
+    const tableContent = (
+        <Box component="table" sx={{ width: "100%" }}>
+            <Box component="thead">
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <Box component="tr" key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                            <Box
+                                component="th"
+                                key={header.id}
+                                sx={{
+                                    padding: "8px",
+                                    textAlign: "left",
+                                    borderBottom: "1px solid #e2e8f0",
+                                }}
+                            >
+                                {flexRender(header.column.columnDef.header, header.getContext())}
+                            </Box>
+                        ))}
+                    </Box>
+                ))}
+            </Box>
+            <Box component="tbody">
+                {table.getRowModel().rows.map((row) => (
+                    <SortableRow key={row.original.actionId} row={row} enableRowOrdering={enableRowOrdering}>
+                        {row.getVisibleCells().map((cell) => (
+                            <Box
+                                component="td"
+                                key={cell.id}
+                                sx={{
+                                    padding: "8px",
+                                    borderBottom: "1px solid #e2e8f0",
+                                }}
+                            >
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </Box>
+                        ))}
+                    </SortableRow>
+                ))}
+            </Box>
+        </Box>
+    );
 
     return (
         <Box sx={{ overflowX: 'auto' }}>
@@ -185,45 +328,22 @@ export function ActionsTable({ type, actions, t }) {
                     t={t}
                 />
             )}
-            <Box component="table" sx={{ width: "100%" }}>
-                <Box component="thead">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <Box component="tr" key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <Box
-                                    component="th"
-                                    key={header.id}
-                                    sx={{
-                                        padding: "8px",
-                                        textAlign: "left",
-                                        borderBottom: "1px solid #e2e8f0",
-                                    }}
-                                >
-                                    {flexRender(header.column.columnDef.header, header.getContext())}
-                                </Box>
-                            ))}
-                        </Box>
-                    ))}
-                </Box>
-                <Box component="tbody">
-                    {table.getRowModel().rows.map((row) => (
-                        <Box component="tr" key={row.id}>
-                            {row.getVisibleCells().map((cell) => (
-                                <Box
-                                    component="td"
-                                    key={cell.id}
-                                    sx={{
-                                        padding: "8px",
-                                        borderBottom: "1px solid #e2e8f0",
-                                    }}
-                                >
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </Box>
-                            ))}
-                        </Box>
-                    ))}
-                </Box>
-            </Box>
+            {enableRowOrdering ? (
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                >
+                    <SortableContext
+                        items={items.map(item => item.actionId)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {tableContent}
+                    </SortableContext>
+                </DndContext>
+            ) : (
+                tableContent
+            )}
         </Box>
     );
 }
