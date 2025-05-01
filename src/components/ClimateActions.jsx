@@ -193,6 +193,7 @@ const ClimateActions = ({
     useEffect(() => {
         const fetchActions = async () => {
             try {
+                setIsLoading(true);
                 const adaptationResponse = await fetch(
                     `${ADAPTA_BRASIL_API}/climate-actions?city=${selectedCity}&type=adaptation`,
                 );
