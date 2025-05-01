@@ -31,7 +31,7 @@ const ClimateActions = ({
     setAdaptationData,
 }) => {
     const [enableRowOrdering, setEnableRowOrdering] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [selectedAction, setSelectedAction] = useState();
     const [selectedActions, setSelectedActions] = useState([]);
@@ -282,17 +282,7 @@ const ClimateActions = ({
                                 </div>
                             </div>
                             <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} enableRowOrdering={enableRowOrdering} />
-                            {/* See Generated Plans button */}
-                            {generatedPlans && generatedPlans.length > 0 && (
-                                <Button
-                                    id="SeeGeneratedPlans"
-                                    variant="outlined"
-                                    className="flex items-center justify-center gap-4 px-4 py-2 text-[#4B4C63] rounded border border-solid border-[#E8EAFB] button font-semibold modify-rankings h-fit my-4 mx-auto"
-                                    onClick={() => setIsPlanModalOpen(true)}
-                                >
-                                    {t("seeGeneratedPlans")}
-                                </Button>
-                            )}
+
 
 
                             {/* Plan Modal */}
