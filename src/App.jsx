@@ -54,7 +54,7 @@ const CityView = () => {
         <div className={"py-4"}>
             <Hero initialCity={validCity.value} />
 
-            <div className="max-w-screen-xl mx-auto p-12">
+            <div style={{ backgroundColor: "#fafafa" }} className="max-w-screen-xl mx-auto p-12">
 
                 <ClimateActions
                     selectedLocode={validCity.locode}

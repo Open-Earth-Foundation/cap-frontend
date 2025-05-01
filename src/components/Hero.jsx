@@ -1,27 +1,29 @@
 import React from 'react';
 import CityDropdown from './CityDropdown';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { BodyLarge } from './Texts/Body';
+import { DisplaySmall } from './Texts/Display';
 
-const Hero = ({onSearch}) => {
-    const {t} = useTranslation();
+const Hero = ({ onSearch }) => {
+    const { t } = useTranslation();
 
     return (
-        <div className="container mx-auto px-4 py-36 flex justify-center items-center gap-32 max-w-[1200px]">
+        <div
+            className="container mx-auto px-8 py-8 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 max-w-[100%] mx-4 md:my-8">
             {/* Left column with text */}
-            <div className="flex-1 flex flex-col justify-center items-start gap-6">
-                <h1 className="w-full">
-                  <span className="block text-5xl font-bold leading-tight font-poppins">
+            <div className="flex-1 flex flex-col justify-center items-start gap-4 md:gap-6 w-full md:w-auto">
+                <DisplaySmall color="#000000">
                     {t('takeAction')}
-                </span>
-                </h1>
+                </DisplaySmall>
 
-                <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+
+                <BodyLarge>
                     {t('driveImpact')}
-                </p>
+                </BodyLarge>
             </div>
 
             {/* Right column with search */}
-            <div className="flex-1">
+            <div className="flex-1 w-full md:w-auto px-8">
                 <div className="relative">
                     <div className="absolute left-3 top-[13px] z-10 pointer-events-none">
                         <svg
@@ -77,7 +79,7 @@ const Hero = ({onSearch}) => {
                     />
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
