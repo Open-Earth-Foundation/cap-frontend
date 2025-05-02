@@ -9,7 +9,7 @@ const Hero = ({ onSearch }) => {
 
     return (
         <div
-            className="container mx-auto px-8 py-8 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 max-w-[100%] mx-4 md:my-8 h-[70vh]">
+            className="container mx-auto px-16 py-8 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 max-w-[100%] mx-4 md:my-8 h-[70vh]">
             {/* Left column with text */}
             <div className="flex-1 flex flex-col justify-center items-start gap-4 md:gap-6 w-full md:w-auto">
                 <DisplaySmall color="#000000">
