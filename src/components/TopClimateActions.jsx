@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { FiLoader } from "react-icons/fi";
 import { getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toTitleCase } from "../utils/helpers.js";
 import PlanModal from "./PlanModal";
 import { useTranslation } from "react-i18next";
@@ -7,6 +6,8 @@ import { ButtonMedium } from "./Texts/Button";
 import { Button } from "@mui/material";
 import { BodyLarge } from "./Texts/Body.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
+import { TbSparkles } from "react-icons/tb";
+import { MdOutlineRemoveRedEye, MdBookmark } from "react-icons/md";
 
 const TopClimateActions = ({
     actions,
@@ -111,9 +112,12 @@ const TopClimateActions = ({
                                 <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
                             </div>
                         ) : (
-                            <ButtonMedium color="#2351DC">
-                                {t("generatePlan")}
-                            </ButtonMedium>
+                            <div className="flex items-center gap-2">
+                                <TbSparkles />
+                                <ButtonMedium color="#2351DC">
+                                    {t("generatePlan")}
+                                </ButtonMedium>
+                            </div>
                         )}
                     </Button>
                 </div>
@@ -130,9 +134,12 @@ const TopClimateActions = ({
                         }}
                         onClick={() => setIsPlanModalOpen(true)}
                     >
-                        <ButtonMedium>
-                            {t("seeGeneratedPlans")}
-                        </ButtonMedium>
+                        <div className="flex items-center gap-2">
+                            <MdOutlineRemoveRedEye />
+                            <ButtonMedium>
+                                {t("seeGeneratedPlans")}
+                            </ButtonMedium>
+                        </div>
                     </Button>
                 )}
 
@@ -153,7 +160,10 @@ const TopClimateActions = ({
                             <span className="text-4xl font-bold text-gray-900 font-poppins">
                                 #{index + 1}
                             </span>
-                            <ButtonMedium color="#2351DC">{t("expertsChoice")}</ButtonMedium>
+                            <div className="flex items-center gap-2">
+                                <MdBookmark color="#2351DC" />
+                                <ButtonMedium color="#2351DC">{t("expertsChoice")}</ButtonMedium>
+                            </div>
                         </div>
 
                         {/* Description */}
@@ -209,7 +219,7 @@ const TopClimateActions = ({
                         <div className="flex justify-between items-center pt-4">
                             <button
                                 onClick={() => setSelectedAction(action)}
-                                className="text-primary hover:text-primary-dark font-semibold"
+                                className="text-primary hover:text-primary-dark font-semibold underline"
                             >
                                 {t("seeMoreDetails")}
                             </button>

@@ -26,7 +26,7 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
+import { MdOutlineBookmark } from "react-icons/md";
 export const ACTION_TYPES = {
     Mitigation: "mitigation",
     Adaptation: "adaptation"
@@ -178,7 +178,9 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
             header: translate("action-name"),
             cell: ({ row }) => (
                 <Stack spacing={1} alignItems="flex-start">
-                    <Typography fontWeight="bold">{row.original.actionName}</Typography>
+                    <div className="flex items-center gap-2 ">
+                        {row.index < 3 && <MdOutlineBookmark className="text-[#2351DC]" />} <Typography fontWeight="bold">{row.original.actionName}</Typography>
+                    </div>
                     <Typography variant="body2" color="text.secondary">
                         {row.original.action.Description}
                     </Typography>
