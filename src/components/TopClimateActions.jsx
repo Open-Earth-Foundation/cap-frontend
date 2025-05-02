@@ -3,7 +3,7 @@ import { getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToT
 import PlanModal from "./PlanModal";
 import { useTranslation } from "react-i18next";
 import { ButtonMedium } from "./Texts/Button";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import { BodyLarge } from "./Texts/Body.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
 import { TbSparkles } from "react-icons/tb";
@@ -99,28 +99,28 @@ const TopClimateActions = ({
                 <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                     {t(`top${type}ClimateActions`)}
                 </h1>
-                <div className="flex items-center gap-2">
-                    {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
-                    <Button
-                        onClick={onGenerateActionPlansClick}
-                        variant="outlined"
-                        disabled={isGenerating}
-                    >
-                        {isGenerating ? (
-                            <div className="flex items-center gap-2">
-                                <CircularProgress indeterminate size={20} />
-                                <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <TbSparkles />
-                                <ButtonMedium color="#2351DC">
-                                    {t("generatePlan")}
-                                </ButtonMedium>
-                            </div>
-                        )}
-                    </Button>
-                </div>
+
+                {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
+                <Button
+                    onClick={onGenerateActionPlansClick}
+                    variant="outlined"
+                    disabled={isGenerating}
+                >
+                    {isGenerating ? (
+                        <div className="flex items-center gap-2 py-3 px-1">
+                            <CircularProgress indeterminate size={24} />
+                            <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-2 py-3 px-1">
+                            <TbSparkles size={24} />
+                            <ButtonMedium color="#2351DC">
+                                {t("generatePlan")}
+                            </ButtonMedium>
+                        </div>
+                    )}
+                </Button>
+
                 {/* See Generated Plans button */}
                 {generatedPlans && generatedPlans.length > 0 && (
                     <Button
@@ -144,6 +144,7 @@ const TopClimateActions = ({
                 )}
 
             </div>
+            <BodyLarge color="black">{t("topClimateActionsDescription")}</BodyLarge>
             {/*Top Mitigatons Cards*/}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {topActions.map(({ action }, index) => (
@@ -185,12 +186,14 @@ const TopClimateActions = ({
                                         ? t("adaptationPotential")
                                         : t("reductionPotential")}
                                 </span>
+
                                 <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
                                     {isAdaptation(type)
                                         ? toTitleCase(action?.AdaptationEffectiveness)
                                         : getReductionPotential(action)}
                                 </p>
                             </div>
+                            <Divider flexItem />
                         </div>
 
                         {/* Details */}

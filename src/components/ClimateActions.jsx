@@ -21,7 +21,7 @@ import { Button, IconButton } from "@mui/material";
 import { DownloadButton } from "./DownloadButton.jsx";
 import { ButtonMedium } from "./Texts/Button.jsx";
 import { ActionsTable } from "./ActionsTable.jsx";
-import { MdOutlineBookmark } from "react-icons/md";
+import { BodyLarge } from "./Texts/Body.jsx";
 
 const ClimateActions = ({
     selectedCity,
