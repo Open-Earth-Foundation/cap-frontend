@@ -4,6 +4,7 @@ import { CsvLink } from "./csvLink.jsx";
 import { exportToPDF } from "../utils/exportUtils.js";
 import { useState } from "react";
 import { ButtonMedium } from "./Texts/Button.jsx";
+import { MdKeyboardArrowDown } from "react-icons/md";
 
 export function DownloadButton({ type, selectedCity, t, adaptationData, mitigationData, generatedPlans }) {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -17,20 +18,40 @@ export function DownloadButton({ type, selectedCity, t, adaptationData, mitigati
         setAnchorEl(null);
     };
 
+    const handleDownload = (format) => {
+        if (format === 'pdf') {
+            exportToPDF(
+                selectedCity,
+                mitigationData,
+                adaptationData,
+                generatedPlans,
+                t
+            );
+        }
+        handleClose();
+    };
+
     return (
         <>
             <IconButton
                 onClick={handleClick}
+                size="small"
                 sx={{
-                    color: '#4B4C63',
                     border: '1px solid #E8EAFB',
                     borderRadius: '4px',
-                    padding: '8px'
+                    padding: '4px 16px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    marginRight: '16px',
+                    height: '40px',
+                    backgroundColor: "white",
+                    color: '#4B4C63',
                 }}
             >
                 <div className="flex items-center gap-2">
                     <FiDownload />
                     <ButtonMedium>{t("download")}</ButtonMedium>
+                    <MdKeyboardArrowDown />
                 </div>
             </IconButton>
             <Menu
@@ -51,16 +72,7 @@ export function DownloadButton({ type, selectedCity, t, adaptationData, mitigati
                     />
                 </MenuItem>
                 <MenuItem
-                    onClick={() => {
-                        exportToPDF(
-                            selectedCity,
-                            mitigationData,
-                            adaptationData,
-                            generatedPlans,
-                            t
-                        );
-                        handleClose();
-                    }}
+                    onClick={() => handleDownload('pdf')}
                 >
                     <a className="flex justify-center gap-4 px-4 py-2">
                         <FiFileText className="mr-2" />

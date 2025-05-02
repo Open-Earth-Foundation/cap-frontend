@@ -226,7 +226,7 @@ const ClimateActions = ({
                                         sx={{
                                             border: '1px solid #E8EAFB',
                                             borderRadius: '4px',
-                                            padding: '8px 8px',
+                                            padding: '4px 16px',
                                             fontSize: '14px',
                                             fontWeight: '600',
                                             marginRight: '16px',
@@ -261,6 +261,7 @@ const ClimateActions = ({
                                                         backgroundColor: "#2351DC",
                                                     },
                                                     borderRadius: "100px",
+                                                    padding: '4px 16px',
                                                 }}
                                             >
                                                 {t("saveRankings")}
@@ -277,6 +278,7 @@ const ClimateActions = ({
                                                 '&:hover': {
                                                     color: "#2351DC",
                                                 },
+                                                padding: '4px 16px',
                                             }}
                                         >
                                             {t("cancel").toUpperCase()}

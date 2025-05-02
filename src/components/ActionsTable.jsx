@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { Box, Typography, Chip, Stack, IconButton } from "@mui/material";
 import { RiExpandDiagonalFill } from "react-icons/ri";
-import { MdDragIndicator } from "react-icons/md";
+import { MdDragIndicator, MdKeyboardArrowDown } from "react-icons/md";
 import {
     useReactTable,
     getCoreRowModel,
