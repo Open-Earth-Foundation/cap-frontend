@@ -205,7 +205,7 @@ const ClimateActions = ({
                                 setSelectedAction={setSelectedAction}
                                 selectedCity={selectedCity}
                                 setGeneratedPlan={setGeneratedPlans}
-                                generatedPlans={generatedPlans}
+                                generatedPlans={[1, 2, 3]}
                                 setGeneratedPlans={setGeneratedPlans}
                                 generatePlans={generatePlans}
                             />

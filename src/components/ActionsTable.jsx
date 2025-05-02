@@ -156,6 +156,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             accessorKey: "actionPriority",
             header: translate("ranking"),
+            size: 100,
             cell: ({ row }) => (
                 <Stack direction="row" spacing={1} alignItems="center">
                     {enableRowOrdering && (
@@ -174,10 +175,11 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             accessorKey: "actionName",
             header: translate("action-name"),
+            size: 300,
             cell: ({ row }) => (
-                <Stack spacing={1} alignItems="flex-start">
+                <Stack spacing={1} alignItems="flex-start" className="max-w-[200px]">
                     <div className="flex items-center gap-2 ">
-                        {row.index < 3 && <MdOutlineBookmark fontSize="16px" className="text-[#2351DC]" />}
+                        {row.index < 3 && <MdOutlineBookmark size="16px" className="text-[#2351DC]" />}
                         <BodyMedium fontWeight="bold">{row.original.actionName}</BodyMedium>
                     </div>
                 </Stack>
@@ -188,6 +190,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "hazards-covered",
                     header: translate("hazards-covered"),
+                    size: 150,
                     cell: ({ row }) => {
                         const action = row.original;
                         return (
@@ -202,6 +205,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "adaptation-effectiveness",
                     header: translate("effectiveness"),
+                    size: 150,
                     cell: ({ row }) => {
                         const action = row.original;
                         const effectivenessMap = {
@@ -218,6 +222,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "sector",
                     header: translate("sector-label"),
+                    size: 200,
                     cell: ({ row }) => {
                         const action = row.original;
                         return (
@@ -233,6 +238,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "reduction-potential",
                     header: translate("ghg-reduction"),
+                    size: 200,
                     cell: ({ row }) => {
                         const action = row.original;
                         const totalReduction = Object.values(action.action.GHGReductionPotential)
@@ -247,6 +253,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             id: "actions",
             header: "",
+            size: 80,
             cell: ({ row }) => (
                 <IconButton
                     size="small"
@@ -280,7 +287,6 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                                 component="th"
                                 key={header.id}
                                 sx={{
-                                    padding: "8px",
                                     textAlign: "left",
                                     borderBottom: "1px solid #e2e8f0",
                                 }}
@@ -299,7 +305,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                                 component="td"
                                 key={cell.id}
                                 sx={{
-                                    padding: "8px",
+                                    padding: "4px",
                                     borderBottom: "1px solid #e2e8f0",
                                 }}
                             >

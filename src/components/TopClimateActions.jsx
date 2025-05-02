@@ -99,50 +99,50 @@ const TopClimateActions = ({
                 <h1 className="text-2xl font-normal text-gray-900 font-poppins">
                     {t(`top${type}ClimateActions`)}
                 </h1>
-
-                {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
-                <Button
-                    onClick={onGenerateActionPlansClick}
-                    variant="outlined"
-                    disabled={isGenerating}
-                >
-                    {isGenerating ? (
-                        <div className="flex items-center gap-2 py-3 px-1">
-                            <CircularProgress indeterminate size={24} />
-                            <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-2 py-3 px-1">
-                            <TbSparkles size={24} />
-                            <ButtonMedium color="#2351DC">
-                                {t("generatePlan")}
-                            </ButtonMedium>
-                        </div>
-                    )}
-                </Button>
-
-                {/* See Generated Plans button */}
-                {generatedPlans && generatedPlans.length > 0 && (
+                <div className="flex items-center gap-4">
+                    {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
                     <Button
-                        id="SeeGeneratedPlans"
-                        variant="contained"
-                        sx={{
-                            backgroundColor: "#2351DC",
-                            '&:hover': {
-                                backgroundColor: "#2351DC",
-                            },
-                        }}
-                        onClick={() => setIsPlanModalOpen(true)}
+                        onClick={onGenerateActionPlansClick}
+                        variant="outlined"
+                        disabled={isGenerating}
                     >
-                        <div className="flex items-center gap-2">
-                            <MdOutlineRemoveRedEye />
-                            <ButtonMedium>
-                                {t("seeGeneratedPlans")}
-                            </ButtonMedium>
-                        </div>
+                        {isGenerating ? (
+                            <div className="flex items-center gap-2 py-3 px-1">
+                                <CircularProgress indeterminate size={24} />
+                                <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2 py-3 px-1">
+                                <TbSparkles size={24} />
+                                <ButtonMedium color="#2351DC">
+                                    {t("generatePlan")}
+                                </ButtonMedium>
+                            </div>
+                        )}
                     </Button>
-                )}
 
+                    {/* See Generated Plans button */}
+                    {generatedPlans && generatedPlans.length > 0 && (
+                        <Button
+                            id="SeeGeneratedPlans"
+                            variant="contained"
+                            sx={{
+                                backgroundColor: "#2351DC",
+                                '&:hover': {
+                                    backgroundColor: "#2351DC",
+                                },
+                            }}
+                            onClick={() => setIsPlanModalOpen(true)}
+                        >
+                            <div className="flex items-center gap-2 py-3 px-1">
+                                <MdOutlineRemoveRedEye size={24} />
+                                <ButtonMedium>
+                                    {t("seeGeneratedPlans")}
+                                </ButtonMedium>
+                            </div>
+                        </Button>
+                    )}
+                </div>
             </div>
             <BodyLarge color="black">{t("topClimateActionsDescription")}</BodyLarge>
             {/*Top Mitigatons Cards*/}
