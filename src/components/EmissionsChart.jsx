@@ -63,8 +63,8 @@ const EmissionsCharts = ({ city }) => {
   const formatValue = (value) => `${value.toFixed(2)} ${t('tCO2e')}`;
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-8">
+    <div className="space-y-8 ">
+      <div className="space-y-8 p-4">
         <TitleMedium>{t('emissionsBySector')}</TitleMedium>
         <div className="h-[260px]">
           <ResponsivePie
@@ -92,7 +92,7 @@ const EmissionsCharts = ({ city }) => {
 
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-8 p-4" >
         <TitleMedium>{t('emissionsByScope')}</TitleMedium>
         <div className="h-[260px]">
           <ResponsivePie

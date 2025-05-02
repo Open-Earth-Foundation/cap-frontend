@@ -9,17 +9,17 @@ export function MoreView({ cityData }) {
 
     return <div className="pt-6">
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 py-6">
             <div className="col-span-2">
                 <TitleLarge>{t('emissionsBreakdown')}</TitleLarge>
-                <Card>
+                <Card className="my-2">
                     <EmissionsCharts city={cityData} />
                 </Card>
             </div>
 
             <div className="pb-6">
                 <TitleLarge>{t('climateRisks')}</TitleLarge>
-                <Card>
+                <Card className="p-4 my-2">
                     {Array.isArray(cityData?.ccra) && cityData.ccra
                         .filter(risk => risk?.normalised_risk_score !== null)
                         .sort((a, b) => (b?.normalised_risk_score || 0) - (a?.normalised_risk_score || 0))
