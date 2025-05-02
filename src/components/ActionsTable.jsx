@@ -90,7 +90,6 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
     const [selectedAction, setSelectedAction] = useState(null);
     const [isTranslationsReady, setIsTranslationsReady] = useState(false);
     const [items, setItems] = useState(actions || []);
-
     useEffect(() => {
         setItems(actions || []);
     }, [actions]);

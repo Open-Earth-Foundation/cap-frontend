@@ -158,6 +158,9 @@ const ClimateActions = ({
     return (<>
         <CityData selectedLocode={selectedLocode} />
         <div className="max-w-screen-xl mx-auto p-12">
+            <div className="flex mb-8">
+                <ButtonMedium color="#2351DC">{t("climateActions")}</ButtonMedium>
+            </div>
             <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
                 {t("topActionsTitle")}
             </h1>

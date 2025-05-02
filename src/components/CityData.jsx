@@ -7,6 +7,8 @@ import { MoreView } from "./MoreView";
 import { ButtonMedium } from "./Texts/Button";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { MdOutlineLocationOn } from "react-icons/md";
+import { Button } from "@mui/material";
+
 const CityData = ({ selectedLocode }) => {
     const { t } = useTranslation();
     const [cityData, setCityData] = useState({});
@@ -33,14 +35,14 @@ const CityData = ({ selectedLocode }) => {
             </div>}
             {cityData?.name && <LessView cityData={cityData} />}
             {showMore ? <MoreView cityData={cityData} /> : null}
-            <div className="mt-4">
-                <div onClick={toggleView} className="flex justify-center items-center gap-2">
+            <div className="my-9 flex justify-center items-center gap-2" >
+                <Button onClick={toggleView} color="black">
                     {showMore ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
                     <ButtonMedium>
                         {showMore ? t('viewLess') : t('viewMore')}
                     </ButtonMedium>
-                </div>
-            </div>
+                </Button>
+            </div >
         </>
     );
 };
