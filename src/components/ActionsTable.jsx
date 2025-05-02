@@ -27,6 +27,9 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { MdOutlineBookmark } from "react-icons/md";
+import { BiExpandAlt } from "react-icons/bi";
+import { BodyMedium } from "./Texts/Body.jsx";
+
 export const ACTION_TYPES = {
     Mitigation: "mitigation",
     Adaptation: "adaptation"
@@ -164,11 +167,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                             }}
                         />
                     )}
-                    <Chip
-                        label={row.original.actionPriority}
-                        color="primary"
-                        size="small"
-                    />
+                    <BodyMedium>#{row.original.actionPriority}</BodyMedium>
                 </Stack>
             ),
         },
@@ -178,11 +177,9 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
             cell: ({ row }) => (
                 <Stack spacing={1} alignItems="flex-start">
                     <div className="flex items-center gap-2 ">
-                        {row.index < 3 && <MdOutlineBookmark className="text-[#2351DC]" />} <Typography fontWeight="bold">{row.original.actionName}</Typography>
+                        {row.index < 3 && <MdOutlineBookmark fontSize="16px" className="text-[#2351DC]" />}
+                        <BodyMedium fontWeight="bold">{row.original.actionName}</BodyMedium>
                     </div>
-                    <Typography variant="body2" color="text.secondary">
-                        {row.original.action.Description}
-                    </Typography>
                 </Stack>
             ),
         },
@@ -226,12 +223,8 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                         return (
                             <Stack direction="row" spacing={1} flexWrap="wrap">
                                 {action.action.Sector.map((sector) => (
-                                    <Chip
-                                        key={sector}
-                                        label={translate(`sectors.${sector}`)}
-                                        color="primary"
-                                        size="small"
-                                    />
+                                    <BodyMedium key={sector}>{translate(`sectors.${sector}`)}</BodyMedium>
+
                                 ))}
                             </Stack>
                         );
@@ -261,7 +254,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                         setSelectedAction(row.original.action)
                     }}
                 >
-                    <RiExpandDiagonalFill />
+                    <BiExpandAlt />
                 </IconButton>
             ),
         },
