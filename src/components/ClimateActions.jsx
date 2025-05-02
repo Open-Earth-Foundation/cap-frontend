@@ -282,7 +282,19 @@ const ClimateActions = ({
                                     {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
                                 </div>
                             </div>
-                            <ActionsTable type={type} actions={isAdaptation(type) ? adaptationData : mitigationData} t={t} enableRowOrdering={enableRowOrdering} />
+                            <ActionsTable
+                                type={type}
+                                actions={isAdaptation(type) ? adaptationData : mitigationData}
+                                t={t}
+                                enableRowOrdering={enableRowOrdering}
+                                onRowOrderChange={(updatedItems) => {
+                                    if (isAdaptation(type)) {
+                                        setAdaptationData(updatedItems);
+                                    } else {
+                                        setMitigationData(updatedItems);
+                                    }
+                                }}
+                            />
 
 
 
