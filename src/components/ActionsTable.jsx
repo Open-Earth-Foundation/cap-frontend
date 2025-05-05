@@ -179,7 +179,9 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
             cell: ({ row }) => (
                 <Stack spacing={1} alignItems="flex-start" className="max-w-[200px]">
                     <div className="flex items-center gap-2 ">
-                        {row.index < 3 && <MdOutlineBookmark size="16px" className="text-[#2351DC]" />}
+                        {row.index < 3 && <MdOutlineBookmark
+                            className="text-[#2351DC] w-4 h-4 flex-shrink-0"
+                        />}
                         <BodyMedium fontWeight="bold">{row.original.actionName}</BodyMedium>
                     </div>
                 </Stack>
