@@ -175,7 +175,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             accessorKey: "actionName",
             header: translate("action-name"),
-            size: 400,
+            size: 300,
             cell: ({ row }) => (
                 <Stack spacing={1} alignItems="flex-start">
                     <div className="flex items-center gap-2 ">
@@ -279,7 +279,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
     }
 
     const tableContent = (
-        <Box component="table" sx={{ width: "100%" }}>
+        <Box component="table" sx={{ width: "100%", tableLayout: "fixed" }}>
             <Box component="thead">
                 {table.getHeaderGroups().map((headerGroup) => (
                     <Box component="tr" key={headerGroup.id}>
@@ -288,8 +288,17 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                                 component="th"
                                 key={header.id}
                                 sx={{
+                                    padding: "8px",
                                     textAlign: "left",
                                     borderBottom: "1px solid #e2e8f0",
+                                    width: header.column.columnDef.size || header.column.columnDef.width || 'auto',
+                                    minWidth: header.column.columnDef.size || header.column.columnDef.width || 'auto',
+                                    maxWidth: header.column.columnDef.size || header.column.columnDef.width || 'auto',
+                                    ...(header.column.id === "sector" && {
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }),
                                 }}
                             >
                                 {flexRender(header.column.columnDef.header, header.getContext())}
@@ -308,6 +317,14 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                                 sx={{
                                     padding: "4px",
                                     borderBottom: "1px solid #e2e8f0",
+                                    width: cell.column.columnDef.size || cell.column.columnDef.width || 'auto',
+                                    minWidth: cell.column.columnDef.size || cell.column.columnDef.width || 'auto',
+                                    maxWidth: cell.column.columnDef.size || cell.column.columnDef.width || 'auto',
+                                    ...(cell.column.id === "sector" && {
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }),
                                 }}
                             >
                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
