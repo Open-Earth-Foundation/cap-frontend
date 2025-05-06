@@ -36,7 +36,9 @@ export const toSentenceCase = (text) => {
     return withSpaces.charAt(0).toUpperCase() + withSpaces.slice(1).toLowerCase();
 };
 
-export const isAdaptation = type => type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase();
+export const isAdaptation = type => {
+    return type?.toLowerCase && type.toLowerCase() === ADAPTATION.toLowerCase() || type.includes(ADAPTATION)
+};
 
 export const getNestedValue = (obj, path) => {
     if (!path) return null;

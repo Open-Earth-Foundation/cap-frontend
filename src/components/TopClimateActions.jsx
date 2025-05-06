@@ -200,7 +200,7 @@ const TopClimateActions = ({
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{t("sector")}</span>
-                                <span className="text-gray-600 font-semibold">
+                                <span className="text-gray-600 font-semibold" style={{ textAlign: "right" }}>
                                     {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action?.Hazard, t)}
                                 </span>
                             </div>

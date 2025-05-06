@@ -187,5 +187,15 @@
     ">10 years": "Más de 10 años"
   },
   "climateActions": "Acciones Climáticas",
-  "brazil": "Brasil"
+  "brazil": "Brasil",
+  "energy_security": "Seguridad Energética",
+  "biodiversity": "Biodiversidad",
+  "railway_infrastructure": "Infraestructura ferroviaria",
+  "port_infrastructure": "Infraestructura portuaria",
+  "geo-hydrological_disasters": "Desastres geo-hidrológicos",
+  "public_health": "Salud Pública",
+  "water_resources": "Recursos Hídricos",
+  "food_security": "Seguridad Alimentaria",
+  "road_infrastructure": "Infraestructura vial",
+  "sea_level_rise": "Aumento del nivel del mar"
 }

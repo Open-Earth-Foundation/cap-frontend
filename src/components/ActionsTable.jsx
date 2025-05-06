@@ -37,12 +37,12 @@ export const ACTION_TYPES = {
 
 export const BarVisualization = ({ value, total }) => {
     return (
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} width="250px">
             {Array.from({ length: total }).map((_, index) => (
                 <Box
                     key={index}
                     sx={{
-                        width: '16px',
+                        width: '32px',
                         height: '4px',
                         bgcolor: index < value ? 'primary.main' : 'grey.200',
                         borderRadius: '4px'
@@ -156,7 +156,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             accessorKey: "actionPriority",
             header: translate("ranking"),
-            size: 100,
+            size: 50,
             cell: ({ row }) => (
                 <Stack direction="row" spacing={1} alignItems="center">
                     {enableRowOrdering && (
@@ -175,9 +175,9 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
         {
             accessorKey: "actionName",
             header: translate("action-name"),
-            size: 300,
+            size: 400,
             cell: ({ row }) => (
-                <Stack spacing={1} alignItems="flex-start" className="max-w-[200px]">
+                <Stack spacing={1} alignItems="flex-start">
                     <div className="flex items-center gap-2 ">
                         {row.index < 3 && <MdOutlineBookmark
                             className="text-[#2351DC] w-4 h-4 flex-shrink-0"
@@ -224,7 +224,7 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "sector",
                     header: translate("sector-label"),
-                    size: 200,
+                    size: 100,
                     cell: ({ row }) => {
                         const action = row.original;
                         return (
@@ -240,7 +240,6 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
                 {
                     id: "reduction-potential",
                     header: translate("ghg-reduction"),
-                    size: 200,
                     cell: ({ row }) => {
                         const action = row.original;
                         const totalReduction = Object.values(action.action.GHGReductionPotential)

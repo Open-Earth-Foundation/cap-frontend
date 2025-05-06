@@ -81,7 +81,7 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
                 }
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#00001F' }}>
                     {t("climateActionDetails")}
                 </Typography>
@@ -127,16 +127,16 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
                         </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography color="text.secondary">
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
+                        <Typography color="text.secondary" >
                             {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
                         </Typography>
-                        <Typography fontWeight="medium" color="text.secondary">
+                        <Typography fontWeight="medium" color="text.secondary" textAlign="right">
                             {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action.Hazard, t)}
                         </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
                         <Typography color="text.secondary">
                             {t("estimatedCost")}
                         </Typography>
@@ -145,7 +145,7 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
                         </Typography>
                     </Box>
 
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
                         <Typography color="text.secondary">
                             {t("implementationTime")}
                         </Typography>
