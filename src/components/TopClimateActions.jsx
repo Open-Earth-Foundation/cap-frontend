@@ -122,7 +122,7 @@ const TopClimateActions = ({
                     </Button>
 
                     {/* See Generated Plans button */}
-                    {generatedPlans && generatedPlans.length > 0 && (
+                    {!isGenerating && generatedPlans && generatedPlans.length > 0 && (
                         <Button
                             id="SeeGeneratedPlans"
                             variant="contained"

@@ -56,7 +56,7 @@ const ClimateActions = ({
         const plans = await Promise.all(selectedActions.map((action) => {
             return generateActionPlan({ action: action.action, city: selectedCity });
         }));
-        setGeneratedPlans(plans);
+        setGeneratedPlans(prevPlans => [...plans, ...prevPlans]);
         // setIsGenerating(false);
         // setEnableRowSelection(false)
     }
