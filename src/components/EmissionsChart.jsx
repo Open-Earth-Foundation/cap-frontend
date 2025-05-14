@@ -5,7 +5,7 @@ import { TitleMedium } from './Texts/Title';
 
 const EmissionsCharts = ({ city }) => {
   const { t } = useTranslation();
-  console.log('city', city);
+
   const sectorData = [
     {
       id: t('stationary_energy'),
@@ -73,6 +73,7 @@ const EmissionsCharts = ({ city }) => {
             innerRadius={0.5}
             padAngle={0.7}
             cornerRadius={3}
+            arcLinkLabelsSkipAngle={5}
             activeOuterRadiusOffset={8}
             borderWidth={1}
             borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
@@ -103,6 +104,7 @@ const EmissionsCharts = ({ city }) => {
             cornerRadius={3}
             activeOuterRadiusOffset={8}
             borderWidth={1}
+            arcLinkLabelsSkipAngle={5}
             borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
             enableArcLabels={false}
             colors={{ datum: 'data.color' }}
