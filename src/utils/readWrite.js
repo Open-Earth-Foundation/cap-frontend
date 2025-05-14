@@ -6,12 +6,6 @@ import {
 import { CITIES } from "../components/constants.js";
 import i18next from "i18next";
 
-console.log("AWS Region:", "VITE_AWS_REGION");
-console.log("AWS Access Key ID:", "VITE_AWS_ACCESS_KEY_ID");
-console.log("AWS S3 Bucket ID:", "VITE_AWS_S3_BUCKET_ID");
-console.log("AWS Region:", "VITE_AWS_REGION");
-console.log("AWS Secret Access Key:", "VITE_AWS_SECRET_ACCESS_KEY");
-
 const awsRegion = "us-east-2";
 const awsAccessKeyId = "VITE_AWS_ACCESS_KEY_ID";
 const awsSecretAccessKey = "VITE_AWS_SECRET_ACCESS_KEY";
