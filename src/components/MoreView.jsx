@@ -30,7 +30,7 @@ export function MoreView({ cityData }) {
                                 : riskScore >= 0.34
                                     ? 'bg-yellow-500'
                                     : 'bg-blue-500';
-                            console.log('risk?.keyimpact', JSON.stringify(risk?.keyimpact));// TODO NINA
+
                             return (
                                 <div key={i} className="mt-3">
                                     <p className="text-sm mb-1">

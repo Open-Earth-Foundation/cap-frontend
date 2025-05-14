@@ -5,7 +5,7 @@ import { TitleMedium } from './Texts/Title';
 
 const EmissionsCharts = ({ city }) => {
   const { t } = useTranslation();
-
+  console.log('city', city);
   const sectorData = [
     {
       id: t('stationary_energy'),
@@ -28,13 +28,13 @@ const EmissionsCharts = ({ city }) => {
     {
       id: t('ippu'),
       label: t('ippu'),
-      value: city.ippuEmissions / 1000,
+      value: city.industrialProcessEmissions / 1000,
       color: '#CFAE53'
     },
     {
       id: t('afolu'),
       label: t('afolu'),
-      value: city.agricultureEmissions / 1000,
+      value: city.landUseEmissions / 1000,
       color: '#D45252'
     },
   ];
