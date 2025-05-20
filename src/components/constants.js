@@ -2,6 +2,7 @@ export const CITIES = [
   { value: "Aracruz", label: "Aracruz", locode: "BR ACZ" },
   { value: "Arapiraca", label: "Arapiraca", locode: "BR ARC" },
   { value: "Altamira", label: "Altamira", locode: "BR ATM" },
+  { value: "Barcarena", label: "Barcarena", locode: "BR BCA" },
   { value: "Boa Vista", label: "Boa Vista", locode: "BR BVB" },
   { value: "Cajazeiras", label: "Cajazeiras", locode: "BR CAJ" },
   { value: "Crato", label: "Crato", locode: "BR CAT" },
