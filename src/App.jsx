@@ -84,7 +84,7 @@ const App = () => {
             <div className="flex flex-col min-h-screen bg-white">
                 <header className="bg-primary text-white p-4">
                     <div className="container mx-auto max-w-[1160px] flex justify-between items-center">
-                        <h1 className="text-xl font-semibold">CityCatalyst CAP</h1>
+                        <h1 className="text-xl font-semibold">CityCatalyst HIAP</h1>
                         <div>
                             <button onClick={() => changeLanguage("en")} className="mx-1">
                                 EN
@@ -132,7 +132,7 @@ const App = () => {
 
                 <footer className="bg-gray-100 py-4 mt-auto">
                     <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-                        &copy; 2024 CityCatalyst CAP | All Rights Reserved
+                        &copy; 2024 CityCatalyst HIAP | All Rights Reserved
                     </div>
                 </footer>
             </div>
