@@ -9,6 +9,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import { MapPin } from "lucide-react";
 import { toTitleCase } from "../utils/helpers.js";
+import { useTranslation } from "react-i18next";
 
 // Custom hook to fit bounds
 const FitBoundsToPolygon = ({ polygon }) => {
@@ -32,6 +33,7 @@ const FitBoundsToPolygon = ({ polygon }) => {
 };
 
 const CityMap = ({ selectedCity }) => {
+  const { t } = useTranslation();
   const [cityCoordinates, setCityCoordinates] = useState(null);
   const [cityPolygon, setCityPolygon] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ const CityMap = ({ selectedCity }) => {
     const fetchCityData = async () => {
       try {
         const apiUrl = `https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(
-          selectedCity,
+          selectedCity
         )},&format=json&polygon_geojson=1&addressdetails=1&countrycodes=br`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -96,7 +98,9 @@ const CityMap = ({ selectedCity }) => {
     if (loading) {
       return (
         <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-          <p className="text-gray-600">Loading map for {toTitleCase(selectedCity)}...</p>
+          <p className="text-gray-600">
+            {t("cityMap.loading", { city: toTitleCase(selectedCity) })}
+          </p>
         </div>
       );
     }
@@ -104,7 +108,7 @@ const CityMap = ({ selectedCity }) => {
     if (error) {
       return (
         <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
-          <p className="text-red-500">Error loading map: {error}</p>
+          <p className="text-red-500">{t("cityMap.error", { error })}</p>
         </div>
       );
     }
@@ -113,7 +117,7 @@ const CityMap = ({ selectedCity }) => {
       return (
         <div className="flex items-center justify-center h-[400px] bg-gray-100 rounded-lg">
           <p className="text-gray-600">
-            No coordinates available for {toTitleCase(selectedCity)}.
+            {t("cityMap.noCoordinates", { city: toTitleCase(selectedCity) })}
           </p>
         </div>
       );
@@ -153,7 +157,9 @@ const CityMap = ({ selectedCity }) => {
     <div className="w-full space-y-8">
       <div className="flex items-center gap-4">
         <MapPin className="w-6 h-6 text-blue-600" />
-        <h2 className="text-2xl font-bold text-[#232640] font-poppins">{toTitleCase(selectedCity)}, {t('brazil')}</h2>
+        <h2 className="text-2xl font-bold text-[#232640] font-poppins">
+          {toTitleCase(selectedCity)}, {t("brazil")}
+        </h2>
       </div>
       <div className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
         {renderContent()}

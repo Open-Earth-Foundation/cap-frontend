@@ -153,119 +153,127 @@ export function ActionsTable({ type, actions, t, enableRowOrdering = false, onRo
     const isAdaptation = type === ACTION_TYPES.Adaptation;
 
     const columns = [
-        {
-            accessorKey: "actionPriority",
-            header: translate("ranking"),
-            size: 50,
-            cell: ({ row }) => (
-                <Stack direction="row" spacing={1} alignItems="center">
-                    {enableRowOrdering && (
-                        <MdDragIndicator
-                            style={{
-                                cursor: 'grab',
-                                color: '#666',
-                                fontSize: '20px'
-                            }}
-                        />
-                    )}
-                    <BodyMedium>#{row.original.actionPriority}</BodyMedium>
-                </Stack>
-            ),
-        },
-        {
-            accessorKey: "actionName",
-            header: translate("action-name"),
-            size: 300,
-            cell: ({ row }) => (
-                <Stack spacing={1} alignItems="flex-start">
-                    <div className="flex items-center gap-2 ">
-                        {row.index < 3 && <MdOutlineBookmark
-                            className="text-[#2351DC] w-4 h-4 flex-shrink-0"
-                        />}
-                        <BodyMedium fontWeight="bold">{row.original.actionName}</BodyMedium>
-                    </div>
-                </Stack>
-            ),
-        },
-        ...(isAdaptation
-            ? [
-                {
-                    id: "hazards-covered",
-                    header: translate("hazards-covered"),
-                    size: 150,
-                    cell: ({ row }) => {
-                        const action = row.original;
-                        return (
-                            <Chip
-                                label={`${action.action.Hazard.length} ${translate("hazards")}`}
-                                color="warning"
-                                size="small"
-                            />
-                        );
-                    },
-                },
-                {
-                    id: "adaptation-effectiveness",
-                    header: translate("effectiveness"),
-                    size: 150,
-                    cell: ({ row }) => {
-                        const action = row.original;
-                        const effectivenessMap = {
-                            low: 1,
-                            medium: 2,
-                            high: 3,
-                        };
-                        const blueBars = effectivenessMap[action.action.AdaptationEffectiveness] || 0;
-                        return <BarVisualization value={blueBars} total={3} />;
-                    },
-                },
-            ]
-            : [
-                {
-                    id: "sector",
-                    header: translate("sector-label"),
-                    size: 100,
-                    cell: ({ row }) => {
-                        const action = row.original;
-                        return (
-                            <Stack direction="row" spacing={1} flexWrap="wrap">
-                                {action.action.Sector.map((sector) => (
-                                    <BodyMedium key={sector}>{translate(`sectors.${sector}`)}</BodyMedium>
-
-                                ))}
-                            </Stack>
-                        );
-                    },
-                },
-                {
-                    id: "reduction-potential",
-                    header: translate("ghg-reduction"),
-                    cell: ({ row }) => {
-                        const action = row.original;
-                        const totalReduction = Object.values(action.action.GHGReductionPotential)
-                            .filter(value => value !== null)
-                            .map(value => parseFloat(value))
-                            .reduce((sum, value) => sum + value, 0);
-                        const blueBars = Math.min(Math.ceil(totalReduction / 20), 5);
-                        return <BarVisualization value={blueBars} total={5} />;
-                    },
-                },
-            ]),
-        {
-            id: "actions",
-            header: "",
-            size: 80,
-            cell: ({ row }) => (
-                <IconButton
+      {
+        accessorKey: "actionPriority",
+        header: translate("ranking"),
+        size: 50,
+        cell: ({ row }) => (
+          <Stack direction="row" spacing={1} alignItems="center">
+            {enableRowOrdering && (
+              <MdDragIndicator
+                style={{
+                  cursor: "grab",
+                  color: "#666",
+                  fontSize: "20px",
+                }}
+              />
+            )}
+            <BodyMedium>#{row.original.actionPriority}</BodyMedium>
+          </Stack>
+        ),
+      },
+      {
+        accessorKey: "actionName",
+        header: translate("action-name"),
+        size: 300,
+        cell: ({ row }) => (
+          <Stack spacing={1} alignItems="flex-start">
+            <div className="flex items-center gap-2 ">
+              {row.index < 3 && (
+                <MdOutlineBookmark className="text-[#2351DC] w-4 h-4 flex-shrink-0" />
+              )}
+              <BodyMedium fontWeight="bold">
+                {row.original.action.ActionName}
+              </BodyMedium>
+            </div>
+          </Stack>
+        ),
+      },
+      ...(isAdaptation
+        ? [
+            {
+              id: "hazards-covered",
+              header: translate("hazards-covered"),
+              size: 150,
+              cell: ({ row }) => {
+                const action = row.original;
+                return (
+                  <Chip
+                    label={`${action.action.Hazard.length} ${translate(
+                      "hazards"
+                    )}`}
+                    color="warning"
                     size="small"
-                    onClick={() => {
-                        setSelectedAction(row.original.action)
-                    }}
-                >
-                    <BiExpandAlt />
-                </IconButton>
-            ),
-        },
+                  />
+                );
+              },
+            },
+            {
+              id: "adaptation-effectiveness",
+              header: translate("effectiveness"),
+              size: 150,
+              cell: ({ row }) => {
+                const action = row.original;
+                const effectivenessMap = {
+                  low: 1,
+                  medium: 2,
+                  high: 3,
+                };
+                const blueBars =
+                  effectivenessMap[action.action.AdaptationEffectiveness] || 0;
+                return <BarVisualization value={blueBars} total={3} />;
+              },
+            },
+          ]
+        : [
+            {
+              id: "sector",
+              header: translate("sector-label"),
+              size: 100,
+              cell: ({ row }) => {
+                const action = row.original;
+                return (
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    {action.action.Sector.map((sector) => (
+                      <BodyMedium key={sector}>
+                        {translate(`sectors.${sector}`)}
+                      </BodyMedium>
+                    ))}
+                  </Stack>
+                );
+              },
+            },
+            {
+              id: "reduction-potential",
+              header: translate("ghg-reduction"),
+              cell: ({ row }) => {
+                const action = row.original;
+                const totalReduction = Object.values(
+                  action.action.GHGReductionPotential
+                )
+                  .filter((value) => value !== null)
+                  .map((value) => parseFloat(value))
+                  .reduce((sum, value) => sum + value, 0);
+                const blueBars = Math.min(Math.ceil(totalReduction / 20), 5);
+                return <BarVisualization value={blueBars} total={5} />;
+              },
+            },
+          ]),
+      {
+        id: "actions",
+        header: "",
+        size: 80,
+        cell: ({ row }) => (
+          <IconButton
+            size="small"
+            onClick={() => {
+              setSelectedAction(row.original.action);
+            }}
+          >
+            <BiExpandAlt />
+          </IconButton>
+        ),
+      },
     ];
 
     const table = useReactTable({

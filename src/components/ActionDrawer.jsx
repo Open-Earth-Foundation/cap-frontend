@@ -70,132 +70,150 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
     };
 
     return (
-        <Drawer
-            anchor="right"
-            open={isOpen}
-            onClose={onClose}
-            PaperProps={{
-                sx: {
-                    width: '600px',
-                    p: 3
-                }
-            }}
-        >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#00001F' }}>
-                    {t("climateActionDetails")}
-                </Typography>
-                <IconButton onClick={onClose} size="small">
-                    <FiX />
-                </IconButton>
+      <Drawer
+        anchor="right"
+        open={isOpen}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            width: "600px",
+            p: 3,
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", color: "#00001F" }}
+          >
+            {t("climateActionDetails")}
+          </Typography>
+          <IconButton onClick={onClose} size="small">
+            <FiX />
+          </IconButton>
+        </Box>
+
+        <Divider sx={{ mb: 3 }} />
+
+        {action.Explanation && (
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1, color: "#00001F" }}>
+              {t("explanation")}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {action.Explanation}
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 1, color: "#232640" }}>
+            {action.ActionName}
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            {action.Description}
+          </Typography>
+
+          <Divider sx={{ mb: 3 }} />
+
+          {renderReductionBars()}
+
+          <Stack spacing={2} sx={{ mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography color="text.secondary">
+                {isAdaptation(action.ActionType)
+                  ? t("adaptationPotential")
+                  : t("reductionPotential")}
+              </Typography>
+              <Typography fontWeight="medium" color="text.secondary">
+                {isAdaptation(action.ActionType)
+                  ? toTitleCase(t(action.AdaptationEffectiveness))
+                  : `${getReductionPotential(action)}%`}
+              </Typography>
             </Box>
 
-            <Divider sx={{ mb: 3 }} />
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography color="text.secondary">
+                {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
+              </Typography>
+              <Typography
+                fontWeight="medium"
+                color="text.secondary"
+                textAlign="right"
+              >
+                {joinToTitleCase(action?.Sector, t) ||
+                  joinToTitleCase(action.Hazard, t)}
+              </Typography>
+            </Box>
 
-            {action.Explanation && (
-                <Box sx={{ mb: 3 }}>
-                    <Typography variant="h6" sx={{ mb: 1, color: '#00001F' }}>
-                        {t("explanation")}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        {action.Explanation}
-                    </Typography>
-                </Box>
-            )}
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography color="text.secondary">
+                {t("estimatedCost")}
+              </Typography>
+              <Typography fontWeight="medium" color="text.secondary">
+                {toTitleCase(t(action.CostInvestmentNeeded))}
+              </Typography>
+            </Box>
 
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography color="text.secondary">
+                {t("implementationTime")}
+              </Typography>
+              <Typography fontWeight="medium" color="text.secondary">
+                {t(getTimelineTranslationKey(action.TimelineForImplementation))}
+              </Typography>
+            </Box>
+          </Stack>
+
+          <Divider sx={{ mb: 3 }} />
+
+          {action.Impacts && (
             <Box sx={{ mb: 3 }}>
-                <Typography variant="h6" sx={{ mb: 1, color: '#232640' }}>
-                    {action.ActionName}
-                </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-                    {action.Description}
-                </Typography>
-
-                <Divider sx={{ mb: 3 }} />
-
-                {renderReductionBars()}
-
-                <Stack spacing={2} sx={{ mb: 3 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography color="text.secondary">
-                            {isAdaptation(action.ActionType) ? t("adaptationPotential") : t("reductionPotential")}
-                        </Typography>
-                        <Typography fontWeight="medium" color="text.secondary">
-                            {isAdaptation(action.ActionType)
-                                ? toTitleCase(action.AdaptationEffectiveness)
-                                : `${getReductionPotential(action)}%`}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
-                        <Typography color="text.secondary" >
-                            {isAdaptation(action.ActionType) ? t("hazard") : t("sector")}
-                        </Typography>
-                        <Typography fontWeight="medium" color="text.secondary" textAlign="right">
-                            {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action.Hazard, t)}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
-                        <Typography color="text.secondary">
-                            {t("estimatedCost")}
-                        </Typography>
-                        <Typography fontWeight="medium" color="text.secondary">
-                            {toTitleCase(t(action.CostInvestmentNeeded))}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
-                        <Typography color="text.secondary">
-                            {t("implementationTime")}
-                        </Typography>
-                        <Typography fontWeight="medium" color="text.secondary">
-                            {t(getTimelineTranslationKey(action.TimelineForImplementation))}
-                        </Typography>
-                    </Box>
-                </Stack>
-
-                <Divider sx={{ mb: 3 }} />
-
-                {action.Impacts && (
-                    <Box sx={{ mb: 3 }}>
-                        <Typography variant="h6" sx={{ mb: 2, color: '#232640' }}>
-                            {t("impacts")}
-                        </Typography>
-                        <List>
-                            {action.Impacts.map((impact, index) => (
-                                <ListItem key={index} sx={{ py: 0.5 }}>
-                                    <ListItemText primary={impact} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Box>
-                )}
-
-                {action.CoBenefits?.length > 0 && (
-                    <Box sx={{ mb: 3 }}>
-                        <Typography variant="h6" sx={{ mb: 2, color: '#232640' }}>
-                            {t("coBenefits")}
-                        </Typography>
-                        <List>
-                            {action.CoBenefits.map((coBenefit, index) => (
-                                <ListItem key={index} sx={{ py: 0.5 }}>
-                                    <ListItemText primary={coBenefit} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Box>
-                )}
-
-                {action.EquityAndInclusionConsiderations && (
-                    <Box>
-                        <Typography variant="h6" sx={{ mb: 2, color: '#232640' }}>
-                            {t("equityAndInclusionConsiderations")}
-                        </Typography>
-                        <MarkdownRenderer markdownContent={action.EquityAndInclusionConsiderations} />
-                    </Box>
-                )}
+              <Typography variant="h6" sx={{ mb: 2, color: "#232640" }}>
+                {t("impacts")}
+              </Typography>
+              <List>
+                {action.Impacts.map((impact, index) => (
+                  <ListItem key={index} sx={{ py: 0.5 }}>
+                    <ListItemText primary={impact} />
+                  </ListItem>
+                ))}
+              </List>
             </Box>
-        </Drawer>
+          )}
+
+          {action.CoBenefits?.length > 0 && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2, color: "#232640" }}>
+                {t("coBenefits")}
+              </Typography>
+              <List>
+                {action.CoBenefits.map((coBenefit, index) => (
+                  <ListItem key={index} sx={{ py: 0.5 }}>
+                    <ListItemText primary={coBenefit} />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          )}
+
+          {action.EquityAndInclusionConsiderations && (
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2, color: "#232640" }}>
+                {t("equityAndInclusionConsiderations")}
+              </Typography>
+              <MarkdownRenderer
+                markdownContent={action.EquityAndInclusionConsiderations}
+              />
+            </Box>
+          )}
+        </Box>
+      </Drawer>
     );
 };

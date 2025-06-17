@@ -22,6 +22,7 @@
   "cancelSorting": "CANCEL SORTING",
   "saveRankings": "SAVE CHANGES",
   "downloadCsv": "DOWNLOAD CSV",
+  "download": "Download",
   "climateActionDetails": "Climate action details",
   "adaptationPotential": "Adaptation Potential",
   "reductionPotential": "Reduction Potential",
@@ -198,5 +199,14 @@
     ">10 years": "More than 10 years"
   },
   "climateActions": "Climate Actions",
-  "brazil": "Brazil"
+  "brazil": "Brazil",
+  "cityMap": {
+    "loading": "Loading map for {{city}}...",
+    "error": "Error loading map: {{error}}",
+    "noCoordinates": "No coordinates available for {{city}}."
+  },
+  "climateActionsUI": {
+    "loading": "Loading",
+    "cancel": "Cancel"
+  }
 }

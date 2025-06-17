@@ -135,187 +135,223 @@ const ClimateActions = ({
         fetchActions();
     }, [selectedCity]);
 
-    if (isLoading || (mitigationData.length === 0 && adaptationData.length === 0))
-        return <>Loading</>;
+    if (
+      isLoading ||
+      (mitigationData.length === 0 && adaptationData.length === 0)
+    )
+      return <>{t("climateActionsUI.loading")}</>;
 
     function getSelectedActions(type) {
-        return isAdaptation(type) ? adaptationRowSelection : mitigationRowSelection;
+      return isAdaptation(type)
+        ? adaptationRowSelection
+        : mitigationRowSelection;
     }
 
     function getTopActions() {
-        return {
-            "0": true,
-            "1": true,
-            "2": true
-        }
+      return {
+        0: true,
+        1: true,
+        2: true,
+      };
     }
 
     // Check if there are any selected actions
     const hasSelectedActions = (type) => {
-        return Object.keys(getSelectedActions(type)).length > 0;
+      return Object.keys(getSelectedActions(type)).length > 0;
     };
 
-    return (<>
+    return (
+      <>
         <CityData selectedLocode={selectedLocode} />
         <div className="max-w-screen-xl mx-auto">
-            <div className="flex mb-8">
-                <ButtonMedium color="#2351DC">{t("climateActions")}</ButtonMedium>
-            </div>
-            <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
-                {t("topActionsTitle")}
-            </h1>
-            <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
-                {t("topActionsDescription")}
-            </p>
+          <div className="flex mb-8">
+            <ButtonMedium color="#2351DC">{t("climateActions")}</ButtonMedium>
+          </div>
+          <h1 className="text-2xl font-bold mb-4 text-[#232640] font-poppins">
+            {t("topActionsTitle")}
+          </h1>
+          <p className="text-base font-normal leading-relaxed tracking-wide font-opensans">
+            {t("topActionsDescription")}
+          </p>
 
-            <Tabs>
-                <TabList className="flex justify-left mb-0 my-8 tab-actions">
-                    <Tab onClick={() => {
-                        setEnableRowOrdering(false);
-                        setEnableRowSelection(false);
-                    }}>
-                        <FiArrowDownRight />
-                        <span className="tab-text">{t("mitigation")}</span>
-                    </Tab>
-                    <Tab onClick={() => {
-                        setEnableRowOrdering(false);
-                        setEnableRowSelection(false);
-                    }}>
-                        <div>
-                            <MdOutlineFlood />
+          <Tabs>
+            <TabList className="flex justify-left mb-0 my-8 tab-actions">
+              <Tab
+                onClick={() => {
+                  setEnableRowOrdering(false);
+                  setEnableRowSelection(false);
+                }}
+              >
+                <FiArrowDownRight />
+                <span className="tab-text">{t("mitigation")}</span>
+              </Tab>
+              <Tab
+                onClick={() => {
+                  setEnableRowOrdering(false);
+                  setEnableRowSelection(false);
+                }}
+              >
+                <div>
+                  <MdOutlineFlood />
+                </div>
+                <span className="tab-text">{t("adaptation")}</span>
+              </Tab>
+            </TabList>
+            {[MITIGATION, ADAPTATION].map((type) => (
+              <TabPanel key={type}>
+                {selectedAction && (
+                  <ActionDrawer
+                    action={selectedAction}
+                    isOpen={!!selectedAction}
+                    onClose={() => setSelectedAction(null)}
+                    t={t}
+                  />
+                )}
+
+                <div className="rounded-lg overflow-hidden">
+                  <TopClimateActions
+                    actions={
+                      isAdaptation(type) ? adaptationData : mitigationData
+                    }
+                    type={type}
+                    setSelectedAction={setSelectedAction}
+                    selectedCity={selectedCity}
+                    setGeneratedPlan={setGeneratedPlans}
+                    generatedPlans={generatedPlans}
+                    setGeneratedPlans={setGeneratedPlans}
+                    generatePlans={generatePlans}
+                  />
+
+                  <div className="mt-12 mb-8">
+                    <h2 className="text-2xl font-normal text-gray-900 font-poppins">
+                      {enableRowSelection
+                        ? t("selectListOfClimateActions")
+                        : t("rankingListOfClimateActions")}
+                    </h2>
+                    <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
+                      {enableRowSelection
+                        ? t("selectActionsDescription")
+                        : t("applyYourLocalExpertise")}
+                    </p>
+                  </div>
+                  <div className="flex justify-end">
+                    {/* Modify button section */}
+                    <div className="flex justify-end">
+                      <IconButton
+                        sx={{
+                          border: "1px solid #E8EAFB",
+                          borderRadius: "4px",
+                          padding: "4px 16px",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          marginRight: "16px",
+                          height: "40px",
+                          backgroundColor: enableRowOrdering
+                            ? "#E8EAFB"
+                            : "white",
+                        }}
+                        variant={enableRowOrdering ? "outlined" : "contained"}
+                        disabled={enableRowOrdering}
+                        onClick={() => {
+                          setEnableRowSelection(false);
+                          setEnableRowOrdering(true);
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <MdOutlineLowPriority
+                            size={30}
+                            color={enableRowOrdering ? "#2351DC" : "#4B4C63"}
+                          />
+                          <ButtonMedium
+                            color={enableRowOrdering ? "#2351DC" : "#4B4C63"}
+                          >
+                            {t("clickToModify")}
+                          </ButtonMedium>
                         </div>
-                        <span className="tab-text">{t("adaptation")}</span>
-                    </Tab>
-                </TabList>
-                {[MITIGATION, ADAPTATION].map((type) => (
-                    <TabPanel key={type}>
-                        {selectedAction && (
-                            <ActionDrawer
-                                action={selectedAction}
-                                isOpen={!!selectedAction}
-                                onClose={() => setSelectedAction(null)}
-                                t={t}
-                            />
-                        )}
+                      </IconButton>
+                    </div>
 
-                        <div className="rounded-lg overflow-hidden">
-                            <TopClimateActions
-                                actions={isAdaptation(type) ? adaptationData : mitigationData}
-                                type={type}
-                                setSelectedAction={setSelectedAction}
-                                selectedCity={selectedCity}
-                                setGeneratedPlan={setGeneratedPlans}
-                                generatedPlans={generatedPlans}
-                                setGeneratedPlans={setGeneratedPlans}
-                                generatePlans={generatePlans}
-                            />
+                    {/* Download and save buttons section */}
+                    <div className="flex justify-end gap-4 mb-8">
+                      {enableRowOrdering && (
+                        <>
+                          <Button
+                            onClick={(data) => onSaveRankings(type, data)}
+                            disabled={isSaving}
+                            variant="contained"
+                            sx={{
+                              backgroundColor: "#2351DC",
+                              "&:hover": {
+                                backgroundColor: "#2351DC",
+                              },
+                              borderRadius: "100px",
+                              padding: "4px 16px",
+                            }}
+                          >
+                            {t("saveRankings")}
+                          </Button>
+                        </>
+                      )}
 
-                            <div className="mt-12 mb-8">
-                                <h2 className="text-2xl font-normal text-gray-900 font-poppins">
-                                    {enableRowSelection ? t("selectListOfClimateActions") : t("rankingListOfClimateActions")}
-                                </h2>
-                                <p className="text-base font-normal leading-relaxed tracking-wide font-opensans mt-2">
-                                    {enableRowSelection ? t("selectActionsDescription") : t("applyYourLocalExpertise")}
-                                </p>
-                            </div>
-                            <div className="flex justify-end">
-                                {/* Modify button section */}
-                                <div className="flex justify-end">
+                      {enableRowOrdering && (
+                        <>
+                          <Button
+                            onClick={() => setEnableRowOrdering(false)}
+                            variant="text"
+                            sx={{
+                              color: "#2351DC",
+                              "&:hover": {
+                                color: "#2351DC",
+                              },
+                              padding: "4px 16px",
+                            }}
+                          >
+                            {t("climateActionsUI.cancel").toUpperCase()}
+                          </Button>
+                        </>
+                      )}
 
-                                    <IconButton
-                                        sx={{
-                                            border: '1px solid #E8EAFB',
-                                            borderRadius: '4px',
-                                            padding: '4px 16px',
-                                            fontSize: '14px',
-                                            fontWeight: '600',
-                                            marginRight: '16px',
-                                            height: '40px',
-                                            backgroundColor: enableRowOrdering ? "#E8EAFB" : "white",
-                                        }}
-                                        variant={enableRowOrdering ? "outlined" : "contained"}
-                                        disabled={enableRowOrdering}
-                                        onClick={() => {
-                                            setEnableRowSelection(false)
-                                            setEnableRowOrdering(true)
-                                        }}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <MdOutlineLowPriority size={30} color={enableRowOrdering ? '#2351DC' : '#4B4C63'} />
-                                            <ButtonMedium color={enableRowOrdering ? '#2351DC' : '#4B4C63'}>{t("clickToModify")}</ButtonMedium>
-                                        </div>
-                                    </IconButton>
-                                </div>
+                      {!enableRowOrdering && (
+                        <DownloadButton
+                          type={type}
+                          selectedCity={selectedCity}
+                          t={t}
+                          adaptationData={adaptationData}
+                          mitigationData={mitigationData}
+                          generatedPlans={generatedPlans}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <ActionsTable
+                    type={type}
+                    actions={
+                      isAdaptation(type) ? adaptationData : mitigationData
+                    }
+                    t={t}
+                    enableRowOrdering={enableRowOrdering}
+                    onRowOrderChange={(updatedItems) => {
+                      if (isAdaptation(type)) {
+                        setAdaptationData(updatedItems);
+                      } else {
+                        setMitigationData(updatedItems);
+                      }
+                    }}
+                  />
 
-                                {/* Download and save buttons section */}
-                                <div className="flex justify-end gap-4 mb-8">
-                                    {enableRowOrdering && (
-                                        <>
-                                            <Button
-                                                onClick={(data) => onSaveRankings(type, data)}
-                                                disabled={isSaving}
-                                                variant="contained"
-                                                sx={{
-                                                    backgroundColor: "#2351DC",
-                                                    '&:hover': {
-                                                        backgroundColor: "#2351DC",
-                                                    },
-                                                    borderRadius: "100px",
-                                                    padding: '4px 16px',
-                                                }}
-                                            >
-                                                {t("saveRankings")}
-                                            </Button>
-                                        </>
-                                    )}
-
-                                    {enableRowOrdering && (<>
-                                        <Button
-                                            onClick={() => setEnableRowOrdering(false)}
-                                            variant="text"
-                                            sx={{
-                                                color: "#2351DC",
-                                                '&:hover': {
-                                                    color: "#2351DC",
-                                                },
-                                                padding: '4px 16px',
-                                            }}
-                                        >
-                                            {t("cancel").toUpperCase()}
-                                        </Button></>)}
-
-                                    {!enableRowOrdering && <DownloadButton type={type} selectedCity={selectedCity} t={t} adaptationData={adaptationData} mitigationData={mitigationData} generatedPlans={generatedPlans} />}
-                                </div>
-                            </div>
-                            <ActionsTable
-                                type={type}
-                                actions={isAdaptation(type) ? adaptationData : mitigationData}
-                                t={t}
-                                enableRowOrdering={enableRowOrdering}
-                                onRowOrderChange={(updatedItems) => {
-                                    if (isAdaptation(type)) {
-                                        setAdaptationData(updatedItems);
-                                    } else {
-                                        setMitigationData(updatedItems);
-                                    }
-                                }}
-                            />
-
-
-
-                            {/* Plan Modal */}
-                            <PlanModal
-                                isOpen={isPlanModalOpen}
-                                onClose={() => setIsPlanModalOpen(false)}
-                                plans={generatedPlans}
-                                isListView={false}
-                            />
-                        </div>
-                    </TabPanel >
-                ))}
-            </Tabs >
-        </div >
-    </>
+                  {/* Plan Modal */}
+                  <PlanModal
+                    isOpen={isPlanModalOpen}
+                    onClose={() => setIsPlanModalOpen(false)}
+                    plans={generatedPlans}
+                    isListView={false}
+                  />
+                </div>
+              </TabPanel>
+            ))}
+          </Tabs>
+        </div>
+      </>
     );
 };
 

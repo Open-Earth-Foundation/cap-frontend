@@ -21,6 +21,7 @@
   "modifyRankings": "MODIFICAR RANKINGS",
   "cancelSorting": "CANCELAR ORDENAMIENTO",
   "saveRankings": "GUARDAR CAMBIOS",
+  "download": "DESCARGAR",
   "downloadCsv": "DESCARGAR CSV",
   "climateActionDetails": "Detalles de la acción climática",
   "adaptationPotential": "Potencial de Adaptación",
@@ -48,6 +49,7 @@
   "discoverTopActionsTailoredToTheCitysClimateNeeds": "Descubre las mejores acciones adaptadas a las necesidades climáticas de la ciudad.",
   "topmitigationClimateActions": "Mejores acciones climáticas de mitigación",
   "topadaptationClimateActions": "Mejores acciones climáticas de adaptación",
+  "topClimateActionsDescription": "Aquí están tus acciones principales – inicialmente priorizadas por nuestros expertos. Reordena la tabla a continuación para ver nuevas prioridades en esta sección. Puedes generar un plan de implementación completo para tus 3 principales acciones en cualquier momento.",
   "rank": "Rango",
   "action": "Acción",
   "sector": "Sector",
@@ -197,5 +199,14 @@
   "water_resources": "Recursos Hídricos",
   "food_security": "Seguridad Alimentaria",
   "road_infrastructure": "Infraestructura vial",
-  "sea_level_rise": "Aumento del nivel del mar"
+  "sea_level_rise": "Aumento del nivel del mar",
+  "cityMap": {
+    "loading": "Cargando mapa para {{city}}...",
+    "error": "Error al cargar el mapa: {{error}}",
+    "noCoordinates": "No hay coordenadas disponibles para {{city}}."
+  },
+  "climateActionsUI": {
+    "loading": "Cargando",
+    "cancel": "Cancelar"
+  }
 }

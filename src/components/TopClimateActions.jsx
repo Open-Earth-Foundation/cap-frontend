@@ -94,160 +94,174 @@ const TopClimateActions = ({
         setIsGenerating(false);
     };
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center mt-8">
-                <h1 className="text-2xl font-normal text-gray-900 font-poppins">
-                    {t(`top${type}ClimateActions`)}
-                </h1>
-                <div className="flex items-center gap-4">
-                    {isGenerating && <BodyLarge color="#2351DC">{t("thisMightTakeAFewMinutes")}</BodyLarge>}
-                    <Button
-                        onClick={onGenerateActionPlansClick}
-                        variant="outlined"
-                        disabled={isGenerating}
-                    >
-                        {isGenerating ? (
-                            <div className="flex items-center gap-2 py-3 px-1">
-                                <CircularProgress indeterminate size={24} />
-                                <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2 py-3 px-1">
-                                <TbSparkles size={24} />
-                                <ButtonMedium color="#2351DC">
-                                    {t("generatePlan")}
-                                </ButtonMedium>
-                            </div>
-                        )}
-                    </Button>
-
-                    {/* See Generated Plans button */}
-                    {!isGenerating && generatedPlans && generatedPlans.length > 0 && (
-                        <Button
-                            id="SeeGeneratedPlans"
-                            variant="contained"
-                            sx={{
-                                backgroundColor: "#2351DC",
-                                '&:hover': {
-                                    backgroundColor: "#2351DC",
-                                },
-                            }}
-                            onClick={() => setIsPlanModalOpen(true)}
-                        >
-                            <div className="flex items-center gap-2 py-3 px-1">
-                                <MdOutlineRemoveRedEye size={24} />
-                                <ButtonMedium>
-                                    {t("seeGeneratedPlans")}
-                                </ButtonMedium>
-                            </div>
-                        </Button>
-                    )}
+      <div className="space-y-6">
+        <div className="flex justify-between items-center mt-8">
+          <h1 className="text-2xl font-normal text-gray-900 font-poppins">
+            {t(`top${type}ClimateActions`)}
+          </h1>
+          <div className="flex items-center gap-4">
+            {isGenerating && (
+              <BodyLarge color="#2351DC">
+                {t("thisMightTakeAFewMinutes")}
+              </BodyLarge>
+            )}
+            <Button
+              onClick={onGenerateActionPlansClick}
+              variant="outlined"
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <div className="flex items-center gap-2 py-3 px-1">
+                  <CircularProgress indeterminate size={24} />
+                  <ButtonMedium color="#2351DC">{t("generating")}</ButtonMedium>
                 </div>
-            </div>
-            <BodyLarge color="black">{t("topClimateActionsDescription")}</BodyLarge>
-            {/*Top Mitigatons Cards*/}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {topActions.map(({ action }, index) => (
-                    /* Mitigation Card */
-                    <div
-                        key={index}
-                        className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${index === 0
-                            ? "border-t-4 border-t-primary first-card ring-1 ring-blue-100"
-                            : "shadow-sm"
-                            }`}
-                    >
-                        {/*Index*/}
-                        <div className="flex justify-between items-center">
-                            <span className="text-4xl font-bold text-gray-900 font-poppins">
-                                #{index + 1}
-                            </span>
-                            <div className="flex items-center gap-2">
-                                <MdBookmark color="#2351DC" />
-                                <ButtonMedium color="#2351DC">{t("expertsChoice")}</ButtonMedium>
-                            </div>
-                        </div>
+              ) : (
+                <div className="flex items-center gap-2 py-3 px-1">
+                  <TbSparkles size={24} />
+                  <ButtonMedium color="#2351DC">
+                    {t("generatePlan")}
+                  </ButtonMedium>
+                </div>
+              )}
+            </Button>
 
-                        {/* Description */}
-                        <div className="space-y-2">
-                            <h2 className="text-xl font-semibold text-gray-900 font-poppins">
-                                {action?.ActionName}
-                            </h2>
-                            <p className="text-gray-600 text-md line-clamp-2 font-opensans">
-                                {action?.Description}
-                            </p>
-                        </div>
+            {/* See Generated Plans button */}
+            {!isGenerating && generatedPlans && generatedPlans.length > 0 && (
+              <Button
+                id="SeeGeneratedPlans"
+                variant="contained"
+                sx={{
+                  backgroundColor: "#2351DC",
+                  "&:hover": {
+                    backgroundColor: "#2351DC",
+                  },
+                }}
+                onClick={() => setIsPlanModalOpen(true)}
+              >
+                <div className="flex items-center gap-2 py-3 px-1">
+                  <MdOutlineRemoveRedEye size={24} />
+                  <ButtonMedium>{t("seeGeneratedPlans")}</ButtonMedium>
+                </div>
+              </Button>
+            )}
+          </div>
+        </div>
+        <BodyLarge color="black">{t("topClimateActionsDescription")}</BodyLarge>
+        {/*Top Mitigatons Cards*/}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {topActions.map(({ action }, index) => (
+            /* Mitigation Card */
+            <div
+              key={index}
+              className={`p-6 space-y-4 border rounded-lg shadow-sm bg-white font-opensans ${
+                index === 0
+                  ? "border-t-4 border-t-primary first-card ring-1 ring-blue-100"
+                  : "shadow-sm"
+              }`}
+            >
+              {/*Index*/}
+              <div className="flex justify-between items-center">
+                <span className="text-4xl font-bold text-gray-900 font-poppins">
+                  #{index + 1}
+                </span>
+                <div className="flex items-center gap-2">
+                  <MdBookmark color="#2351DC" />
+                  <ButtonMedium color="#2351DC">
+                    {t("expertsChoice")}
+                  </ButtonMedium>
+                </div>
+              </div>
 
-                        {/* Progress Bar */}
-                        <div className="space-y-1">
-                            <div className="flex gap-2 ">{getProgressBars(action)}</div>
-                            <div className="flex justify-between items-center pt-2">
-                                <span className="text-gray-600">
-                                    {isAdaptation(type)
-                                        ? t("adaptationPotential")
-                                        : t("reductionPotential")}
-                                </span>
+              {/* Description */}
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-gray-900 font-poppins">
+                  {action?.ActionName}
+                </h2>
+                <p className="text-gray-600 text-md line-clamp-2 font-opensans">
+                  {action?.Description}
+                </p>
+              </div>
 
-                                <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
-                                    {isAdaptation(type)
-                                        ? toTitleCase(action?.AdaptationEffectiveness)
-                                        : getReductionPotential(action)}
-                                </p>
-                            </div>
-                            <Divider flexItem />
-                        </div>
+              {/* Progress Bar */}
+              <div className="space-y-1">
+                <div className="flex gap-2 ">{getProgressBars(action)}</div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-gray-600">
+                    {isAdaptation(type)
+                      ? t("adaptationPotential")
+                      : t("reductionPotential")}
+                  </span>
 
-                        {/* Details */}
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-600">{t("sector")}</span>
-                                <span className="text-gray-600 font-semibold" style={{ textAlign: "right" }}>
-                                    {joinToTitleCase(action?.Sector, t) || joinToTitleCase(action?.Hazard, t)}
-                                </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-600">{t("estimatedCost")}</span>
-                                <span className="text-gray-600 font-semibold">
-                                    {toTitleCase(t(action?.CostInvestmentNeeded))}
-                                </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-gray-600">{t("implementationTime")}</span>
-                                <span className="text-gray-600 font-semibold">
-                                    {t(getTimelineTranslationKey(action?.TimelineForImplementation))}
-                                </span>
-                            </div>
-                        </div>
+                  <p className="text-gray-600 text-sm font-semibold line-clamp-2 font-opensans">
+                    {isAdaptation(type)
+                      ? toTitleCase(t(action?.AdaptationEffectiveness))
+                      : getReductionPotential(action)}
+                  </p>
+                </div>
+                <Divider flexItem />
+              </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex justify-between items-center pt-4">
-                            <button
-                                onClick={() => setSelectedAction(action)}
-                                className="text-primary hover:text-primary-dark font-semibold underline"
-                            >
-                                {t("seeMoreDetails")}
-                            </button>
+              {/* Details */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">{t("sector")}</span>
+                  <span
+                    className="text-gray-600 font-semibold"
+                    style={{ textAlign: "right" }}
+                  >
+                    {joinToTitleCase(action?.Sector, t) ||
+                      joinToTitleCase(action?.Hazard, t)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">{t("estimatedCost")}</span>
+                  <span className="text-gray-600 font-semibold">
+                    {toTitleCase(t(action?.CostInvestmentNeeded))}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">
+                    {t("implementationTime")}
+                  </span>
+                  <span className="text-gray-600 font-semibold">
+                    {t(
+                      getTimelineTranslationKey(
+                        action?.TimelineForImplementation
+                      )
+                    )}
+                  </span>
+                </div>
+              </div>
 
-                        </div>
+              {/* Action Buttons */}
+              <div className="flex justify-between items-center pt-4">
+                <button
+                  onClick={() => setSelectedAction(action)}
+                  className="text-primary hover:text-primary-dark font-semibold underline"
+                >
+                  {t("seeMoreDetails")}
+                </button>
+              </div>
 
-                        {/* Modals */}
-                        <PlanModal
-                            isOpen={isPlanModalOpen}
-                            onClose={() => setIsPlanModalOpen(false)}
-                            plan={localGeneratedPlan}
-                            plans={generatedPlans}
-                            isListView={false}
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <PlanModal
-                isOpen={isPlansListModalOpen}
-                onClose={() => setIsPlansListModalOpen(false)}
+              {/* Modals */}
+              <PlanModal
+                isOpen={isPlanModalOpen}
+                onClose={() => setIsPlanModalOpen(false)}
+                plan={localGeneratedPlan}
                 plans={generatedPlans}
-                isListView={true}
-            />
-        </div >
+                isListView={false}
+              />
+            </div>
+          ))}
+        </div>
+
+        <PlanModal
+          isOpen={isPlansListModalOpen}
+          onClose={() => setIsPlansListModalOpen(false)}
+          plans={generatedPlans}
+          isListView={true}
+        />
+      </div>
     );
 };
 

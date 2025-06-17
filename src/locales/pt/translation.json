@@ -3,7 +3,7 @@
   "discover": "Estas são as 40 principais ações que recomendamos com base no seu inventário de GEE, Avaliação de Riscos Climáticos e dados do Contexto da Cidade. Você encontrará 20 ações para Mitigação e 20 para Adaptação em suas respectivas abas.",
   "wantToModify": "Deseja fazer alguma modificação no ranking?",
   "wantToDownload": "Deseja baixar o ranking?",
-  "clickToModify": "MODIFICAR RANKING",
+  "clickToModify": "ALTERAR RANKING",
   "selectListOfClimateActions": "Selecionar Ações",
   "details": "Detalhes",
   "selectActionsDescription": "Vamos selecionar as ações que você gostaria de implementar da lista. Geraremos Planos de Implementação para as ações selecionadas.",
@@ -22,6 +22,7 @@
   "cancelSorting": "CANCELAR ORDENAÇÃO",
   "saveRankings": "SALVAR ALTERAÇÕES",
   "downloadCsv": "BAIXAR CSV",
+  "download": "Baixar",
   "climateActionDetails": "Detalhes da ação climática",
   "adaptationPotential": "Potencial de Adaptação",
   "reductionPotential": "Potencial de Redução",
@@ -48,6 +49,7 @@
   "discoverTopActionsTailoredToTheCitysClimateNeeds": "Descubra as melhores ações adaptadas às necessidades climáticas da cidade.",
   "topmitigationClimateActions": "Melhores ações climáticas de mitigação",
   "topadaptationClimateActions": "Melhores ações climáticas de adaptação",
+  "topClimateActionsDescription": "Aqui estão suas ações principais – inicialmente priorizadas por nossos especialistas. Reordene a tabela abaixo para ver novas prioridades nesta seção. Você pode gerar um plano de implementação completo para suas 3 principais ações a qualquer momento.",
   "rank": "Rank",
   "action": "Ação",
   "sector": "Setor",
@@ -197,5 +199,14 @@
   "water_resources": "Recursos Hídricos",
   "food_security": "Segurança Alimentar",
   "road_infrastructure": "Infraestrutura rodoviária",
-  "sea_level_rise": "Aumento do nível do mar"
+  "sea_level_rise": "Aumento do nível do mar",
+  "cityMap": {
+    "loading": "Carregando mapa para {{city}}...",
+    "error": "Erro ao carregar o mapa: {{error}}",
+    "noCoordinates": "Não há coordenadas disponíveis para {{city}}."
+  },
+  "climateActionsUI": {
+    "loading": "Carregando",
+    "cancel": "Cancelar"
+  }
 }
