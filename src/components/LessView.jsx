@@ -23,8 +23,8 @@ export function LessView({ cityData }) {
           <MapView city={cityData} />
         </div>
         <Card>
-          <div className="space-y-4 p-6 ">
-            <div className="flex flex-col gap-4">
+          <div className="space-y-4 p-6 h-full">
+            <div className="flex flex-col justify-around gap-4 h-full">
               <div className="flex items-center gap-2">
                 <MdArrowOutward color="#7A7B9A" size={24} />
                 <div>
