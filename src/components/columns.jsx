@@ -1,4 +1,6 @@
-import {getReductionPotential} from "../utils/helpers.js";
+import {getReductionPotential, getTimelineTranslationKey, joinToTitleCase, toTitleCase} from "../utils/helpers.js";
+import { Tooltip } from 'react-tooltip'
+import { MdInfoOutline, MdZoomIn } from "react-icons/md";
 
 const getImpactLevelClass = (level) => {
     const classes = {
@@ -9,16 +11,15 @@ const getImpactLevelClass = (level) => {
     return `${classes[level]} text-xs font-medium px-2 py-0.5 rounded-full`;
 };
 
-
-export const mitigationColumns = (t) => [
+export const mitigationColumns = (t, setSelectedActionByIndex) => [
     {
         accessorKey: "actionPriority",
-        header: t("rank"),
+        header: toTitleCase(t("rank")) ,
         size: 40,
     },
     {
         accessorKey: "action.ActionName",
-        header: t("action"),
+        header: toTitleCase(t("action")) ,
         size: 150,
         Cell: ({cell}) => (
             <div>
@@ -27,13 +28,33 @@ export const mitigationColumns = (t) => [
         ),
     },
     {
+    accessorKey: "detail",
+    header: toTitleCase(t("detail")),
+    size: 40,
+    Cell: ({ cell }) => (
+        <div className="flex justify-center items-center">
+            <button
+                className="flex items-center cursor-pointer"
+                onClick={() => setSelectedActionByIndex(cell.row.index)}
+            >
+                <MdZoomIn className="text-lg" />
+            </button>
+        </div>
+    ),
+},
+    {
         accessorKey: "action.Sector",
-        header: t("sector"),
+        header: toTitleCase(t("sector")) ,
+        Cell: ({cell}) => (
+            <div>
+                {joinToTitleCase(cell.getValue(), t)}
+            </div>
+        ),
         size: 100,
     },
     {
         accessorKey: "action.GHGReductionPotential",
-        header: t("reductionPotential"),
+        header: toTitleCase(t("reductionPotential")) ,
         size: 100,
         Cell: ({cell}) => (
             <div>
@@ -43,92 +64,159 @@ export const mitigationColumns = (t) => [
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
+        header: toTitleCase(t("estimatedCost")) ,
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
+        header: toTitleCase(t("implementationTime")) ,
         size: 80,
-    },
-    {
-        accessorKey: "explanation",
-        header: t("explanation"),
-        size: 300,
         Cell: ({cell}) => (
-            <div className="max-w-xs break-words">
-                {cell.getValue() ? cell.getValue() : "N/A"}
+            <div>
+                {t(getTimelineTranslationKey(cell.getValue()))}
             </div>
         ),
     },
+    {
+        accessorKey: "explanation",
+        header: toTitleCase(t("explanation")) ,
+        size: 40,
+        Cell: ({cell}) => {
+            // Create a unique ID for tooltip anchor and content
+            const tooltipId = `explanation-tooltip-${cell.row.index}`;
+
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        id={tooltipId}
+                        className="flex items-center cursor-pointer"
+                        data-tooltip-id={`tooltip-content-${cell.row.index}`}
+                        data-tooltip-content={cell.getValue() || "N/A"}
+                    >
+                        <MdInfoOutline className="text-lg" />
+                    </div>
+
+                    <Tooltip
+                        id={`tooltip-content-${cell.row.index}`}
+                        place="left"
+                        className="z-[1000] max-w-xs"
+                        positionStrategy="fixed"
+                        style={{
+                            maxWidth: "300px",
+                            wordBreak: "break-word"
+                        }}
+                    />
+                </div>
+            );
+        },  }
 ];
 
-export const adaptationColumns = (t) => [
+export const adaptationColumns = (t, setSelectedActionByIndex) => [
     {
         accessorKey: "actionPriority",
-        header: t("rank"),
+        header: toTitleCase(t("rank")) ,
         size: 40,
     },
     {
         accessorKey: "action.ActionName",
-        header: t("action"),
+        header: toTitleCase(t("action")) ,
         size: 150,
         Cell: ({cell}) => (
             <div>
                 <strong>{cell.getValue()}</strong>
-                <br/>
-                <span className="text-gray-500">{cell.row.original.action.ActionName}</span>
             </div>
         ),
     },
+   {
+    accessorKey: "detail",
+    header: toTitleCase(t("detail")),
+    size: 40,
+    Cell: ({ cell }) => (
+        <div className="flex justify-center items-center">
+            <button
+                className="flex items-center cursor-pointer"
+                onClick={() => setSelectedActionByIndex(cell.row.index)}
+            >
+                <MdZoomIn className="text-lg" />
+            </button>
+        </div>
+    ),
+},
     {
         accessorKey: "action.Hazard",
-        header: t("hazard"),
+        header: toTitleCase(t("hazard")) ,
         Cell: ({cell}) => (
             <div>
-                {cell.getValue()?.join(", ")}
+                {joinToTitleCase(cell.getValue(), t)}
             </div>
         ),
         size: 100,
     },
     {
         accessorKey: "action.AdaptationEffectiveness",
-        header: t("adaptationEffectiveness"),
+        header: toTitleCase(t("adaptationEffectiveness")) ,
         size: 100,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
     {
         accessorKey: "action.CostInvestmentNeeded",
-        header: t("estimatedCost"),
+        header: toTitleCase(t("estimatedCost")) ,
         size: 80,
         Cell: ({cell}) => (
             <div>
-                <span className={getImpactLevelClass(cell.getValue())}>{cell.getValue()}</span>
+                <span className={getImpactLevelClass(cell.getValue())}>{toTitleCase(t(cell.getValue()))}</span>
             </div>
         ),
     },
     {
         accessorKey: "action.TimelineForImplementation",
-        header: t("implementationTime"),
+        header: toTitleCase(t("implementationTime")) ,
         size: 80,
-    },
-    {
-        accessorKey: "explanation",
-        header: t("explanation"),
-        size: 300,
         Cell: ({cell}) => (
-            <div className="max-w-xs break-words">
-                {cell.getValue() ? cell.getValue() : "N/A"}
+            <div>
+                {t(getTimelineTranslationKey(cell.getValue()))}
             </div>
         ),
     },
+ {
+        accessorKey: "explanation",
+        header: toTitleCase(t("explanation")) ,
+        size: 40,
+        Cell: ({cell}) => {
+            // Create a unique ID for tooltip anchor and content
+            const tooltipId = `explanation-tooltip-${cell.row.index}`;
+
+            return (
+                <div className="flex justify-center items-center">
+                    <div
+                        id={tooltipId}
+                        className="flex items-center cursor-pointer"
+                        data-tooltip-id={`tooltip-content-${cell.row.index}`}
+                        data-tooltip-content={cell.getValue() || "N/A"}
+                    >
+                        <MdInfoOutline className="text-lg" />
+                    </div>
+
+                    <Tooltip
+                        id={`tooltip-content-${cell.row.index}`}
+                        place="left"
+                        className="z-[1000] max-w-xs"
+                        positionStrategy="fixed"
+                        style={{
+                            maxWidth: "300px",
+                            wordBreak: "break-word"
+                        }}
+                    />
+                </div>
+            );
+        },}
 ];

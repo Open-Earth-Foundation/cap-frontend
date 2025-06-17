@@ -1,51 +1,57 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-import { getReductionPotential, toTitleCase } from './helpers';
-
-const convertToCSV = (data) => {
-  if (!data || !data.length) return '';
-
-  const headers = Object.keys(data[0]);
-  const csvRows = [
-    headers.join(','),
-    ...data.map(row => 
-      headers.map(header => {
-        let cell = row[header] ?? '';
-        if (cell.toString().includes(',')) {
-          cell = `"${cell}"`;
-        }
-        return cell;
-      }).join(',')
-    )
-  ];
-
-  return csvRows.join('\n');
-};
-
-export const exportToCSV = (data, filename) => {
-  const csv = convertToCSV(data);
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  saveAs(blob, filename);
-};
+import { getNestedValue, getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toSentenceCase, toTitleCase } from './helpers';
+import { useTranslation } from 'react-i18next';
+import { CSVLink } from 'react-csv';
 
 const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
   const doc = new jsPDF();
-  let currentY = 20;
+
+  // Page configuration
   const pageWidth = doc.internal.pageSize.width;
-  const margin = 20;
   const pageHeight = doc.internal.pageSize.height;
+  const horizontalMargin = 20;
+  const topMargin = 20;
+  const bottomMargin = 25; // Increased bottom margin for page numbers
+  const textWidth = pageWidth - (2 * horizontalMargin);
+
+  let currentY = topMargin;
 
   // Helper functions
   const addNewPage = () => {
     doc.addPage();
-    currentY = 20;
+    currentY = topMargin;
+    return currentY;
   };
 
   const checkForNewPage = (requiredSpace) => {
-    if (currentY + requiredSpace > pageHeight - margin) {
-      addNewPage();
+    if (currentY + requiredSpace > pageHeight - bottomMargin) {
+      return addNewPage();
     }
+    return currentY;
+  };
+
+  const addWrappedText = (text, x, y, maxWidth, fontSize = 10, options = {}) => {
+    doc.setFontSize(fontSize);
+
+    // Calculate line height based on font size
+    const lineHeight = fontSize * 0.5;
+
+    // Split text into lines that fit within maxWidth
+    const lines = doc.splitTextToSize(text, maxWidth);
+
+    // Calculate total height needed for this text block
+    const totalHeight = lines.length * lineHeight * 1.2; // 1.2 for extra spacing
+
+    // Check if we need a new page for this text block
+    y = checkForNewPage(totalHeight);
+
+    // Render text with alignment options if provided
+    doc.text(lines, x, y, options);
+
+    // Return the new Y position after the text
+    return y + totalHeight;
   };
 
   const calculateAdjustedVulnerability = (row, resilienceScore) => {
@@ -69,48 +75,52 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
     return "Low";
   };
 
+  // ---- Start building the report ----
+
   // Title Section
   doc.setFontSize(24);
-  doc.text('Climate Change Risk Assessment Report', margin, currentY);
+  doc.text('Climate Change Risk Assessment Report', pageWidth / 2, currentY, { align: 'center' });
   currentY += 15;
 
   // City and Date
   doc.setFontSize(16);
-  doc.text(`City: ${cityName}`, margin, currentY);
+  doc.text(`City: ${cityName}`, horizontalMargin, currentY);
   currentY += 10;
   doc.setFontSize(12);
-  doc.text(`Report generated on: ${new Date().toLocaleDateString()}`, margin, currentY);
+  doc.text(`Report generated on: ${new Date().toLocaleDateString()}`, horizontalMargin, currentY);
   currentY += 15;
 
   // Executive Summary
-  doc.setFontSize(14);
-  doc.text('Executive Summary', margin, currentY);
-  currentY += 10;
-  doc.setFontSize(10);
+  doc.setFontSize(16);
+  doc.text('Executive Summary', horizontalMargin, currentY);
+  currentY += 8;
+
   const summaryText = `This report presents a comprehensive Climate Change Risk Assessment for ${cityName}. ` +
     `The assessment evaluates various climate hazards and their potential impacts across different sectors.`;
-  doc.text(doc.splitTextToSize(summaryText, pageWidth - 2 * margin), margin, currentY);
-  currentY += 20;
+
+  currentY = addWrappedText(summaryText, horizontalMargin, currentY, textWidth, 11);
+  currentY += 15; // Extra vertical margin after summary
 
   // Qualitative Assessment Section (if available)
   if (qualitativeScore !== null) {
-    checkForNewPage(40);
-    doc.setFontSize(14);
-    doc.text('Qualitative Assessment Results', margin, currentY);
-    currentY += 10;
-    doc.setFontSize(10);
-    doc.text(`Resilience Score: ${(qualitativeScore * 100).toFixed(1)}%`, margin, currentY);
-    currentY += 7;
+    currentY = checkForNewPage(40);
+    doc.setFontSize(16);
+    doc.text('Qualitative Assessment Results', horizontalMargin, currentY);
+    currentY += 8;
+    doc.setFontSize(11);
+    doc.text(`Resilience Score: ${(qualitativeScore * 100).toFixed(1)}%`, horizontalMargin, currentY);
+    currentY += 8;
+
     const qualitativeNote = 'Note: The risk scores in this report have been adjusted based on the qualitative assessment results.';
-    doc.text(doc.splitTextToSize(qualitativeNote, pageWidth - 2 * margin), margin, currentY);
-    currentY += 15;
+    currentY = addWrappedText(qualitativeNote, horizontalMargin, currentY, textWidth, 11);
+    currentY += 15; // Extra vertical margin after section
   }
 
   // Top Risks Section
-  checkForNewPage(80);
-  doc.setFontSize(14);
-  doc.text('Top Climate Risks', margin, currentY);
-  currentY += 10;
+  currentY = checkForNewPage(80);
+  doc.setFontSize(16);
+  doc.text('Top Climate Risks', horizontalMargin, currentY);
+  currentY += 8;
 
   const topRisks = [...ccraData]
     .sort((a, b) => {
@@ -121,44 +131,54 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
     .slice(0, 3);
 
   topRisks.forEach((risk, index) => {
-    checkForNewPage(40);
+    // Check if we need a new page for this risk
+    currentY = checkForNewPage(50);
+
+    // If we started a new page and it's not the first risk, add section header
+    if (currentY === topMargin && index > 0) {
+      doc.setFontSize(16);
+      doc.text('Top Climate Risks (continued)', horizontalMargin, currentY);
+      currentY += 8;
+    }
+
     const riskScore = qualitativeScore ? calculateAdjustedRiskScore(risk, qualitativeScore) : risk["Risk Score"];
     const riskLevel = defineRiskLevel(riskScore);
 
-    doc.setFontSize(12);
-    doc.text(`${index + 1}. ${risk.Hazard} (${risk.Sector})`, margin, currentY);
+    // Show risk title with proper wrapping
+    const riskTitle = `${index + 1}. ${risk.Hazard} (${risk.Sector})`;
+    currentY = addWrappedText(riskTitle, horizontalMargin, currentY, textWidth, 12, { align: 'left' });
+
+    doc.setFontSize(11);
+    doc.text(`Risk Score: ${riskScore.toFixed(2)}`, horizontalMargin + 10, currentY);
     currentY += 7;
-    doc.setFontSize(10);
-    doc.text(`Risk Score: ${riskScore.toFixed(2)}`, margin + 10, currentY);
+    doc.text(`Risk Level: ${riskLevel}`, horizontalMargin + 10, currentY);
     currentY += 7;
-    doc.text(`Risk Level: ${riskLevel}`, margin + 10, currentY);
+    doc.text(`Climate Threat Score: ${risk["Climate Threat Score"].toFixed(2)}`, horizontalMargin + 10, currentY);
     currentY += 7;
-    doc.text(`Climate Threat Score: ${risk["Climate Threat Score"].toFixed(2)}`, margin + 10, currentY);
+    doc.text(`Exposure Score: ${risk["Exposure Score"].toFixed(2)}`, horizontalMargin + 10, currentY);
     currentY += 7;
-    doc.text(`Exposure Score: ${risk["Exposure Score"].toFixed(2)}`, margin + 10, currentY);
-    currentY += 7;
-    doc.text(`Sensitivity Score: ${risk["Sensitivity Score"].toFixed(2)}`, margin + 10, currentY);
-    currentY += 12;
+    doc.text(`Sensitivity Score: ${risk["Sensitivity Score"].toFixed(2)}`, horizontalMargin + 10, currentY);
+    currentY += 15; // Extra vertical margin between risks
   });
 
-  // Full Assessment Table
+  // Full Assessment Table - force a new page to ensure table starts fresh
   addNewPage();
-  doc.setFontSize(14);
-  doc.text('Detailed Risk Assessment', margin, currentY);
+  doc.setFontSize(16);
+  doc.text('Detailed Risk Assessment', horizontalMargin, currentY);
   currentY += 10;
 
   // Prepare comprehensive table data
   const fullTableHeaders = [
     'Sector',
     'Hazard',
-    'Climate Threat',
+    'Climate\nThreat',
     'Exposure',
     'Sensitivity',
-    'Adaptive Capacity',
-    qualitativeScore ? 'Adjusted Vulnerability' : 'Vulnerability',
-    qualitativeScore ? 'Adjusted Risk Score' : 'Risk Score',
-    'Risk Level',
-    'Custom Risk Level'
+    'Adaptive\nCapacity',
+    qualitativeScore ? 'Adjusted\nVulnerability' : 'Vulnerability',
+    qualitativeScore ? 'Adjusted\nRisk' : 'Risk Score',
+    'Risk\nLevel',
+    'Custom\nRisk'
   ];
 
   const fullTableData = ccraData.map((row, index) => {
@@ -179,256 +199,418 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
     ];
   });
 
-  // Add the full table
+  // Add the full table with improved column configuration and cell handling
   doc.autoTable({
     startY: currentY,
     head: [fullTableHeaders],
     body: fullTableData,
     theme: 'grid',
-    styles: { fontSize: 8 },
-    headStyles: { fillColor: [35, 81, 220] },
-    margin: { top: 10 },
+    styles: {
+      fontSize: 6.5, // Further reduced font size
+      cellPadding: 1, // Minimal padding
+      overflow: 'linebreak', // Force text wrapping
+      halign: 'center', // Center-align content
+      valign: 'middle', // Vertical center alignment
+      lineWidth: 0.1, // Thinner grid lines
+    },
+    headStyles: {
+      fillColor: [35, 81, 220],
+      fontSize: 7,
+      fontStyle: 'bold',
+    },
+    margin: {
+      top: topMargin,
+      left: horizontalMargin,
+      right: horizontalMargin,
+      bottom: bottomMargin
+    },
     columnStyles: {
-      0: { cellWidth: 25 },
-      1: { cellWidth: 25 },
+      0: { cellWidth: 21, halign: 'left' },   // Sector - left aligned
+      1: { cellWidth: 21, halign: 'left' },   // Hazard - left aligned
+      2: { cellWidth: 12 },  // Climate Threat
+      3: { cellWidth: 12 },  // Exposure
+      4: { cellWidth: 12 },  // Sensitivity
+      5: { cellWidth: 12 },  // Adaptive Capacity
+      6: { cellWidth: 15 },  // Adjusted Vulnerability
+      7: { cellWidth: 12 },  // Adjusted Risk Score
+      8: { cellWidth: 10 },  // Risk Level
+      9: { cellWidth: 10 }   // Custom Risk Level
+    },
+    willDrawCell: function (data) {
+      // Additional cell customization if needed
+      if (data.section === 'body' && typeof data.cell.text === 'string') {
+        // Ensure very long text is truncated if needed
+        if (data.cell.text.length > 30) {
+          data.cell.text = data.cell.text.substring(0, 28) + '...';
+        }
+      }
+    },
+    didDrawPage: function (data) {
+      // Add header and footer to each page
+      doc.setFontSize(9);
+      doc.text(`Climate Risk Assessment - ${cityName}`, horizontalMargin, 10);
     }
   });
 
-  // Add page numbers
+  // Add page numbers to all pages
   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
   }
 
   return doc;
 };
-
 export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
   const doc = generatePdfReport(cityName, ccraData, qualitativeScore, customRiskLevels);
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
-const isAdaptation = (type) => type === 'adaptation';
+// Helper to render details in a 2x2 grid format
+const renderDetailsGrid = (details, x, y, maxWidth, doc, defaultFont) => {
+  if (!details || details.length === 0) return y;
 
-export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlans) => {
+  const colWidth = (maxWidth / 2) - 5; // Width per column with some spacing
+  const leftColX = x;
+  const rightColX = x + colWidth + 10;
+  const valueFontSize = 10;
+  const keyFontSize = 14;
+  const valueLineHeight = valueFontSize * 0.5;
+  const keyLineHeight = keyFontSize * 0.5;
+
+  let row1Y = y;
+  let row2Y = y; // Will be updated after row 1 is drawn
+  let maxRow1Y = y;
+  let maxRow2Y = y;
+
+  details.slice(0, 4).forEach((detail, index) => {
+    const parts = detail.split(': ');
+    const key = parts[0];
+    const value = parts.slice(1).join(': ');
+
+    let currentX;
+    let startY;
+    let isRow1 = index < 2;
+
+    if (index % 2 === 0) { // Left column (index 0 or 2)
+      currentX = leftColX;
+      startY = isRow1 ? row1Y : row2Y;
+    } else { // Right column (index 1 or 3)
+      currentX = rightColX;
+      startY = isRow1 ? row1Y : row2Y;
+    }
+
+    let currentY = startY;
+
+    // Draw Value (Normal)
+    doc.setFont(defaultFont.normal, 'normal');
+    doc.setFontSize(valueFontSize);
+    const valueLines = doc.splitTextToSize(value, colWidth);
+    doc.text(valueLines, currentX, currentY);
+    currentY += valueLines.length * valueLineHeight + 1; // Add small gap
+
+    // Draw Key (Bold)
+    doc.setFont(defaultFont.normal, 'bold');
+    doc.setFontSize(keyFontSize);
+    const keyLines = doc.splitTextToSize(key, colWidth);
+    doc.text(keyLines, currentX, currentY);
+    currentY += keyLines.length * keyLineHeight + 3; // Add gap after key
+
+    // Update max Y for the current row
+    if (isRow1) {
+      maxRow1Y = Math.max(maxRow1Y, currentY);
+    } else {
+      maxRow2Y = Math.max(maxRow2Y, currentY);
+    }
+
+    // After drawing the first row, set the starting Y for the second row
+    if (index === 1) {
+      row2Y = maxRow1Y;
+      maxRow2Y = row2Y; // Initialize maxRow2Y
+    }
+  });
+
+  // Return the Y position after the grid (based on the bottom-most element)
+  return maxRow2Y;
+};
+
+// Fixed function to safely get reduction potential based on the specific object structure
+const getReductionPotentialSafe = (action, t) => {
+  // Check if GHGReductionPotential is the expected object
+  if (action.GHGReductionPotential && typeof action.GHGReductionPotential === 'object') {
+    try {
+      // Filter out null/empty values and format/translate keys
+      const formattedEntries = Object.entries(action.GHGReductionPotential)
+        .filter(([key, value]) => value !== null && value !== undefined && value !== '')
+        .map(([key, value]) => `${t(key, toSentenceCase(key))}: ${value}%`); // Translate key, use value directly, add %
+
+      // Join with commas if multiple entries exist
+      if (formattedEntries.length > 0) {
+        return formattedEntries.join(', ');
+      }
+    } catch (e) {
+      // Log error if formatting fails
+      console.error("Error formatting GHGReductionPotential object:", e);
+    }
+  }
+
+  // Default Fallback if not the expected object, formatting failed, or object was empty
+  return t('na'); // Translate N/A
+};
+
+// Main PDF export function, now accepting the t function
+export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlans, t) => {
   const doc = new jsPDF();
   let yPos = 20;
   const margin = 20;
   const pageWidth = doc.internal.pageSize.width;
-  const defaultFont = { normal: 'helvetica', bold: 'helvetica' }; // Added default font definition
+  const contentWidth = pageWidth - 2 * margin;
+  const pageHeight = doc.internal.pageSize.height;
+  const defaultFont = { normal: 'helvetica', bold: 'helvetica' };
+
+  // Helper function to check if we need a new page
+  const checkForNewPage = (requiredSpace) => {
+    if (yPos + requiredSpace > pageHeight - 30) {
+      doc.addPage();
+      yPos = 20;
+      return true;
+    }
+    return false;
+  };
+
+  // Helper function to force a new page
+  const forceNewPage = () => {
+    doc.addPage();
+    yPos = 20;
+  };
+
+  // Helper function to add wrapped text and return new Y position
+  const addWrappedText = (text, x, y, maxWidth, fontSize, fontStyle = 'normal') => {
+    doc.setFontSize(fontSize);
+    doc.setFont(defaultFont.normal, fontStyle);
+
+    const lines = doc.splitTextToSize(text, maxWidth);
+    doc.text(lines, x, y);
+
+    // Adjust line height calculation based on font size for better spacing
+    const lineHeightFactor = 1.2; // Adjust this factor as needed
+    const calculatedLineHeight = fontSize * 0.352778 * lineHeightFactor; // Convert pt to mm and apply factor
+
+    return y + (lines.length * calculatedLineHeight) + (fontStyle === 'bold' ? 1 : 0); // Add small extra gap for bold
+  };
 
   // Title
   doc.setFontSize(20);
-  doc.text(`Climate Actions Report - ${cityName}`, margin, yPos);
-  yPos += 20;
+  doc.text(t('pdf.reportTitle', { cityName }), margin, yPos);
+  yPos += 15; // Increased space after main title
 
-  // Top Mitigation Actions
-  doc.setFontSize(16);
-  doc.text("Top Mitigation Actions", margin, yPos);
-  yPos += 15;
+  // --- MITIGATION --- //
 
-  mitigationData.slice(0, 3).forEach((item, index, type = 'mitigation') => {
-    doc.setFont(defaultFont.normal, 'bold'); // Changed to default font
-    doc.setFontSize(14);
-    doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
-    yPos += 12;
-
-    doc.setFont(defaultFont.normal, 'normal'); // Changed to default font
-    doc.setFontSize(11);
-    // Description with proper text wrapping
-    const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
-    doc.text(descriptionText, margin + 5, yPos);
-    yPos += (descriptionText.length * 7) + 8;
-    // Reduction/Adaptation Potential
-    const potential = item.action.GHGReductionPotential ? 
-      `${getReductionPotential(item.action)}%` : 
-      toTitleCase(item.action.AdaptationEffectiveness || 'N/A');
-    doc.text(`${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}`, margin + 5, yPos);
+  // Top Mitigation Actions Title
+  if (mitigationData && mitigationData.length > 0) {
+    doc.setFontSize(13);
+    doc.text(t('pdf.topMitigationActions'), margin, yPos);
     yPos += 10;
-    // Sector/Hazard
-    const sectorOrHazard = item.action.Sector?.join ? 
-      item.action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') :
-      item.action.Hazard?.join ?
-        item.action.Hazard.map(h => toTitleCase(h)).join(', ') :
-        toTitleCase(String(item.action.Sector || item.action.Hazard || ''));
-    doc.text(`${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${sectorOrHazard}`, margin + 5, yPos);
-    yPos += 10;
-    // Cost
-    doc.text(`Estimated cost: ${toTitleCase(item.action.CostInvestmentNeeded || 'N/A')}`, margin + 5, yPos);
-    yPos += 10;
-    // Implementation time
-    doc.text(`Implementation time: ${item.action.TimelineForImplementation || 'N/A'}`, margin + 5, yPos);
-    yPos += 20;
-  });
 
-  // Full Mitigation List
-  yPos += 10;
-  doc.setFontSize(16);
-  doc.text("All Mitigation Actions", margin, yPos);
-  yPos += 10;
+    mitigationData.slice(0, 3).forEach((item, index) => {
+      const type = 'mitigation';
+      checkForNewPage(80); // Estimate space needed
 
-  const mitigationHeaders = [['Priority', 'Action Name', 'Reduction Potential']];
-  const mitigationRows = mitigationData.map((item, index) => [
-    index + 1,
-    item.action.ActionName,
-    item.action.GHGReductionPotential || 'N/A'
-  ]);
+      doc.setFont(defaultFont.normal, 'bold');
+      doc.setFontSize(14);
+      const actionTitle = `${index + 1}. ${item.action.ActionName}`; // Assuming ActionName is already translated or language-agnostic
+      yPos = addWrappedText(actionTitle, margin, yPos, contentWidth, 14, 'bold');
 
-  doc.autoTable({
-    startY: yPos,
-    head: mitigationHeaders,
-    body: mitigationRows,
-    margin: { left: margin }
-  });
+      doc.setFont(defaultFont.normal, 'normal');
+      doc.setFontSize(11);
+      // Assuming Description is already translated or language-agnostic
+      const descriptionText = doc.splitTextToSize(item.action.Description || '', contentWidth - 5);
+      if (checkForNewPage(descriptionText.length * 5)) {
+        yPos = addWrappedText(actionTitle, margin, yPos, contentWidth, 14, 'bold'); // Re-add title if new page
+      }
+      doc.text(descriptionText, margin + 5, yPos);
+      yPos += (descriptionText.length * 5) + 3;
 
-  // Add new page for adaptation actions
-  doc.addPage();
-  yPos = 20;
+      checkForNewPage(60); // Check space for grid
 
-  // Top Adaptation Actions
-  doc.setFontSize(16);
-  doc.text("Top Adaptation Actions", margin, yPos);
-  yPos += 15;
+      // Prepare translated details for the grid
+      const potentialKey = t('reductionPotential');
+      const sectorKey = t('sector');
+      const costKey = t('estimatedCost');
+      const timeKey = t('implementationTime');
 
-  adaptationData.slice(0, 3).forEach((item, index, type = 'adaptation') => {
-    doc.setFont(defaultFont.normal, 'bold'); // Changed to default font
-    doc.setFontSize(14);
-    doc.text(`${index + 1}. ${item.action.ActionName}`, margin, yPos);
-    yPos += 12;
+      const potentialValue = getReductionPotentialSafe(item.action, t);
+      const sectorValue = joinToTitleCase(item.action.Sector || [], t) || t('na');
+      const costValue = item.action.CostInvestmentNeeded ? t(item.action.CostInvestmentNeeded) : t('na');
+      const timeValue = item.action.TimelineForImplementation ? t(getTimelineTranslationKey(item.action.TimelineForImplementation)) : t('na');
 
-    doc.setFont(defaultFont.normal, 'normal'); // Changed to default font
-    doc.setFontSize(11);
-    // Description with proper text wrapping
-    const descriptionText = doc.splitTextToSize(item.action.Description, pageWidth - 2 * margin - 10);
-    doc.text(descriptionText, margin + 5, yPos);
-    yPos += (descriptionText.length * 7) + 8;
-    // Reduction/Adaptation Potential
-    const potential = item.action.GHGReductionPotential ?
-      `${getReductionPotential(item.action)}%` :
-      toTitleCase(item.action.AdaptationEffectiveness || 'N/A');
-    doc.text(`${isAdaptation(type) ? 'Adaptation' : 'Reduction'} Potential: ${potential}`, margin + 5, yPos);
-    yPos += 10;
-    // Sector/Hazard
-    const sectorOrHazard = item.action.Sector?.join ?
-      item.action.Sector.map(s => toTitleCase(s.replace('_', ' '))).join(', ') :
-      item.action.Hazard?.join ?
-        item.action.Hazard.map(h => toTitleCase(h)).join(', ') :
-        toTitleCase(String(item.action.Sector || item.action.Hazard || ''));
-    doc.text(`${isAdaptation(type) ? 'Hazard' : 'Sector'}: ${sectorOrHazard}`, margin + 5, yPos);
-    yPos += 10;
-    // Cost
-    doc.text(`Estimated cost: ${toTitleCase(item.action.CostInvestmentNeeded || 'N/A')}`, margin + 5, yPos);
-    yPos += 10;
-    // Implementation time
-    doc.text(`Implementation time: ${item.action.TimelineForImplementation || 'N/A'}`, margin + 5, yPos);
-    yPos += 20;
-  });
+      const details = [
+        `${potentialKey}: ${potentialValue}`,
+        `${sectorKey}: ${sectorValue}`,
+        `${costKey}: ${costValue}`,
+        `${timeKey}: ${timeValue}`
+      ];
 
-  // Full Adaptation List
-  yPos += 10;
-  doc.setFontSize(16);
-  doc.text("All Adaptation Actions", margin, yPos);
-  yPos += 10;
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
+      yPos += 12;
+    });
 
-  const adaptationHeaders = [['Priority', 'Action Name', 'Adaptation Potential']];
-  const adaptationRows = adaptationData.map((item, index) => [
-    index + 1,
-    item.action.ActionName,
-    item.action.AdaptationEffectiveness || 'N/A'
-  ]);
-
-  doc.autoTable({
-    startY: yPos,
-    head: adaptationHeaders,
-    body: adaptationRows,
-    margin: { left: margin }
-  });
-
-  // Add generated plans
-  const pageHeight = doc.internal.pageSize.height;
-  const contentHeight = pageHeight - 40; // Available content height per page
-  const styles = {
-    h2: { style: 'bold', fontSize: 14, spacing: 10 },
-    normal: { style: 'normal', fontSize: 12, spacing: 7 },
-    small: { style: 'italic', fontSize: 10, spacing: 5 }
-  };
-
-  const calculateTextHeight = (text, fontSize, pageWidth) => {
-    const lines = doc.splitTextToSize(text, pageWidth - 2 * margin);
-    return lines.length * (fontSize * 0.3528); // Convert pt to mm
-  };
-
-  if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
-    doc.addPage();
-    yPos = 20;
+    // Full Mitigation List
+    forceNewPage();
     doc.setFontSize(16);
-    doc.text("Generated Action Plans", margin, yPos);
-    yPos += 20;
+    doc.text(t('pdf.allMitigationActions'), margin, yPos);
+    yPos += 10;
 
-    generatedPlans.forEach((planData, index) => {
-      if (yPos > pageHeight - 40) {
-        doc.addPage();
-        yPos = 20;
-      }
+    const mitigationHeaders = [[t('pdf.priority'), t('pdf.actionName'), t('pdf.reductionPotential')]];
+    const mitigationRows = mitigationData.map((item, index) => [
+      index + 1,
+      item.action.ActionName, // Assuming ActionName is language-agnostic or pre-translated
+      getReductionPotentialSafe(item.action, t)
+    ]);
 
-      // Calculate required height for current plan
-      const plainText = convertMarkdownToPlainText(planData.plan);
-      const textHeight = calculateTextHeight(plainText, styles.normal.fontSize, pageWidth);
-      const headerHeight = styles.h2.spacing + styles.small.spacing + 8;
-      const totalRequiredHeight = textHeight + headerHeight;
-
-      // Check if we need a new page
-      if (yPos + totalRequiredHeight > contentHeight) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      // Plan header with background
-      doc.setFillColor(230, 240, 255);
-      doc.rect(margin - 2, yPos - 6, pageWidth - 2 * margin + 4, 12, 'F');
-      doc.setFont(undefined, styles.h2.style);
-      doc.setFontSize(styles.h2.fontSize);
-      doc.text(`Plan ${index + 1}: ${planData.actionName}`, margin, yPos);
-      yPos += styles.h2.spacing;
-      
-      // Timestamp
-      doc.setFont(undefined, 'italic');
-      doc.setFontSize(styles.small.fontSize);
-      doc.setTextColor(100, 100, 100);
-      doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos);
-      yPos += styles.small.spacing + 4;
-      
-      // Process the plan text with markdown support
-      doc.setFont(undefined, 'normal');
-      doc.setFontSize(styles.normal.fontSize);
-      doc.setTextColor(0, 0, 0);
-      const splitText = doc.splitTextToSize(plainText, pageWidth - 2 * margin);
-
-      splitText.forEach(line => {
-        if (yPos > contentHeight) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.text(line, margin, yPos);
-        yPos += styles.normal.spacing;
-      });
-
-      // Add some spacing between plans
-      yPos += 20;
-      if (yPos > pageHeight - 60) {
-        doc.addPage();
-        yPos = 20;
+    doc.autoTable({
+      startY: yPos,
+      head: mitigationHeaders,
+      body: mitigationRows,
+      margin: { left: margin, right: margin },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 45 } // Adjusted width for potentially longer translated text
+      },
+      styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
+      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
+      didDrawPage: function (data) {
+        doc.setFontSize(10);
+        doc.text(t('pdf.headerMitigation', { cityName }), margin, 10);
       }
     });
+    yPos = doc.autoTable.previous.finalY + 10;
   }
 
-  doc.save(`${cityName}_climate_actions.pdf`);
+  // --- ADAPTATION --- //
+  if (adaptationData && adaptationData.length > 0) {
+    if (mitigationData && mitigationData.length > 0) {
+      forceNewPage(); // Ensure adaptation starts on a new page if mitigation existed
+    }
+
+    doc.setFontSize(16);
+    doc.text(t('pdf.topAdaptationActions'), margin, yPos);
+    yPos += 10;
+
+    adaptationData.slice(0, 3).forEach((item, index) => {
+      const type = 'adaptation';
+      checkForNewPage(80); // Estimate space needed
+
+      doc.setFont(defaultFont.normal, 'bold');
+      doc.setFontSize(14);
+      const actionTitle = `${index + 1}. ${item.action.ActionName}`; // Assuming ActionName is language-agnostic
+      yPos = addWrappedText(actionTitle, margin, yPos, contentWidth, 14, 'bold');
+
+      doc.setFont(defaultFont.normal, 'normal');
+      doc.setFontSize(11);
+      const descriptionText = doc.splitTextToSize(item.action.Description || '', contentWidth - 5);
+      if (checkForNewPage(descriptionText.length * 5)) {
+        yPos = addWrappedText(actionTitle, margin, yPos, contentWidth, 14, 'bold'); // Re-add title if new page
+      }
+      doc.text(descriptionText, margin + 5, yPos);
+      yPos += (descriptionText.length * 5) + 3;
+
+      checkForNewPage(60); // Check space for grid
+
+      // Prepare translated details for the grid
+      const potentialKey = t('adaptationPotential');
+      const hazardKey = t('hazard');
+      const costKey = t('estimatedCost');
+      const timeKey = t('implementationTime');
+
+      const potentialValue = item.action.AdaptationEffectiveness ? t(item.action.AdaptationEffectiveness) : t('na');
+      const hazardValue = joinToTitleCase(item.action.Hazard || [], t) || t('na');
+      const costValue = item.action.CostInvestmentNeeded ? t(item.action.CostInvestmentNeeded) : t('na');
+      const timeValue = item.action.TimelineForImplementation ? t(getTimelineTranslationKey(item.action.TimelineForImplementation)) : t('na');
+
+      const details = [
+        `${potentialKey}: ${potentialValue}`,
+        `${hazardKey}: ${hazardValue}`,
+        `${costKey}: ${costValue}`,
+        `${timeKey}: ${timeValue}`
+      ];
+
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
+
+      // Add space after each action
+      yPos = renderDetailsGrid(details, margin, yPos, contentWidth, doc, defaultFont);
+
+      // Add space after each action
+      yPos += 12;
+    });
+
+    // Full Adaptation List
+    forceNewPage();
+    doc.setFontSize(16);
+    doc.text(t('pdf.allAdaptationActions'), margin, yPos);
+    yPos += 10;
+
+    const adaptationHeaders = [[t('pdf.priority'), t('pdf.actionName'), t('pdf.adaptationPotential')]];
+    const adaptationRows = adaptationData.map((item, index) => [
+      index + 1,
+      item.action.ActionName, // Assuming ActionName is language-agnostic or pre-translated
+      item.action.AdaptationEffectiveness ? t(item.action.AdaptationEffectiveness) : t('na')
+    ]);
+
+    doc.autoTable({
+      startY: yPos,
+      head: adaptationHeaders,
+      body: adaptationRows,
+      margin: { left: margin, right: margin },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 45 } // Adjusted width for potentially longer translated text
+      },
+      styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
+      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
+      didDrawPage: function (data) {
+        doc.setFontSize(10);
+        doc.text(t('pdf.headerAdaptation', { cityName }), margin, 10);
+      }
+    });
+    yPos = doc.autoTable.previous.finalY + 10;
+  }
+
+  // --- GENERATED PLANS --- //
+  if (generatedPlans && Array.isArray(generatedPlans) && generatedPlans.length > 0) {
+    forceNewPage();
+
+    doc.setFontSize(16);
+    doc.text(t('pdf.generatedPlans'), margin, yPos);
+    yPos += 15;
+
+    // ... (Rest of generated plans logic - assuming plan text itself doesn't need translation here)
+    // Consider translating the timestamp format if needed
+    generatedPlans.forEach((planData, index) => {
+      const planTitle = t('pdf.planTitle', { index: index + 1, actionName: planData.actionName });
+      doc.text(new Date(planData.timestamp).toLocaleString(), margin, yPos); // Maybe translate format?
+    });
+
+  }
+
+  // Add page numbers
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(9);
+    doc.text(t('pdf.page', { i, pageCount }), pageWidth / 2, pageHeight - 10, { align: 'center' });
+  }
+
+  // Use translated filename, replacing spaces in city name for safety
+  const safeCityName = cityName.replace(/\s+/g, '_');
+  doc.save(t('pdf.filename', { cityName: safeCityName }));
 };
 
 export const exportUtils = {
-  exportToCSV,
   exportToPDF
 };
 
@@ -436,3 +618,90 @@ export default exportUtils;
 
 // Placeholder for markdown conversion function.  Replace with your actual implementation.
 const convertMarkdownToPlainText = (markdown) => markdown.replace(/`/g, '');
+
+// --- CSV Data Preparation for react-csv/CSVLink ---
+
+// Helper to get translated value for a specific cell based on column config
+export const getTranslatedCsvValue = (rowItem, column, t) => {
+    if (!rowItem || !column) {
+        console.warn('Missing rowItem or column:', { rowItem, column });
+        return '';
+    }
+
+    // Handle nested action object
+    const rawValue = column.accessorKey.startsWith('action.') 
+        ? rowItem.action?.[column.accessorKey.replace('action.', '')]
+        : rowItem[column.accessorKey];
+
+    if (rawValue === undefined || rawValue === null) {
+        return '';
+    }
+
+    // Handle array values (e.g., hazards, sectors)
+    if (Array.isArray(rawValue)) {
+        return rawValue.map(item => {
+            // Convert hyphens to underscores for hazard keys
+            const key = item.includes('-') ? item.replace(/-/g, '_') : item;
+            // Use joinToTitleCase for proper translation
+            return joinToTitleCase([key], t);
+        }).join(', ');
+    }
+
+    // Handle object values (e.g., GHGReductionPotential)
+    if (typeof rawValue === 'object' && rawValue !== null) {
+        const entries = Object.entries(rawValue)
+            .filter(([_, value]) => value !== null && value !== undefined && value !== '')
+            .map(([key, value]) => `${t(key)}: ${value}%`);
+        return entries.join(', ');
+    }
+
+    // Handle timeline values
+    if (column.accessorKey === 'action.TimelineForImplementation') {
+        const timelineKey = getTimelineTranslationKey(rawValue);
+        return t(timelineKey);
+    }
+
+    // Handle cost values
+    if (column.accessorKey === 'action.CostInvestmentNeeded') {
+        return t(rawValue);
+    }
+
+    // Handle adaptation effectiveness
+    if (column.accessorKey === 'action.AdaptationEffectiveness') {
+        return t(rawValue);
+    }
+
+    // Handle single values
+    return t(rawValue.toString());
+};
+
+// Prepares headers and data array suitable for react-csv/CSVLink
+export const prepareCsvData = (data, columns, t) => {
+    if (!data || !columns || !Array.isArray(data) || !Array.isArray(columns)) {
+        console.error('Invalid input data:', { data, columns });
+        return { headers: [], data: [] };
+    }
+
+    // Prepare headers with translated labels and clean keys
+    const headers = columns.map(col => {
+        // Remove 'action.' prefix from the key if it exists
+        const cleanKey = col.accessorKey.replace('action.', '');
+        return {
+            label: t(col.header),
+            key: cleanKey
+        };
+    });
+
+    // Prepare data rows with translated values and clean keys
+    const rows = data.map((item, index) => {
+        const row = {};
+        columns.forEach(col => {
+            // Remove 'action.' prefix from the key if it exists
+            const cleanKey = col.accessorKey.replace('action.', '');
+            row[cleanKey] = getTranslatedCsvValue(item, col, t);
+        });
+        return row;
+    });
+
+    return { headers, data: rows };
+};
