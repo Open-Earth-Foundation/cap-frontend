@@ -1,11 +1,38 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { saveAs } from 'file-saver';
-import { getNestedValue, getReductionPotential, getTimelineTranslationKey, isAdaptation, joinToTitleCase, toSentenceCase, toTitleCase } from './helpers';
-import { useTranslation } from 'react-i18next';
-import { CSVLink } from 'react-csv';
+import {
+  getTimelineTranslationKey,
+  joinToTitleCase,
+  toSentenceCase,
+  toTitleCase,
+} from './helpers';
 
-const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
+const ensureAutoTable = async () => {
+  try {
+    const autoTableModule = await import('jspdf-autotable');
+    if (
+      autoTableModule.autoTable &&
+      typeof autoTableModule.autoTable === 'function' &&
+      !jsPDF.autoTable
+    ) {
+      autoTableModule.applyPlugin(jsPDF);
+    } 
+  } catch (importError) {
+    console.error('Dynamic import failed:', importError);
+    console.error('Import error details:', {
+      name: importError.name,
+      message: importError.message,
+      stack: importError.stack,
+    });
+  }
+};
+
+const generatePdfReport = (
+  cityName,
+  ccraData,
+  qualitativeScore,
+  customRiskLevels
+) => {
   const doc = new jsPDF();
 
   // Page configuration
@@ -178,31 +205,38 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
     qualitativeScore ? 'Adjusted\nVulnerability' : 'Vulnerability',
     qualitativeScore ? 'Adjusted\nRisk' : 'Risk Score',
     'Risk\nLevel',
-    'Custom\nRisk'
+    'Custom\nRisk',
   ];
 
   const fullTableData = ccraData.map((row, index) => {
-    const adjustedRiskScore = qualitativeScore ? calculateAdjustedRiskScore(row, qualitativeScore) : row["Risk Score"];
-    const adjustedVulnerability = qualitativeScore ? calculateAdjustedVulnerability(row, qualitativeScore) : row["Vulnerability Score"];
+    const adjustedRiskScore = qualitativeScore
+      ? calculateAdjustedRiskScore(row, qualitativeScore)
+      : row['Risk Score'];
+    const adjustedVulnerability = qualitativeScore
+      ? calculateAdjustedVulnerability(row, qualitativeScore)
+      : row['Vulnerability Score'];
 
     return [
       row.Sector,
       row.Hazard,
-      row["Climate Threat Score"]?.toFixed(2),
-      row["Exposure Score"]?.toFixed(2),
-      row["Sensitivity Score"]?.toFixed(2),
-      qualitativeScore ? qualitativeScore.toFixed(2) : row["Adaptive Capacity Score"]?.toFixed(2),
+      row['Climate Threat Score']?.toFixed(2),
+      row['Exposure Score']?.toFixed(2),
+      row['Sensitivity Score']?.toFixed(2),
+      qualitativeScore
+        ? qualitativeScore.toFixed(2)
+        : row['Adaptive Capacity Score']?.toFixed(2),
       adjustedVulnerability?.toFixed(2),
       adjustedRiskScore?.toFixed(2),
       defineRiskLevel(adjustedRiskScore),
-      customRiskLevels[index] || defineRiskLevel(adjustedRiskScore)
+      customRiskLevels[index] || defineRiskLevel(adjustedRiskScore),
     ];
   });
 
   // Add the full table with improved column configuration and cell handling
-  doc.autoTable({
-    startY: currentY,
-    head: [fullTableHeaders],
+  if (doc.autoTable) {
+    doc.autoTable({
+      startY: currentY,
+      head: [fullTableHeaders],
     body: fullTableData,
     theme: 'grid',
     styles: {
@@ -246,24 +280,53 @@ const generatePdfReport = (cityName, ccraData, qualitativeScore, customRiskLevel
       }
     },
     didDrawPage: function (data) {
-      // Add header and footer to each page
-      doc.setFontSize(9);
-      doc.text(`Climate Risk Assessment - ${cityName}`, horizontalMargin, 10);
-    }
-  });
+        // Add header and footer to each page
+        doc.setFontSize(9);
+        doc.text(`Climate Risk Assessment - ${cityName}`, horizontalMargin, 10);
+      },
+    });
+  } else {
+    console.warn('Using fallback table generation - autoTable not available');
+    // For this complex table, we'll just add a simple text representation
+    doc.setFontSize(10);
+    doc.text('Detailed Risk Assessment Table', horizontalMargin, currentY);
+    currentY += 10;
+    doc.setFontSize(8);
+    fullTableData.slice(0, 10).forEach((row, index) => {
+      if (currentY > pageHeight - 30) {
+        doc.addPage();
+        currentY = topMargin;
+      }
+      const rowText = `${index + 1}. ${row[0]} - ${row[1]} (Risk: ${row[7]})`;
+      doc.text(rowText, horizontalMargin, currentY);
+      currentY += 5;
+    });
+  }
 
   // Add page numbers to all pages
   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(9);
-    doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+    doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, {
+      align: 'center',
+    });
   }
 
   return doc;
 };
-export const exportCCRAToPDF = (cityName, ccraData, qualitativeScore, customRiskLevels) => {
-  const doc = generatePdfReport(cityName, ccraData, qualitativeScore, customRiskLevels);
+export const exportCCRAToPDF = (
+  cityName,
+  ccraData,
+  qualitativeScore,
+  customRiskLevels
+) => {
+  const doc = generatePdfReport(
+    cityName,
+    ccraData,
+    qualitativeScore,
+    customRiskLevels
+  );
   doc.save(`${cityName.replace(/\s+/g, '_')}_CCRA_Report.pdf`);
 };
 
@@ -360,8 +423,17 @@ const getReductionPotentialSafe = (action, t) => {
 };
 
 // Main PDF export function, now accepting the t function
-export const exportToPDF = (cityName, mitigationData, adaptationData, generatedPlans, t) => {
+export const exportToPDF = async (
+  cityName,
+  mitigationData,
+  adaptationData,
+  generatedPlans,
+  t
+) => {
+  await ensureAutoTable();
+
   const doc = new jsPDF();
+
   let yPos = 20;
   const margin = 20;
   const pageWidth = doc.internal.pageSize.width;
@@ -462,31 +534,48 @@ export const exportToPDF = (cityName, mitigationData, adaptationData, generatedP
     doc.text(t('pdf.allMitigationActions'), margin, yPos);
     yPos += 10;
 
-    const mitigationHeaders = [[t('pdf.priority'), t('pdf.actionName'), t('pdf.reductionPotential')]];
+    const mitigationHeaders = [
+      [t('pdf.priority'), t('pdf.actionName'), t('pdf.reductionPotential')],
+    ];
     const mitigationRows = mitigationData.map((item, index) => [
       index + 1,
       item.action.ActionName, // Assuming ActionName is language-agnostic or pre-translated
-      getReductionPotentialSafe(item.action, t)
+      getReductionPotentialSafe(item.action, t),
     ]);
 
-    doc.autoTable({
-      startY: yPos,
-      head: mitigationHeaders,
+    if (doc.autoTable) {
+      doc.autoTable({
+        startY: yPos,
+        head: mitigationHeaders,
       body: mitigationRows,
       margin: { left: margin, right: margin },
-      columnStyles: {
-        0: { cellWidth: 20 },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 45 } // Adjusted width for potentially longer translated text
-      },
-      styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
-      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
-      didDrawPage: function (data) {
-        doc.setFontSize(10);
-        doc.text(t('pdf.headerMitigation', { cityName }), margin, 10);
-      }
-    });
-    yPos = doc.autoTable.previous.finalY + 10;
+        columnStyles: {
+          0: { cellWidth: 20 },
+          1: { cellWidth: 'auto' },
+          2: { cellWidth: 45 }, // Adjusted width for potentially longer translated text
+        },
+        styles: { overflow: 'linebreak', cellPadding: 3, fontSize: 9 }, // Smaller font for table body
+        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 10 },
+        didDrawPage: function (data) {
+          doc.setFontSize(10);
+          doc.text(t('pdf.headerMitigation', { cityName }), margin, 10);
+        },
+      });
+      // Safely get the final Y position
+      yPos =
+        doc.autoTable.previous && doc.autoTable.previous.finalY
+          ? doc.autoTable.previous.finalY + 10
+          : yPos + mitigationRows.length * 15 + 20; // Fallback calculation
+    } else {
+      console.warn('Using fallback table generation - autoTable not available');
+      yPos = createSimpleTable(
+        doc,
+        mitigationHeaders,
+        mitigationRows,
+        yPos,
+        margin
+      );
+    }
   }
 
   // --- ADAPTATION --- //
@@ -703,5 +792,62 @@ export const prepareCsvData = (data, columns, t) => {
         return row;
     });
 
-    return { headers, data: rows };
+  return { headers, data: rows };
+};
+
+// Fallback function to create a simple table without autoTable
+const createSimpleTable = (doc, headers, rows, startY, margin) => {
+  const fontSize = 9;
+  const lineHeight = fontSize * 0.352778 * 1.2;
+  let currentY = startY;
+
+  // Draw headers
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setFillColor(41, 128, 185);
+  doc.setTextColor(255, 255, 255);
+
+  const colWidths = [20, 100, 45]; // Priority, Action Name, Potential
+  let xPos = margin;
+
+  headers[0].forEach((header, index) => {
+    doc.rect(xPos, currentY, colWidths[index], lineHeight * 1.5, 'F');
+    doc.text(header, xPos + 2, currentY + lineHeight);
+    xPos += colWidths[index];
+  });
+
+  currentY += lineHeight * 1.5;
+
+  // Draw rows
+  doc.setFontSize(fontSize);
+  doc.setFont('helvetica', 'normal');
+  doc.setFillColor(255, 255, 255);
+  doc.setTextColor(0, 0, 0);
+
+  rows.forEach((row, rowIndex) => {
+    if (currentY + lineHeight > doc.internal.pageSize.height - 30) {
+      doc.addPage();
+      currentY = 20;
+    }
+
+    xPos = margin;
+    row.forEach((cell, colIndex) => {
+      const cellText = String(cell);
+      const lines = doc.splitTextToSize(cellText, colWidths[colIndex] - 4);
+
+      lines.forEach((line, lineIndex) => {
+        if (currentY + lineHeight > doc.internal.pageSize.height - 30) {
+          doc.addPage();
+          currentY = 20;
+        }
+        doc.text(line, xPos + 2, currentY + lineHeight);
+        currentY += lineHeight;
+      });
+
+      xPos += colWidths[colIndex];
+      currentY = startY + (rowIndex + 1) * lineHeight * 1.5;
+    });
+  });
+
+  return currentY + 10;
 };

@@ -15,21 +15,25 @@ export function DownloadButton({ type, selectedCity, t, adaptationData, mitigati
     };
 
     const handleClose = () => {
-        setAnchorEl(null);
-    };
+    setAnchorEl(null);
+  };
 
-    const handleDownload = (format) => {
-        if (format === 'pdf') {
-            exportToPDF(
-                selectedCity,
-                mitigationData,
-                adaptationData,
-                generatedPlans,
-                t
-            );
-        }
-        handleClose();
-    };
+  const handleDownload = async (format) => {
+    if (format === "pdf") {
+      try {
+        await exportToPDF(
+          selectedCity,
+          mitigationData,
+          adaptationData,
+          generatedPlans,
+          t
+        );
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+      }
+    }
+    handleClose();
+  };
 
     return (
         <>
