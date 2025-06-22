@@ -759,24 +759,6 @@ export const exportToPDF = async (
         doc,
         defaultFont
       );
-      yPos = renderDetailsGrid(
-        details,
-        margin,
-        yPos,
-        contentWidth,
-        doc,
-        defaultFont
-      );
-
-      // Add space after each action
-      yPos = renderDetailsGrid(
-        details,
-        margin,
-        yPos,
-        contentWidth,
-        doc,
-        defaultFont
-      );
 
       // Add space after each action
       yPos += 12;
@@ -876,11 +858,6 @@ export const exportUtils = {
 };
 
 export default exportUtils;
-
-// Placeholder for markdown conversion function.  Replace with your actual implementation.
-const convertMarkdownToPlainText = (markdown) => markdown.replace(/`/g, "");
-
-// --- CSV Data Preparation for react-csv/CSVLink ---
 
 // Helper to get translated value for a specific cell based on column config
 export const getTranslatedCsvValue = (rowItem, column, t) => {
