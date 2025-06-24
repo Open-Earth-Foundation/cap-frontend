@@ -206,18 +206,6 @@ const ActionDetailsModal = ({ cityAction, onClose, type }) => {
               </>
             )}
 
-            {action.EquityAndInclusionConsiderations && (
-              <div>
-                <h3 className="text-lg font-medium text-[#232640] mb-3">
-                  {t("equityAndInclusionConsiderations")}
-                </h3>
-                {action.EquityAndInclusionConsiderations && (
-                  <MarkdownRenderer
-                    markdownContent={action.EquityAndInclusionConsiderations}
-                  />
-                )}
-              </div>
-            )}
           </div>
         </div>
       </div>
