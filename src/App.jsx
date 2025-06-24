@@ -31,16 +31,19 @@ const CityView = () => {
         setLoading(true);
         setError(null);
         try {
-            const data = await readFile(city, type);
+            const data = (await readFile(city, type)).sort(
+              (a, b) => a.actionPriority - b.actionPriority
+            );
             if (type === ADAPTATION) {
                 setAdaptationData(data);
             } else {
-                setMitigationData(data);
-            }
-        } catch (err) {
-            setError(`Failed to fetch data: ${err.message}`);
-        } finally {
-            setLoading(false);
+          setMitigationData(data);
+        }
+      } catch (err) {
+        console.error(`Failed to fetch data: ${err.message}`, err);
+        setError(`Failed to fetch data: ${err.message}`);
+      } finally {
+        setLoading(false);
         }
     };
 

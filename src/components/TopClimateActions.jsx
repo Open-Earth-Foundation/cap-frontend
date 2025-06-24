@@ -29,9 +29,7 @@ const TopClimateActions = ({
     const { t, i18n } = useTranslation();
 
     // Get top 3 actions of the specified type
-    const topActions = actions
-        .sort((a, b) => a.actionPriority - b.actionPriority)
-        .slice(0, 3);
+    const topActions = actions.slice(0, 3);
 
     const getProgressBars = (action) => {
         if (isAdaptation(type)) {

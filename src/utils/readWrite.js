@@ -39,8 +39,12 @@ const streamToString = async (stream) => {
 };
 
 function getFileName(cityName, type) {
-  const fileName = CITIES.find((city) => city.value === cityName).locode;
   const language = i18next.language || "en"; // Default to 'en' if no language is set
+  return getFileNameForLanguage(cityName, type, language);
+}
+
+function getFileNameForLanguage(cityName, type, language) {
+  const fileName = CITIES.find((city) => city.value === cityName).locode;
   return `data/${language}/${type}/${fileName}.json`;
 }
 
