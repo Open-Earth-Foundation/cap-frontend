@@ -64,6 +64,11 @@ jobs:
       - name: Testing connection to EKS
         run: kubectl get pods -n default
 
+      - name: Deploy Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/cap-frontend-deployment.yml
+          kubectl apply -f k8s/cap-frontend-service.yml
+
       - name: Set environment variables in container on cluster
         run: |
           kubectl set env deployment/cap-frontend \

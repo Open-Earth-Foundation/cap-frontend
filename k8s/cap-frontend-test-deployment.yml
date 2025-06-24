@@ -4,7 +4,6 @@ metadata:
   name: cap-frontend-test
   labels:
     app: cap-frontend-test
-    environment: test
 spec:
   replicas: 1
   selector:
@@ -14,7 +13,6 @@ spec:
     metadata:
       labels:
         app: cap-frontend-test
-        environment: test
     spec:
       containers:
       - name: cap-frontend-test
