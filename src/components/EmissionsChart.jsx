@@ -11,31 +11,31 @@ const EmissionsCharts = ({ city }) => {
       id: t('stationary_energy'),
       label: t('stationary_energy'),
       value: city.stationaryEnergyEmissions / 1000,
-      color: '#FFAB51'
+      color: '#5785F4'
     },
     {
       id: t('transportation'),
       label: t('transportation'),
       value: city.transportationEmissions / 1000,
-      color: '#5162FF'
+      color: '#DF2222'
     },
     {
       id: t('waste'),
       label: t('waste'),
       value: city.wasteEmissions / 1000,
-      color: '#51ABFF'
+      color: '#F28C37'
     },
     {
       id: t('ippu'),
       label: t('ippu'),
       value: city.industrialProcessEmissions / 1000,
-      color: '#CFAE53'
+      color: '#2DD05B'
     },
     {
       id: t('afolu'),
       label: t('afolu'),
       value: city.landUseEmissions / 1000,
-      color: '#D45252'
+      color: '#C6C61D'
     },
   ];
 
