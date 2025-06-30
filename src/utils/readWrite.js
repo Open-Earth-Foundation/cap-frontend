@@ -48,6 +48,11 @@ function getFileNameForLanguage(cityName, type, language) {
   return `data/${language}/${type}/${fileName}.json`;
 }
 
+function getSelectedActionsFileName(cityName, type) {
+  const fileName = CITIES.find((city) => city.value === cityName).locode;
+  return `data/selected/${type}/${fileName}.json`;
+}
+
 export const fetchCityContextData = async () => {
   try {
     const command = new GetObjectCommand({
@@ -86,11 +91,58 @@ export const writeFile = async (cityName, data, type) => {
       Key: getFileName(cityName, type),
       Body: dataJson,
       ContentType: "application/json",
+      TTL: 0,
     });
     await s3Client.send(command);
     console.log("New ranking saved to S3");
   } catch (err) {
     console.error("Error writing file to S3:", err);
     throw err;
+  }
+};
+
+export const writeSelectedActionsFile = async (
+  cityName,
+  selectedActionIds,
+  type
+) => {
+  try {
+    // Create a new filename for selected actions (language-agnostic)
+    const selectedActionsKey = getSelectedActionsFileName(cityName, type);
+
+    // Remove duplicates and store only unique action IDs
+    const uniqueActionIds = [...new Set(selectedActionIds)];
+    const dataJson = JSON.stringify(uniqueActionIds, null, 2);
+
+    const command = new PutObjectCommand({
+      Bucket: bucketName,
+      Key: selectedActionsKey,
+      Body: dataJson,
+      ContentType: "application/json",
+      TTL: 0,
+    });
+    await s3Client.send(command);
+    console.log("Selected action IDs saved to S3");
+  } catch (err) {
+    console.error("Error writing selected actions file to S3:", err);
+    throw err;
+  }
+};
+
+export const readSelectedActionsFile = async (cityName, type) => {
+  try {
+    const selectedActionsKey = getSelectedActionsFileName(cityName, type);
+
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: selectedActionsKey,
+    });
+    const response = await s3Client.send(command);
+    const data = await streamToString(response.Body);
+    return JSON.parse(data); // This will be an array of action IDs
+  } catch (err) {
+    // this will fail if the file doesn't exist,
+    // ignore it (top 3 ranked actions will be shown)
+    return [];
   }
 };

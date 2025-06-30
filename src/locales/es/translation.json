@@ -32,7 +32,7 @@
   "coBenefits": "Co-beneficios",
   "equityAndInclusionConsiderations": "Consideraciones de equidad e inclusión",
   "seeMoreDetails": "Ver más detalles",
-  "generatePlan": "Generar Planes",
+  "generatePlan": "Generar Plan",
   "takeAction": "Toma acción. Genera impacto.",
   "driveImpact": "El objetivo de esta herramienta es recomendar acciones para tu ciudad basadas en tu Inventario de GEI, tu Evaluación de Riesgos Climáticos y tus Datos de Contexto de la Ciudad, y proponer un plan de implementación para las acciones.",
   "explanation": "Explicación",
@@ -57,7 +57,7 @@
   "hazard": "Riesgo",
   "adaptationEffectiveness": "Efectividad de Adaptación",
   "generating": "Generando...",
-  "thisMightTakeAFewMinutes": "Esto puede tomar unos minutos...",
+  "thisMightTakeAFewMinutes": "Esto puede tomar unos minutos",
   "exportPdf": "EXPORTAR PDF",
   "goBack": "Volver",
   "detail": "Detalle",
@@ -142,8 +142,9 @@
   "action-type-adaptation": "Adaptación",
   "tab-cap-title": "Priorización de acciones climáticas",
   "loading": "Cargando acciones...",
+  "loadingUnranked": "Cargando...",
   "priority": "Prioridad",
-  "action-name": "Nombre de la Acción",
+  "action-name": "Acción",
   "hazards": "Riesgos",
   "hazards-covered": "Riesgos cubiertos",
   "sector-label": "Sector",
@@ -208,5 +209,12 @@
   "climateActionsUI": {
     "loading": "Cargando",
     "cancel": "Cancelar"
-  }
+  },
+  "selectedClimateActions": "Acciones Climáticas Seleccionadas",
+  "selectedActionsDescription": "Aquí están tus acciones climáticas seleccionadas. Puedes generar planes de implementación para estas acciones.",
+  "selectedAction": "Acción Seleccionada",
+  "pickTopActions": "SELECCIONAR MEJORES ACCIONES",
+  "selectUpTo3Actions": "Selecciona hasta 3 acciones de las tablas de abajo para verlas en la sección superior.",
+  "maximumActionsSelected": "Máximo de 3 acciones seleccionadas. Puedes deseleccionar acciones para elegir otras diferentes.",
+  "selectMoreActions": "Puedes seleccionar {{count}} acción(es) más."
 }
