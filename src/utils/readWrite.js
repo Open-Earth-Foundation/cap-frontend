@@ -91,6 +91,7 @@ export const writeFile = async (cityName, data, type) => {
       Key: getFileName(cityName, type),
       Body: dataJson,
       ContentType: "application/json",
+      TTL: 0,
     });
     await s3Client.send(command);
     console.log("New ranking saved to S3");
@@ -118,6 +119,7 @@ export const writeSelectedActionsFile = async (
       Key: selectedActionsKey,
       Body: dataJson,
       ContentType: "application/json",
+      TTL: 0,
     });
     await s3Client.send(command);
     console.log("Selected action IDs saved to S3");
