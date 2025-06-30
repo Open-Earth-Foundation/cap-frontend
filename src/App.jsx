@@ -4,75 +4,35 @@ import { HashRouter, Navigate, Route, Routes, useParams, } from "react-router-do
 import Hero from "./components/Hero";
 import ClimateActions from "./components/ClimateActions.jsx";
 import "./index.css";
-import { readFile } from "./utils/readWrite.js";
-import { ADAPTATION, MITIGATION } from "./utils/helpers.js";
 import { useTranslation } from "react-i18next";
 import { CITIES } from "./components/constants.js";
 import { ButtonMedium } from "./components/Texts/Button.jsx";
 
 const CityView = () => {
-    const { cityName } = useParams();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [adaptationData, setAdaptationData] = useState([]);
-    const [mitigationData, setMitigationData] = useState([]);
-    const { t, i18n } = useTranslation();
+  const { cityName } = useParams();
 
-    const validCity = CITIES.find(
-        (city) => city.value.toLowerCase() === cityName?.toLowerCase(),
-    );
+  const validCity = CITIES.find(
+    (city) => city.value.toLowerCase() === cityName?.toLowerCase()
+  );
 
-    if (!validCity) {
-        return <Navigate to="/" />;
-    }
+  if (!validCity) {
+    return <Navigate to="/" />;
+  }
 
-    const fetchData = async (city, type) => {
-        if (!city) return;
-        setLoading(true);
-        setError(null);
-        try {
-            const data = (await readFile(city, type)).sort(
-              (a, b) => a.actionPriority - b.actionPriority
-            );
-            if (type === ADAPTATION) {
-                setAdaptationData(data);
-            } else {
-          setMitigationData(data);
-        }
-      } catch (err) {
-        console.error(`Failed to fetch data: ${err.message}`, err);
-        setError(`Failed to fetch data: ${err.message}`);
-      } finally {
-        setLoading(false);
-        }
-    };
-
-    React.useEffect(() => {
-        if (validCity) {
-            fetchData(validCity.value, ADAPTATION);
-            fetchData(validCity.value, MITIGATION);
-        }
-    }, [validCity, i18n.language]);
-
-    return (
-        <div className={"py-4"}>
-            <Hero initialCity={validCity.value} />
-            <div style={{ backgroundColor: "#fafafa" }} className="max-w-screen-xl mx-auto p-12">
-
-
-                <ClimateActions
-                    selectedLocode={validCity.locode}
-                    selectedCity={validCity.value}
-                    mitigationData={mitigationData}
-                    setMitigationData={setMitigationData}
-                    adaptationData={adaptationData}
-                    setAdaptationData={setAdaptationData}
-                    loading={loading}
-                    error={error}
-                />
-            </div>
-        </div>
-    );
+  return (
+    <div className={"py-4"}>
+      <Hero initialCity={validCity.value} />
+      <div
+        style={{ backgroundColor: "#fafafa" }}
+        className="max-w-screen-xl mx-auto p-12"
+      >
+        <ClimateActions
+          selectedLocode={validCity.locode}
+          selectedCity={validCity.value}
+        />
+      </div>
+    </div>
+  );
 };
 
 const App = () => {

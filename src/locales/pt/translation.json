@@ -32,7 +32,7 @@
   "coBenefits": "Co-benefícios",
   "equityAndInclusionConsiderations": "Considerações de equidade e inclusão",
   "seeMoreDetails": "Ver mais detalhes",
-  "generatePlan": "Gerar Planos",
+  "generatePlan": "Gerar Plano",
   "takeAction": "Tome ação. Gere impacto.",
   "driveImpact": "O objetivo desta ferramenta é recomendar ações para sua cidade com base no seu Inventário de GEE, sua Avaliação de Riscos Climáticos e seus Dados de Contexto da Cidade, e propor um plano de implementação para as ações.",
   "explanation": "Explicação",
@@ -57,7 +57,7 @@
   "hazard": "Risco",
   "adaptationEffectiveness": "Efetividade de Adaptação",
   "generating": "Gerando...",
-  "thisMightTakeAFewMinutes": "Isso pode levar alguns minutos...",
+  "thisMightTakeAFewMinutes": "Isso pode levar alguns minutos",
   "exportPdf": "EXPORTAR PDF",
   "goBack": "Voltar",
   "detail": "Detalhe",
@@ -208,5 +208,12 @@
   "climateActionsUI": {
     "loading": "Carregando",
     "cancel": "Cancelar"
-  }
+  },
+  "selectedClimateActions": "Ações Climáticas Selecionadas",
+  "selectedActionsDescription": "Aqui estão suas ações climáticas selecionadas. Você pode gerar planos de implementação para essas ações.",
+  "selectedAction": "Ação Selecionada",
+  "pickTopActions": "SELECIONAR MELHORES AÇÕES",
+  "selectUpTo3Actions": "Selecione até 3 ações das tabelas abaixo para vê-las na seção superior.",
+  "maximumActionsSelected": "Máximo de 3 ações selecionadas. Você pode desmarcar ações para escolher outras diferentes.",
+  "selectMoreActions": "Você pode selecionar mais {{count}} ação(ões)."
 }
