@@ -264,7 +264,7 @@ export function ActionsTable({
                 <MdBookmark size={30} color="#2351DC" />
               )}
               <BodyMedium fontWeight="bold">
-                {row.original.actionName}
+                {row.original.action.ActionName}
               </BodyMedium>
             </div>
           </Stack>
