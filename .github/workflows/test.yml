@@ -1,13 +1,13 @@
-name: CAP Frontend Deployment
+name: CAP Frontend Test Deployment
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - develop
+      - test
     paths:
       - "**"
-      - ".github/workflows/develop.yml"
+      - ".github/workflows/test.yml"
 
 jobs:
   build:
@@ -45,8 +45,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ steps.vars.outputs.commit_hash }}
-            ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+            ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:test-${{ steps.vars.outputs.commit_hash }}
+            ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:test-latest
 
   deploy:
     needs: build
@@ -64,14 +64,14 @@ jobs:
       - name: Testing connection to EKS
         run: kubectl get pods -n default
 
-      - name: Deploy Kubernetes manifests
+      - name: Deploy test Kubernetes manifests
         run: |
-          kubectl apply -f k8s/cap-frontend-deployment.yml
-          kubectl apply -f k8s/cap-frontend-service.yml
+          kubectl apply -f k8s/cap-frontend-test-deployment.yml
+          kubectl apply -f k8s/cap-frontend-test-service.yml
 
-      - name: Set environment variables in container on cluster
+      - name: Set environment variables in test container on cluster
         run: |
-          kubectl set env deployment/cap-frontend \
+          kubectl set env deployment/cap-frontend-test \
             VITE_AWS_REGION=us-east-2 \
             VITE_API_URL="http://cap-api:8080" \
             VITE_PLAN_CREATOR_URL="http://hiap-service" \
@@ -79,6 +79,6 @@ jobs:
             VITE_AWS_ACCESS_KEY_ID="${{ secrets.VITE_AWS_ACCESS_KEY_ID }}" \
             VITE_AWS_SECRET_ACCESS_KEY="${{ secrets.VITE_AWS_SECRET_ACCESS_KEY }}"
 
-      - name: Re-deploying service
+      - name: Re-deploying test service
         run: |
-          kubectl rollout restart deployment cap-frontend -n default
+          kubectl rollout restart deployment cap-frontend-test -n default
