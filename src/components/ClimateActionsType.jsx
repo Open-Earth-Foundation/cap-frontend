@@ -9,7 +9,7 @@ import { isAdaptation } from "../utils/helpers.js";
 import { useTranslation } from "react-i18next";
 import { ActionDrawer } from "./ActionDrawer.jsx";
 import TopClimateActions from "./TopClimateActions.jsx";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, CircularProgress } from "@mui/material";
 import { DownloadButton } from "./DownloadButton.jsx";
 import { ButtonMedium } from "./Texts/Button.jsx";
 import { ActionsTable } from "./ActionsTable.jsx";
@@ -27,6 +27,7 @@ const ClimateActionsType = ({ type, selectedCity }) => {
   const [enableRowSelection, setEnableRowSelection] = useState(false);
   const [selectedActionIds, setSelectedActionIds] = useState([]);
   const [showLongList, setShowLongList] = useState(false);
+  const [isLoadingLongList, setIsLoadingLongList] = useState(false);
 
   const { t, i18n } = useTranslation();
 
@@ -222,6 +223,24 @@ const ClimateActionsType = ({ type, selectedCity }) => {
     }
   };
 
+  // Function to handle long list toggle with loading state
+  const handleLongListToggle = async () => {
+    if (!showLongList) {
+      // Show loading when opening the long list
+      setIsLoadingLongList(true);
+      setShowLongList(true);
+
+      // Small delay to allow the UI to update and show loading state
+      setTimeout(() => {
+        setIsLoadingLongList(false);
+      }, 100);
+    } else {
+      // Hide immediately when closing
+      setShowLongList(false);
+      setIsLoadingLongList(false);
+    }
+  };
+
   const longListData = adaptLongListData(longList, type);
 
   return (
@@ -374,7 +393,7 @@ const ClimateActionsType = ({ type, selectedCity }) => {
         {/* Toggle button for long list */}
         <div className="flex justify-center my-6">
           <button
-            onClick={() => setShowLongList(!showLongList)}
+            onClick={() => handleLongListToggle()}
             className="flex items-center gap-2 py-2 rounded-lg bg-[#E8EAFB] w-full justify-center"
           >
             <BodyMedium color="#2351DC">
@@ -382,7 +401,9 @@ const ClimateActionsType = ({ type, selectedCity }) => {
                 ? t("hideUnrankedActions")
                 : t("viewUnrankedActions")}
             </BodyMedium>
-            {showLongList ? (
+            {isLoadingLongList ? (
+              <CircularProgress size={20} color="#2351DC" />
+            ) : showLongList ? (
               <FiChevronUp size={20} color="#2351DC" />
             ) : (
               <FiChevronDown size={20} color="#2351DC" />
@@ -397,14 +418,23 @@ const ClimateActionsType = ({ type, selectedCity }) => {
               <MdInfoOutline color="#2351DC" size={"16px"} />
               <BodyLarge>{t("unrankedDisclaimer")}</BodyLarge>
             </div>
-            <ActionsTable
-              type={type}
-              actions={longListData}
-              t={t}
-              enableRowSelection={enableRowSelection}
-              selectedActions={selectedActionIds}
-              onActionSelectionChange={handleActionSelection}
-            />
+            {isLoadingLongList ? (
+              <div className="flex justify-center items-center py-12">
+                <CircularProgress size={40} />
+                <BodyMedium className="ml-4">
+                  {t("loadingUnrankedActions")}
+                </BodyMedium>
+              </div>
+            ) : (
+              <ActionsTable
+                type={type}
+                actions={longListData}
+                t={t}
+                enableRowSelection={enableRowSelection}
+                selectedActions={selectedActionIds}
+                onActionSelectionChange={handleActionSelection}
+              />
+            )}
           </>
         )}
       </div>
