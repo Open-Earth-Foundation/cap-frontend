@@ -77,7 +77,7 @@ const GenerateActionPlanButton = ({
     setIsGenerating(true);
     try {
       const plan = await generateActionPlan({
-        action: action.action,
+        action: action?.action || action,
         city: selectedCity,
       });
       setGeneratedPlan(plan);
