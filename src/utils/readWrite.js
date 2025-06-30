@@ -6,10 +6,10 @@ import {
 import { CITIES } from "../components/constants.js";
 import i18next from "i18next";
 
-const awsRegion = process.env.VITE_AWS_REGION || "us-east-2";
-const awsAccessKeyId = process.env.VITE_AWS_ACCESS_KEY_ID;
-const awsSecretAccessKey = process.env.VITE_AWS_SECRET_ACCESS_KEY;
-const awsS3BucketId = process.env.VITE_AWS_S3_BUCKET_ID;
+const awsRegion = "us-east-2";
+const awsAccessKeyId = "VITE_AWS_ACCESS_KEY_ID";
+const awsSecretAccessKey = "VITE_AWS_SECRET_ACCESS_KEY";
+const awsS3BucketId = "VITE_AWS_S3_BUCKET_ID";
 
 const s3Client = new S3Client({
   region: awsRegion,
@@ -18,7 +18,7 @@ const s3Client = new S3Client({
     secretAccessKey: awsSecretAccessKey,
   },
 });
-const bucketName = awsS3BucketId;
+const bucketName = "VITE_AWS_S3_BUCKET_ID";
 console.log("Bucket Name:", bucketName);
 
 const streamToString = async (stream) => {
