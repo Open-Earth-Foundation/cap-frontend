@@ -1,6 +1,7 @@
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -9,7 +10,7 @@ app.use(
   cors({
     origin: true,
     credentials: true,
-  }),
+  })
 );
 
 // Parse JSON bodies
@@ -19,7 +20,10 @@ app.use(express.json());
 app.use(
   "/api",
   createProxyMiddleware({
-    target: CAP_API_URL,
+    target:
+      process.env.CAP_API_URL ||
+      process.env.VITE_API_URL ||
+      "http://cap-api:8080",
     changeOrigin: true,
     pathRewrite: {
       "^/api": "",
@@ -32,14 +36,14 @@ app.use(
     onProxyRes: (proxyRes, req, res) => {
       console.log("Proxy Response:", proxyRes.statusCode);
     },
-  }),
+  })
 );
 
-// Proxy for cap-plan-creator
+// Proxy for cap-plan-creator (now points to hiap-service)
 app.use(
   "/plan-api",
   createProxyMiddleware({
-    target: VITE_PLAN_CREATOR_URL,
+    target: process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service",
     changeOrigin: true,
     pathRewrite: {
       "^/plan-api/start_plan_creation": "/start_plan_creation",
@@ -47,7 +51,7 @@ app.use(
       "^/plan-api/get_plan": "/get_plan",
     },
     logLevel: "debug",
-    secure: true,
+    secure: false,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -90,12 +94,35 @@ app.use(
         proxyReq.write(bodyData);
       }
     },
-  }),
+  })
 );
+
+// Serve static files in production
+if (process.env.NODE_ENV === "production") {
+  // Serve static assets
+  app.use(express.static(path.join(__dirname, "../dist")));
+
+  // Handle React routing - send all requests to index.html
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist/index.html"));
+  });
+}
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Proxy server listening on port ${port}`);
+  console.log(
+    `Plan Creator URL: ${
+      process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service"
+    }`
+  );
+  console.log(
+    `API URL: ${
+      process.env.CAP_API_URL ||
+      process.env.VITE_API_URL ||
+      "http://cap-api:8080"
+    }`
+  );
 });
 
 // Add a test route
