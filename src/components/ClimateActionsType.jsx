@@ -433,6 +433,8 @@ const ClimateActionsType = ({ type, selectedCity }) => {
                 enableRowSelection={enableRowSelection}
                 selectedActions={selectedActionIds}
                 onActionSelectionChange={handleActionSelection}
+                showSectorFilter={true}
+                loading={isLoadingLongList}
               />
             )}
           </>

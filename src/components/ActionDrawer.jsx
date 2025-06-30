@@ -203,7 +203,7 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
             </Box>
           )}
 
-          {action.EquityAndInclusionConsiderations && (
+          {/* {action.EquityAndInclusionConsiderations && (
             <Box>
               <Typography variant="h6" sx={{ mb: 2, color: "#232640" }}>
                 {t("equityAndInclusionConsiderations")}
@@ -212,7 +212,7 @@ export const ActionDrawer = ({ action, isOpen, onClose, t }) => {
                 markdownContent={action.EquityAndInclusionConsiderations}
               />
             </Box>
-          )}
+          )} */}
         </Box>
       </Drawer>
     );

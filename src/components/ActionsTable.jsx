@@ -1,6 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import i18next from "i18next";
-import { Box, Chip, Stack, IconButton, Checkbox } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Stack,
+  IconButton,
+  Checkbox,
+  CircularProgress,
+} from "@mui/material";
 import { MdBookmark, MdDragIndicator } from "react-icons/md";
 import {
   useReactTable,
@@ -26,6 +33,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { BiExpandAlt } from "react-icons/bi";
 import { BodyMedium } from "./Texts/Body.jsx";
+import SectorFilterButton from "./SectorFilterButton.jsx";
 
 export const ACTION_TYPES = {
   Mitigation: "mitigation",
@@ -95,15 +103,48 @@ export function ActionsTable({
   enableRowSelection = false,
   selectedActions = [],
   onActionSelectionChange,
+  showSectorFilter = false,
+  loading = false,
 }) {
-  const lng = i18next.language;
   const [selectedAction, setSelectedAction] = useState(null);
-  const [isTranslationsReady, setIsTranslationsReady] = useState(false);
   const [items, setItems] = useState(actions || []);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   useEffect(() => {
     setItems(actions || []);
   }, [actions]);
+
+  // Determine filter field and options based on type
+  const isAdaptation = type === ACTION_TYPES.Adaptation;
+  const filterField = isAdaptation ? "Hazard" : "Sector";
+
+  // Get all available filter options from the data
+  const availableFilters = useMemo(() => {
+    if (!showSectorFilter) return [];
+    return [
+      ...new Set(
+        items.flatMap((item) => {
+          const action = item.action || item;
+          return Array.isArray(action[filterField]) ? action[filterField] : [];
+        })
+      ),
+    ];
+  }, [items, showSectorFilter, filterField]);
+
+  // Filter items based on selected filter options
+  const filteredItems = useMemo(() => {
+    if (!showSectorFilter || selectedFilters.length === 0) {
+      return items;
+    }
+    return items.filter((item) => {
+      const action = item.action || item;
+      return (
+        action[filterField] &&
+        Array.isArray(action[filterField]) &&
+        action[filterField].some((val) => selectedFilters.includes(val))
+      );
+    });
+  }, [items, selectedFilters, showSectorFilter, filterField]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -148,27 +189,6 @@ export function ActionsTable({
       onActionSelectionChange(actionId, checked);
     }
   };
-
-  useEffect(() => {
-    // Check if translations are ready
-    const checkTranslations = async () => {
-      try {
-        await i18next.loadNamespaces("translation");
-        setIsTranslationsReady(true);
-      } catch (error) {
-        console.error("Error loading translations:", error);
-      }
-    };
-    checkTranslations();
-  }, []);
-
-  // Use the translation function with explicit namespace and fallback
-  const translate = (key) => {
-    const translation = t(key, { ns: "translation" });
-    return translation || key; // Fallback to key if translation is not available
-  };
-
-  const isAdaptation = type === ACTION_TYPES.Adaptation;
 
   // Selection column
   const selectionColumn = {
@@ -231,7 +251,7 @@ export function ActionsTable({
 
   const rankColumn = {
     accessorKey: "actionPriority",
-    header: translate("ranking"),
+    header: t("ranking"),
     size: 50,
     cell: ({ row }) => (
       <Stack direction="row" spacing={1} alignItems="center">
@@ -254,7 +274,7 @@ export function ActionsTable({
     ...(showRanking ? [rankColumn] : []),
     {
       accessorKey: "actionName",
-      header: translate("action-name"),
+      header: t("action-name"),
       size: 300,
       cell: ({ row }) => {
         return (
@@ -275,13 +295,13 @@ export function ActionsTable({
       ? [
           {
             id: "hazards-covered",
-            header: translate("hazards-covered"),
+            header: t("hazards-covered"),
             size: 150,
             cell: ({ row }) => {
               const action = row.original.action || row.original;
               return (
                 <Chip
-                  label={`${action.Hazard.length} ${translate("hazards")}`}
+                  label={`${action.Hazard.length} ${t("hazards")}`}
                   color="warning"
                   size="small"
                 />
@@ -290,7 +310,7 @@ export function ActionsTable({
           },
           {
             id: "adaptation-effectiveness",
-            header: translate("effectiveness"),
+            header: t("effectiveness"),
             size: 150,
             cell: ({ row }) => {
               const action = row.original.action || row.original;
@@ -308,7 +328,7 @@ export function ActionsTable({
       : [
           {
             id: "sector",
-            header: translate("sector-label"),
+            header: t("sector-label"),
             size: 100,
             cell: ({ row }) => {
               const action = row.original.action || row.original;
@@ -316,7 +336,7 @@ export function ActionsTable({
                 <Stack direction="row" spacing={1} flexWrap="wrap">
                   {action.Sector.map((sector) => (
                     <BodyMedium key={sector}>
-                      {translate(`sectors.${sector}`)}
+                      {t(`sectors.${sector}`)}
                     </BodyMedium>
                   ))}
                 </Stack>
@@ -325,7 +345,7 @@ export function ActionsTable({
           },
           {
             id: "reduction-potential",
-            header: translate("ghg-reduction"),
+            header: t("ghg-reduction"),
             cell: ({ row }) => {
               const action = row.original.action || row.original;
               const totalReduction = Object.values(action.GHGReductionPotential)
@@ -355,13 +375,21 @@ export function ActionsTable({
   ];
 
   const table = useReactTable({
-    data: items,
+    data: filteredItems,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  if (loading) {
+    return (
+      <Box p={2} display="flex" alignItems="center" gap={2}>
+        <CircularProgress size={24} />
+        <span>{t("loading-actions")}</span>
+      </Box>
+    );
+  }
   if (!actions || actions.length === 0) {
-    return <Box p={2}>{translate("no-actions-found")}</Box>;
+    return <Box p={2}>{t("no-actions-found")}</Box>;
   }
 
   const tableContent = (
@@ -478,6 +506,21 @@ export function ActionsTable({
           t={t}
         />
       )}
+
+      {/* Sector Filter */}
+      {showSectorFilter && availableFilters.length > 0 && items.length > 0 && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <SectorFilterButton
+            availableFilters={availableFilters}
+            selectedFilters={selectedFilters}
+            onChange={setSelectedFilters}
+            t={t}
+            filterLabelKey={isAdaptation ? "by-hazard" : "by-sector"}
+            filterField={filterField}
+          />
+        </Box>
+      )}
+
       {enableRowOrdering ? (
         <DndContext
           sensors={sensors}
@@ -485,7 +528,7 @@ export function ActionsTable({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={items.map((item) => item.actionId)}
+            items={filteredItems.map((item) => item.actionId)}
             strategy={verticalListSortingStrategy}
           >
             {tableContent}

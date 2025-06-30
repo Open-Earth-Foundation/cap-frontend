@@ -216,5 +216,8 @@
   "pickTopActions": "SELECIONAR MELHORES AÇÕES",
   "selectUpTo3Actions": "Selecione até 3 ações das tabelas abaixo para vê-las na seção superior.",
   "maximumActionsSelected": "Máximo de 3 ações selecionadas. Você pode desmarcar ações para escolher outras diferentes.",
-  "selectMoreActions": "Você pode selecionar mais {{count}} ação(ões)."
+  "selectMoreActions": "Você pode selecionar mais {{count}} ação(ões).",
+  "no-actions-found": "Nenhuma ação encontrada",
+  "filter": "Filtrar",
+  "by-sector": "Por setor"
 }

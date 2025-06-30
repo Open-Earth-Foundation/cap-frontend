@@ -1002,3 +1002,270 @@ const createSimpleTable = (doc, headers, rows, startY, margin) => {
 
   return currentY + 10;
 };
+
+// Export plan content to PDF for PlanModal
+export const exportPlanToPDF = (planData, t) => {
+  try {
+    const doc = new jsPDF();
+    
+    // Page configuration
+    const pageWidth = doc.internal.pageSize.width;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 20;
+    const contentWidth = pageWidth - 2 * margin;
+    
+    let yPos = 20;
+    
+    // Helper function to check if we need a new page
+    const checkForNewPage = (requiredSpace) => {
+      if (yPos + requiredSpace > pageHeight - 40) { // Increased bottom margin
+        doc.addPage();
+        yPos = 20;
+        return true;
+      }
+      return false;
+    };
+    
+    // Helper function to add wrapped text and return new Y position
+    const addWrappedText = (text, x, y, maxWidth, fontSize = 11, fontStyle = 'normal') => {
+      if (!text) return y;
+      
+      doc.setFontSize(fontSize);
+      doc.setFont('helvetica', fontStyle);
+      
+      // Split text into lines that fit within maxWidth
+      const lines = doc.splitTextToSize(text, maxWidth);
+      
+      // Calculate line height
+      const lineHeight = fontSize * 0.4;
+      
+      // Check if we need a new page for this text block
+      const totalHeight = lines.length * lineHeight;
+      if (y + totalHeight > pageHeight - 40) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      // Render text
+      doc.text(lines, x, y);
+      return y + totalHeight + 2;
+    };
+    
+    // Helper function to add markdown-formatted text
+    const addMarkdownText = (text, x, y, maxWidth) => {
+      if (!text) return y;
+      
+      let currentY = y;
+      const lines = text.split('\n');
+      
+      for (let line of lines) {
+        line = line.trim();
+        if (!line) {
+          currentY += 8; // Add space for empty lines
+          continue;
+        }
+        
+        // Check for page break before processing line
+        if (currentY > pageHeight - 50) {
+          doc.addPage();
+          currentY = 20;
+        }
+        
+        // Handle headers
+        if (line.startsWith('# ')) {
+          currentY = addWrappedText(line.substring(2), x, currentY, maxWidth, 16, 'bold');
+          currentY += 8;
+        } else if (line.startsWith('## ')) {
+          currentY = addWrappedText(line.substring(3), x, currentY, maxWidth, 14, 'bold');
+          currentY += 6;
+        } else if (line.startsWith('### ')) {
+          currentY = addWrappedText(line.substring(4), x, currentY, maxWidth, 12, 'bold');
+          currentY += 5;
+        }
+        // Handle bold text with better parsing
+        else if (line.includes('**')) {
+          const parts = line.split('**');
+          let currentX = x;
+          let remainingWidth = maxWidth;
+          
+          for (let i = 0; i < parts.length; i++) {
+            if (parts[i]) {
+              const fontStyle = i % 2 === 0 ? 'normal' : 'bold';
+              const textWidth = doc.getTextWidth(parts[i]);
+              
+              if (textWidth > remainingWidth) {
+                // Text doesn't fit, need to wrap
+                const wrappedLines = doc.splitTextToSize(parts[i], remainingWidth);
+                for (let j = 0; j < wrappedLines.length; j++) {
+                  if (currentY > pageHeight - 50) {
+                    doc.addPage();
+                    currentY = 20;
+                    currentX = x;
+                    remainingWidth = maxWidth;
+                  }
+                  doc.setFontSize(11);
+                  doc.setFont('helvetica', fontStyle);
+                  doc.text(wrappedLines[j], currentX, currentY);
+                  currentY += 11 * 0.4;
+                  if (j < wrappedLines.length - 1) {
+                    currentX = x;
+                    remainingWidth = maxWidth;
+                  }
+                }
+                currentX = x;
+                remainingWidth = maxWidth;
+              } else {
+                // Text fits on current line
+                doc.setFontSize(11);
+                doc.setFont('helvetica', fontStyle);
+                doc.text(parts[i], currentX, currentY);
+                currentX += textWidth;
+                remainingWidth = maxWidth - (currentX - x);
+              }
+            }
+          }
+          currentY += 4;
+        }
+        // Handle lists with better indentation
+        else if (line.startsWith('- ') || line.startsWith('* ')) {
+          const listText = line.substring(2);
+          currentY = addWrappedText('• ' + listText, x + 15, currentY, maxWidth - 15, 11, 'normal');
+          currentY += 3;
+        }
+        else if (/^\d+\.\s/.test(line)) {
+          const listText = line.replace(/^\d+\.\s/, '');
+          currentY = addWrappedText(line.replace(/^\d+\.\s/, '') + '.', x + 15, currentY, maxWidth - 15, 11, 'normal');
+          currentY += 3;
+        }
+        // Handle links (extract text only)
+        else if (line.includes('[') && line.includes('](')) {
+          const linkText = line.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+          currentY = addWrappedText(linkText, x, currentY, maxWidth, 11, 'normal');
+          currentY += 3;
+        }
+        // Handle italic text (single asterisks)
+        else if (line.includes('*') && !line.includes('**')) {
+          const parts = line.split('*');
+          let currentX = x;
+          let remainingWidth = maxWidth;
+          
+          for (let i = 0; i < parts.length; i++) {
+            if (parts[i]) {
+              const fontStyle = i % 2 === 0 ? 'normal' : 'italic';
+              const textWidth = doc.getTextWidth(parts[i]);
+              
+              if (textWidth > remainingWidth) {
+                const wrappedLines = doc.splitTextToSize(parts[i], remainingWidth);
+                for (let j = 0; j < wrappedLines.length; j++) {
+                  if (currentY > pageHeight - 50) {
+                    doc.addPage();
+                    currentY = 20;
+                    currentX = x;
+                    remainingWidth = maxWidth;
+                  }
+                  doc.setFontSize(11);
+                  doc.setFont('helvetica', fontStyle);
+                  doc.text(wrappedLines[j], currentX, currentY);
+                  currentY += 11 * 0.4;
+                  if (j < wrappedLines.length - 1) {
+                    currentX = x;
+                    remainingWidth = maxWidth;
+                  }
+                }
+                currentX = x;
+                remainingWidth = maxWidth;
+              } else {
+                doc.setFontSize(11);
+                doc.setFont('helvetica', fontStyle);
+                doc.text(parts[i], currentX, currentY);
+                currentX += textWidth;
+                remainingWidth = maxWidth - (currentX - x);
+              }
+            }
+          }
+          currentY += 3;
+        }
+        // Regular text
+        else {
+          currentY = addWrappedText(line, x, currentY, maxWidth, 11, 'normal');
+          currentY += 3;
+        }
+      }
+      
+      return currentY;
+    };
+    
+    // Get action name for title and filename
+    let actionName = 'Action Plan';
+    if (Array.isArray(planData) && planData.length > 0) {
+      actionName = planData[0].actionName || 'Action Plan';
+    } else if (planData && typeof planData === 'object') {
+      actionName = planData.actionName || 'Action Plan';
+    }
+    
+    // Title
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(actionName, pageWidth / 2, yPos, { align: "center" });
+    yPos += 15;
+    
+    // Date
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, yPos);
+    yPos += 15;
+    
+    // Handle different plan data structures
+    if (Array.isArray(planData)) {
+      // Multiple plans (list view)
+      planData.forEach((plan, index) => {
+        checkForNewPage(50);
+        
+        // Plan title
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        const title = `${index + 1}. ${plan.actionName || `Plan ${index + 1}`}`;
+        yPos = addWrappedText(title, margin, yPos, contentWidth, 16, 'bold');
+        yPos += 5;
+        
+        // Plan content
+        if (plan.plan) {
+          yPos = addMarkdownText(plan.plan, margin, yPos, contentWidth);
+          yPos += 10;
+        }
+      });
+    } else if (planData && typeof planData === 'object') {
+      // Single plan object
+      checkForNewPage(50);
+      
+      // Plan content
+      const planContent = planData.plan || planData;
+      if (planContent) {
+        yPos = addMarkdownText(planContent, margin, yPos, contentWidth);
+      }
+    } else if (typeof planData === 'string') {
+      // Simple string plan
+      checkForNewPage(50);
+      yPos = addMarkdownText(planData, margin, yPos, contentWidth);
+    }
+    
+    // Add page numbers to all pages
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 15, {
+        align: "center",
+      });
+    }
+    
+    // Save the PDF with action name in filename
+    const safeActionName = actionName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+    const filename = `${safeActionName}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(filename);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    alert("Error generating PDF. Please try again.");
+  }
+};

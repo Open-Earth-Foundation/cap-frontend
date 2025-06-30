@@ -89,6 +89,7 @@
   "storms": "Storms",
   "wildfires": "Wildfires",
   "sea_level_rise": "Sea Level Rise",
+  "sea-level-rise": "Sea Level Rise",
   "public_health": "Public Health",
   "water_resources": "Water Resources",
   "food_security": "Food Security",
@@ -220,5 +221,10 @@
   "viewUnrankedActions": "View Unranked Actions",
   "hideUnrankedActions": "Hide Unranked Actions",
   "unrankedDisclaimer": "The actions below are not ranked.",
-  "loadingUnrankedActions": "Loading unranked actions..."
+  "loadingUnrankedActions": "Loading unranked actions...",
+  "no-actions-found": "No actions found",
+  "filter": "Filter",
+  "by-sector": "By sector",
+  "by-hazard": "By hazard",
+  "loading-actions": "Loading actions..."
 }
