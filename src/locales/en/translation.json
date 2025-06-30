@@ -219,5 +219,6 @@
   "viewPlan": "View Plan",
   "viewUnrankedActions": "View Unranked Actions",
   "hideUnrankedActions": "Hide Unranked Actions",
-  "unrankedDisclaimer": "The actions below are not ranked."
+  "unrankedDisclaimer": "The actions below are not ranked.",
+  "loadingUnrankedActions": "Loading unranked actions..."
 }
