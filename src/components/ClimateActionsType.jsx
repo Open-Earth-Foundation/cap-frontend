@@ -122,7 +122,8 @@ const ClimateActionsType = ({ type, selectedCity }) => {
   // Reset selections when selection mode is disabled
   useEffect(() => {
     if (!enableRowSelection) {
-      setSelectedActionIds([]);
+      // Don't clear selectedActionIds when disabling selection mode
+      // This allows bookmark icons to remain visible after saving
     }
   }, [enableRowSelection]);
 
@@ -209,6 +210,9 @@ const ClimateActionsType = ({ type, selectedCity }) => {
 
       // Save the main data (without selected flags)
       await writeFile(selectedCity, dataToSave, type);
+
+      // Reload selected actions to ensure they persist after saving
+      await restoreSelectedState();
 
       setEnableRowSelection(false);
       setIsSaving(false);
