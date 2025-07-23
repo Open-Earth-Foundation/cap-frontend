@@ -1,4 +1,4 @@
-import { jsPDF } from 'jspdf';
+import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import {
   getTimelineTranslationKey,
@@ -858,57 +858,82 @@ export const exportUtils = {
   exportToPDF,
 };
 
-export async function exportMarkdownToPDF(markdown, filename = "plan.pdf") {
-  // Convert markdown to HTML
-  const html = marked.parse(markdown);
-
-  // Create a temporary container for the HTML
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html;
-  tempDiv.style.width = "595px"; // A4 width in px at 72dpi
-  tempDiv.style.padding = "32px";
-  tempDiv.style.fontFamily = "Arial, sans-serif";
-  tempDiv.style.background = "white";
-
-  // Add markdown styles
-  const style = document.createElement("style");
-  style.innerHTML = `
-    h1 { font-size: 1.5em; font-weight: bold; margin: 0.67em 0; }
-    h2 { font-size: 1.2em; font-weight: bold; margin: 0.75em 0; }
-    h3 { font-size: 1em; font-weight: bold; margin: 0.83em 0; }
-    p { font-size: 0.95em; margin: 0.7em 0; }
-    ul, ol { margin: 0.7em 0 0.7em 2em; }
-    li { margin: 0.3em 0; }
-    blockquote { border-left: 4px solid #ccc; margin: 0.7em 0; padding: 0.5em 1em; color: #555; background: #f9f9f9; }
-    code, pre { background: #eee; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 6px 13px; }
-    th { background: #f5f5f5; }
-    a { color: #2351DC; text-decoration: underline; }
-  `;
-  tempDiv.prepend(style);
-
-  document.body.appendChild(tempDiv);
-
-  // Use jsPDF's html method for better text rendering and pagination
-  const pdf = new jsPDF({
+export function exportMarkdownToPDF(markdown, filename = "plan.pdf") {
+  const doc = new jsPDF({
     orientation: "portrait",
     unit: "pt",
     format: "a4",
   });
 
-  await pdf.html(tempDiv, {
-    callback: function (doc) {
-      doc.save(filename);
-      document.body.removeChild(tempDiv);
-    },
-    margin: [32, 32, 32, 32], // top, left, bottom, right
-    autoPaging: "text",
-    x: 0,
-    y: 0,
-    width: 531, // 595 - 2*32
-    windowWidth: 595,
+  const lines = markdown.split('\n');
+  const topMargin = 48;
+  const bottomMargin = 48;
+  let y = topMargin; // Start below the top margin
+  const leftMargin = 48;
+  const lineHeight = 20;
+  const maxWidth = doc.internal.pageSize.getWidth() - 2 * leftMargin;
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  doc.setFont("helvetica");
+
+  lines.forEach((line) => {
+    // Headings
+    if (/^### (.*)/.test(line)) {
+      doc.setFontSize(14);
+      doc.setFont(undefined, "bold");
+      y = addWrappedText(doc, RegExp.$1, leftMargin, y, maxWidth, lineHeight, pageHeight, bottomMargin);
+      doc.setFont(undefined, "normal");
+    } else if (/^## (.*)/.test(line)) {
+      doc.setFontSize(18);
+      doc.setFont(undefined, "bold");
+      y = addWrappedText(doc, RegExp.$1, leftMargin, y, maxWidth, lineHeight, pageHeight, bottomMargin);
+      doc.setFont(undefined, "normal");
+    } else if (/^# (.*)/.test(line)) {
+      doc.setFontSize(22);
+      doc.setFont(undefined, "bold");
+      y = addWrappedText(doc, RegExp.$1, leftMargin, y, maxWidth, lineHeight, pageHeight, bottomMargin);
+      doc.setFont(undefined, "normal");
+    }
+    // Unordered list
+    else if (/^- (.*)/.test(line)) {
+      doc.setFontSize(12);
+      y = addWrappedText(doc, "• " + RegExp.$1, leftMargin + 12, y, maxWidth - 12, lineHeight, pageHeight, bottomMargin);
+    }
+    // Bold inline
+    else if (/\*\*(.*?)\*\*/.test(line)) {
+      doc.setFontSize(12);
+      let parts = line.split(/(\*\*.*?\*\*)/g);
+      let x = leftMargin;
+      parts.forEach((part) => {
+        if (/^\*\*(.*?)\*\*$/.test(part)) {
+          doc.setFont(undefined, "bold");
+          const text = part.replace(/\*\*/g, "");
+          doc.text(text, x, y);
+          x += doc.getTextWidth(text);
+          doc.setFont(undefined, "normal");
+        } else {
+          doc.text(part, x, y);
+          x += doc.getTextWidth(part);
+        }
+      });
+      y += lineHeight;
+    }
+    // Paragraph
+    else if (line.trim() !== "") {
+      doc.setFontSize(12);
+      y = addWrappedText(doc, line, leftMargin, y, maxWidth, lineHeight, pageHeight, bottomMargin);
+    } else {
+      y += lineHeight / 2; // Blank line
+    }
+
+    // Add new page if needed (for blank lines or after a block)
+    if (y > pageHeight - bottomMargin) {
+      doc.addPage();
+      y = topMargin;
+    }
   });
+
+  doc.save(filename);
 }
 
 // Helper to get translated value for a specific cell based on column config
@@ -1321,3 +1346,21 @@ export const exportPlanToPDF = (planData, t) => {
     alert("Error generating PDF. Please try again.");
   }
 };
+
+// Helper to wrap text
+function addWrappedText(doc, text, x, y, maxWidth, lineHeight, pageHeight, bottomMargin) {
+  const lines = doc.splitTextToSize(text, maxWidth);
+  lines.forEach((l) => {
+    if (y + lineHeight > pageHeight - bottomMargin) {
+      doc.addPage();
+      y = 48;
+    }
+    doc.text(l, x, y);
+    y += lineHeight;
+  });
+  return y;
+}
+
+// Custom markdown to PDF renderer
+
+
