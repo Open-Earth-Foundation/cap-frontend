@@ -5,6 +5,7 @@ import { Disclosure } from "@headlessui/react";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import MarkdownRenderer from "./MarkdownRenderer.jsx";
 import html2pdf from "html2pdf.js";
+import { exportMarkdownToPDF } from "../utils/exportUtils";
 
 const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
   if (!isOpen) return null;
@@ -105,58 +106,19 @@ const PlanModal = ({ isOpen, onClose, plan, plans, isListView }) => {
       const safeFilename = filename
         .replace(/[^a-zA-Z0-9\s]/g, "")
         .replace(/\s+/g, "_");
-      const element = printRef.current;
-
-      if (!element) {
-        console.error("Export element not found");
-        return;
+      // Get the markdown content
+      let markdown = "";
+      if (isListView && plans && plans.length > 0) {
+        // Concatenate all plans' markdown
+        markdown = plans.map((p, i) => `# ${i + 1}. ${p.actionName || "Action Plan"}\n\n${p.plan || ""}`).join("\n\n---\n\n");
+      } else if (plan) {
+        markdown = plan.plan || plan;
       }
-
-      // Make the export area visible temporarily
-      element.style.position = "fixed";
-      element.style.left = "0";
-      element.style.top = "0";
-      element.style.width = "800px";
-      element.style.height = "auto";
-      element.style.backgroundColor = "white";
-      element.style.zIndex = "9999";
-      element.style.padding = "20px";
-      element.style.visibility = "visible";
-
-      // Wait a bit for the content to render
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Generate PDF
-      await html2pdf()
-        .set({
-          margin: [0.5, 0.5, 0.5, 0.5],
-          filename: `${safeFilename}_${
-            new Date().toISOString().split("T")[0]
-          }.pdf`,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-          },
-          jsPDF: {
-            unit: "in",
-            format: "a4",
-            orientation: "portrait",
-          },
-        })
-        .from(element)
-        .save();
+      await exportMarkdownToPDF(markdown, `${safeFilename}_${new Date().toISOString().split("T")[0]}.pdf`);
     } catch (error) {
       console.error("PDF export error:", error);
       alert("Error generating PDF. Please try again.");
     } finally {
-      // Hide the export area again
-      if (printRef.current) {
-        printRef.current.style.position = "absolute";
-        printRef.current.style.left = "-9999px";
-        printRef.current.style.visibility = "hidden";
-      }
       setIsExporting(false);
     }
   };

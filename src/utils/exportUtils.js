@@ -6,6 +6,7 @@ import {
   toSentenceCase,
   toTitleCase,
 } from './helpers';
+import { marked } from "marked";
 
 const ensureAutoTable = async () => {
   try {
@@ -857,7 +858,58 @@ export const exportUtils = {
   exportToPDF,
 };
 
-export default exportUtils;
+export async function exportMarkdownToPDF(markdown, filename = "plan.pdf") {
+  // Convert markdown to HTML
+  const html = marked.parse(markdown);
+
+  // Create a temporary container for the HTML
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+  tempDiv.style.width = "595px"; // A4 width in px at 72dpi
+  tempDiv.style.padding = "32px";
+  tempDiv.style.fontFamily = "Arial, sans-serif";
+  tempDiv.style.background = "white";
+
+  // Add markdown styles
+  const style = document.createElement("style");
+  style.innerHTML = `
+    h1 { font-size: 1.5em; font-weight: bold; margin: 0.67em 0; }
+    h2 { font-size: 1.2em; font-weight: bold; margin: 0.75em 0; }
+    h3 { font-size: 1em; font-weight: bold; margin: 0.83em 0; }
+    p { font-size: 0.95em; margin: 0.7em 0; }
+    ul, ol { margin: 0.7em 0 0.7em 2em; }
+    li { margin: 0.3em 0; }
+    blockquote { border-left: 4px solid #ccc; margin: 0.7em 0; padding: 0.5em 1em; color: #555; background: #f9f9f9; }
+    code, pre { background: #eee; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 6px 13px; }
+    th { background: #f5f5f5; }
+    a { color: #2351DC; text-decoration: underline; }
+  `;
+  tempDiv.prepend(style);
+
+  document.body.appendChild(tempDiv);
+
+  // Use jsPDF's html method for better text rendering and pagination
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "pt",
+    format: "a4",
+  });
+
+  await pdf.html(tempDiv, {
+    callback: function (doc) {
+      doc.save(filename);
+      document.body.removeChild(tempDiv);
+    },
+    margin: [32, 32, 32, 32], // top, left, bottom, right
+    autoPaging: "text",
+    x: 0,
+    y: 0,
+    width: 531, // 595 - 2*32
+    windowWidth: 595,
+  });
+}
 
 // Helper to get translated value for a specific cell based on column config
 export const getTranslatedCsvValue = (rowItem, column, t) => {

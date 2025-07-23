@@ -44,6 +44,7 @@
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
     "lucide-react": "^0.453.0",
+    "marked": "^16.1.1",
     "material-react-table": "^3.0.1",
     "openai": "^4.76.0",
     "papaparse": "^5.4.1",
