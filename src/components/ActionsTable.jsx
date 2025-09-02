@@ -32,6 +32,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { BiExpandAlt } from "react-icons/bi";
+import { MdInfoOutline } from "react-icons/md";
+import { Tooltip } from 'react-tooltip';
 import { BodyMedium } from "./Texts/Body.jsx";
 import SectorFilterButton from "./SectorFilterButton.jsx";
 
@@ -358,6 +360,28 @@ export function ActionsTable({
           },
         ]),
     {
+      id: "explanation",
+      header: t("explanation"),
+      size: 60,
+      cell: ({ row }) => {
+        const original = row.original;
+        const explanation =
+          original?.explanation;
+        const tooltipId = `explanation-tooltip-global`;
+        return (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Box
+              className="flex items-center cursor-pointer"
+              data-tooltip-id={tooltipId}
+              data-tooltip-content={explanation || "N/A"}
+            >
+              <MdInfoOutline size={18} color="#4B4C63" />
+            </Box>
+          </Box>
+        );
+      },
+    },
+    {
       id: "actions",
       header: "",
       size: 80,
@@ -506,6 +530,14 @@ export function ActionsTable({
           t={t}
         />
       )}
+
+      {/* Global tooltip for explanations to avoid stacking context issues */}
+      <Tooltip
+        id="explanation-tooltip-global"
+        place="left"
+        positionStrategy="fixed"
+        style={{ maxWidth: '300px', wordBreak: 'break-word', zIndex: 999999 }}
+      />
 
       {/* Sector Filter */}
       {showSectorFilter && availableFilters.length > 0 && items.length > 0 && (
