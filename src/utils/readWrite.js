@@ -119,7 +119,10 @@ export const writeSelectedActionsFile = async (
       Key: selectedActionsKey,
       Body: dataJson,
       ContentType: "application/json",
-      TTL: 0,
+      CacheControl: "no-cache, no-store, must-revalidate",
+      Metadata: {
+        timestamp: Date.now().toString()
+      }
     });
     await s3Client.send(command);
     console.log("Selected action IDs saved to S3");
@@ -136,6 +139,8 @@ export const readSelectedActionsFile = async (cityName, type) => {
     const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: selectedActionsKey,
+      // Add cache-busting to force fresh read
+      IfModifiedSince: new Date(0), // Always get fresh data
     });
     const response = await s3Client.send(command);
     const data = await streamToString(response.Body);
