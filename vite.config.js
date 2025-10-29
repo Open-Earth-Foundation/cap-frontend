@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
         },
         "/plan-api": {
           target: isProduction
-            ? "http://hiap-service"
+            ? "http://hiap-service-dev"
             : "https://cap-plan-creator.openearth.dev",
           changeOrigin: true,
           secure: false,
@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => {
         },
         "/plan-api": {
           target: isProduction
-            ? "http://hiap-service"
+            ? "http://hiap-service-dev"
             : "http://localhost:8000",
           changeOrigin: true,
           secure: false,

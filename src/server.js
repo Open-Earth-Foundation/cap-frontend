@@ -39,11 +39,11 @@ app.use(
   })
 );
 
-// Proxy for cap-plan-creator (now points to hiap-service)
+// Proxy for cap-plan-creator (now points to hiap-service-dev)
 app.use(
   "/plan-api",
   createProxyMiddleware({
-    target: process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service",
+    target: process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service-dev",
     changeOrigin: true,
     pathRewrite: {
       "^/plan-api/start_plan_creation": "/start_plan_creation",
@@ -113,7 +113,7 @@ app.listen(port, () => {
   console.log(`Proxy server listening on port ${port}`);
   console.log(
     `Plan Creator URL: ${
-      process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service"
+      process.env.VITE_PLAN_CREATOR_URL || "http://hiap-service-dev"
     }`
   );
   console.log(
